@@ -89,6 +89,12 @@ export const asyncRoutes = [
     meta: { title: 'demo', icon: 'user' },
     children: [
       {
+        path: 'user-manage',
+        component: () => import('@/views/user-manage/index'),
+        name: 'UserManage',
+        meta: { title: '用户管理' }
+      },
+      {
         path: 'list',
         component: () => import('@/views/demo-page/index'),
         name: 'List',
@@ -117,7 +123,7 @@ export const asyncRoutes = [
         component: () => import('@/views/export'),
         name: 'export',
         meta: { title: '导入导出示例' }
-      },
+      }
       // {
       //   path: 'tabindex',
       //   component: () => import('@/views/demo-page/tabindex'),
