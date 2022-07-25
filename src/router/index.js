@@ -88,11 +88,18 @@ export const asyncRoutes = [
     component: Layout,
     meta: { title: 'demo', icon: 'user' },
     children: [
+      // 系统管理
       {
         path: 'user-manage',
         component: () => import('@/views/user-manage/index'),
         name: 'UserManage',
         meta: { title: '用户管理' }
+      },
+      {
+        path: 'menu-manage',
+        component: () => import('@/views/menu-manage/index'),
+        name: 'UserManage',
+        meta: { title: '菜单管理' }
       },
       {
         path: 'list',

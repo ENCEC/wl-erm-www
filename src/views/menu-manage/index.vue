@@ -1,26 +1,33 @@
 <!--
  * @Author: Hongzf
- * @Date: 2022-07-25 10:36:16
+ * @Date: 2022-07-25 16:05:47
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-07-25 16:59:35
- * @Description: 系统管理-用户管理
+ * @LastEditTime: 2022-07-25 16:58:36
+ * @Description: 系统管理-菜单管理
 -->
 <template>
-  <div class="app-container user-manage">
+  <div class="app-container menu-manage">
     <el-form ref="filterFormRef" :model="filterForm" :inline="true" size="mini">
-      <el-form-item label="用户名" prop="account">
+      <el-form-item label="菜单标题" prop="menuTitle">
         <el-input
-          v-model="filterForm.account"
-          placeholder="请输入用户名"
+          v-model="filterForm.menuTitle"
+          placeholder="请输入菜单标题"
           clearable
         />
       </el-form-item>
-      <el-form-item label="姓名" prop="name">
-        <el-input
-          v-model="filterForm.name"
-          placeholder="请输入姓名"
+      <el-form-item label="父级菜单" prop="parentMenu">
+        <el-select
+          v-model="filterForm.parentMenu"
+          placeholder="请选择父级菜单"
           clearable
-        />
+        >
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item label="状态" prop="status">
         <el-select
@@ -42,7 +49,7 @@
             type="primary"
             size="mini"
             @click="handleOpen"
-          >新增用户</el-button>
+          >新增菜单</el-button>
         </el-form-item>
         <el-form-item>
           <el-button
@@ -64,10 +71,12 @@
       style="width: 100%"
     >
       <el-table-column type="index" label="序号" />
-      <el-table-column prop="username" label="用户名" />
-      <el-table-column prop="name" label="姓名" />
-      <el-table-column prop="phone" label="联系电话" />
-      <el-table-column prop="email" label="电子邮箱" />
+      <el-table-column prop="menuTitle" label="菜单标题" />
+      <el-table-column prop="parentMenu" label="父级菜单" />
+      <el-table-column prop="resourceAddress" label="资源地址" />
+      <el-table-column prop="menuSort" label="菜单序号" />
+      <el-table-column prop="createName" label="创建人" />
+      <el-table-column prop="createTime" label="创建时间" />
       <el-table-column prop="teacherGender" label="状态">
         <template slot-scope="scope">
           {{ scope.row.teacherGender === 1 ? "启用" : "禁用" }}
@@ -77,7 +86,6 @@
         <template slot-scope="scope">
           <div class="operate-wrap">
             <span @click="handleOpen(scope.row.id)">编辑</span>
-            <span @click="resetPassword(scope.row.id)">重置密码</span>
             <span @click="changeStatus(1)">启用</span>
             <span @click="changeStatus(2)">禁用</span>
             <span @click="handleDelete(scope.row.id)">删除</span>
@@ -99,28 +107,14 @@
     />
     <!-- 新增/修改用户 -->
     <CreateDialog :visible.sync="dialogShow" />
-    <!-- 密码重置 Start -->
-    <el-dialog center title="消息提示" :visible.sync="show" width="30%">
-      <div class="password-dialog">
-        密码重置成功！重置后的密码为<span class="password">123456</span> 。
-      </div>
-      <span slot="footer" class="dialog-footer">
-        <el-button
-          size="mini"
-          type="primary"
-          @click="show = false"
-        >确 定</el-button>
-      </span>
-    </el-dialog>
-    <!-- 密码重置 End -->
   </div>
 </template>
 <script>
 import CreateDialog from './component/create-dialog';
-import { queryUemUser } from '@/api/user-manege';
+import { queryUemUser } from '@/api/menu-manege';
 
 export default {
-  name: 'UserManage',
+  name: 'MenuManage',
   components: {
     CreateDialog
   },
@@ -139,7 +133,7 @@ export default {
       show: false,
       dialogShow: false,
       filterForm: {
-        account: '',
+        menuTitle: '',
         name: '',
         status: '',
         currentPage: 1,
@@ -191,11 +185,15 @@ export default {
     // 删除
     handleDelete(id) {
       console.log('【 id 】-178', id);
-      this.$confirm('您确定要删除该用户吗？删除后该用户信息不可恢复。', '删除提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      })
+      this.$confirm(
+        '您确定要删除该菜单信息吗？删除后该菜单信息不可恢复。',
+        '删除提示',
+        {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }
+      )
         .then(() => {})
         .catch(() => {});
     }
@@ -203,7 +201,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.user-manage {
+.menu-manage {
   .btn-wrap {
     display: flex;
     justify-content: flex-end;
