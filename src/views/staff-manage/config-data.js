@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-01 13:52:08
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-01 14:52:47
+ * @LastEditTime: 2022-08-01 18:12:53
  * @Description:
  */
 
@@ -218,7 +218,7 @@ export const operates = _this => {
         disabled: false,
         method: (index, row) => {
           console.log('【 index 】-163', index)
-          _this.handleOpen(row);
+          _this.handleOpen(row, 'edit');
         }
       },
       {
@@ -229,7 +229,7 @@ export const operates = _this => {
         disabled: false,
         method: (index, row) => {
           console.log('【 index 】-163', index)
-          _this.handleOpen(row);
+          _this.handleOpen(row, 'detail');
         }
       },
       {
@@ -243,7 +243,7 @@ export const operates = _this => {
         disabled: false,
         method: (index, row) => {
           console.log('【 index 】-163', index)
-          _this.handleOpen(row);
+          _this.handleOpen(row, 'regular');
         }
       },
       {

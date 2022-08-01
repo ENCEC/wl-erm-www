@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-01 15:41:40
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-01 15:53:39
+ * @LastEditTime: 2022-08-01 17:40:47
  * @Description: 用户资料
 -->
 
@@ -238,7 +238,7 @@ export default {
   created() {
   },
   mounted() {
-    this.$refs['elForm'].clearValidate();
+    // this.$refs['elForm'].clearValidate();
   },
   methods: {
     // 关闭弹框

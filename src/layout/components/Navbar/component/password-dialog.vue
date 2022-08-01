@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-01 15:55:04
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-01 16:28:36
+ * @LastEditTime: 2022-08-01 17:40:58
  * @Description: 修改密码
 -->
 
@@ -129,7 +129,7 @@ export default {
   watch: {},
   created() {},
   mounted() {
-    this.$refs['elForm'].clearValidate();
+    // this.$refs['elForm'].clearValidate();
   },
   methods: {
     // 关闭弹框

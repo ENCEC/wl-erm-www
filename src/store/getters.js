@@ -1,3 +1,10 @@
+/*
+ * @Author: Hongzf
+ * @Date: 2022-07-22 16:25:46
+ * @LastEditors: Hongzf
+ * @LastEditTime: 2022-08-01 17:41:36
+ * @Description:
+ */
 const getters = {
   sidebar: state => state.app.sidebar,
   language: state => state.app.language,
@@ -12,5 +19,6 @@ const getters = {
   roles: state => state.user.roles,
   permission_routes: state => state.permission.routes,
   errorLogs: state => state.errorLog.logs
+  // dictionary: state => state.dictionary.dictionary
 }
 export default getters

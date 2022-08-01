@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-07-25 10:36:16
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-01 12:32:45
+ * @LastEditTime: 2022-08-01 18:15:03
  * @Description: 系统管理-用户管理
 -->
 
@@ -22,27 +22,20 @@
       @handleSizeChange="handleSizeChange"
     />
     <!-- 表格 End -->
-    <!-- 新增/修改用户 -->
+    <!-- 编辑 -->
     <CreateDialog
       :visible.sync="dialogVisible"
       :edit-data="editData"
+      :type="openType"
       @getTableData="getTableData"
     />
-    <!-- 密码重置 Start -->
-    <el-dialog center title="消息提示" :visible.sync="show" width="30%">
-      <div class="password-dialog">
-        密码重置成功！已发送至您的邮箱，请注意查收。
-        <!-- 重置后的密码为<span class="password">123456</span> 。 -->
-      </div>
-      <span slot="footer" class="dialog-footer">
-        <el-button
-          size="mini"
-          type="primary"
-          @click="show = false"
-        >确 定</el-button>
-      </span>
-    </el-dialog>
-    <!-- 密码重置 End -->
+    <!-- 转正 -->
+    <RegularDialog
+      :visible.sync="regularDialogVisible"
+      :edit-data="editData"
+      :type="openType"
+      @getTableData="getTableData"
+    />
   </div>
 </template>
 <script>
@@ -50,9 +43,9 @@ import filterPanel from '@/components/FilterPanel';
 import tableComponent from '@/components/TableComponent';
 import { filterConfig, tableConfig, columns, operates } from './config-data.js';
 import CreateDialog from './component/create-dialog';
+import RegularDialog from './component/regular-dialog';
 import {
   queryUemUser,
-  resetUemUserPassword,
   uemUserStartStop,
   deleteUemUser
 } from '@/api/user-manage';
@@ -62,7 +55,8 @@ export default {
   components: {
     filterPanel,
     tableComponent,
-    CreateDialog
+    CreateDialog,
+    RegularDialog
   },
   mixins: [tableMix],
   data() {
@@ -83,7 +77,9 @@ export default {
       // 弹框
       editData: {},
       show: false,
-      dialogVisible: false
+      openType: '',
+      dialogVisible: false,
+      regularDialogVisible: false
     };
   },
   computed: {},
@@ -110,21 +106,16 @@ export default {
       this.dialogVisible = false;
     },
     // 打开弹框
-    handleOpen(item = {}) {
-      this.dialogVisible = true;
+    handleOpen(item = {}, type) {
+      this.openType = type
       this.editData = { uemUserId: item.uemUserId || '' };
-    },
-    // 重置密码
-    resetPassword(uemUserId) {
-      this.$confirm('您确定要重置密码吗？', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        resetUemUserPassword({ uemUserId }).then(res => {
-          this.show = true;
-        });
-      });
+      if (type === 'detail' || type === 'edit') {
+        this.dialogVisible = true;
+      }
+      // 转正
+      if (type === 'regular') {
+        this.regularDialogVisible = true
+      }
     },
     // 启用/禁用用户
     changeStatus(item) {

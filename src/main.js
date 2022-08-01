@@ -21,7 +21,9 @@ import './permission' // permission control
 import './utils/error-log' // error log
 
 import * as filters from './filters' // global filters
-import {getDict} from '@/api/demo'
+import { getDict } from '@/api/demo'
+import dictionary from './utils/dictionary'
+Vue.prototype.$dict = dictionary;
 
 /**
  * If you don't want to use mock-server
@@ -32,7 +34,7 @@ import {getDict} from '@/api/demo'
  * please remove it before going online ! ! !
  */
 if (process.env.NODE_ENV === 'development') {
-  const {mockXHR} = require('../mock')
+  const { mockXHR } = require('../mock')
   mockXHR()
 }
 

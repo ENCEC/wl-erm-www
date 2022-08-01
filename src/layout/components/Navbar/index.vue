@@ -53,7 +53,7 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
-import ErrorLog from '@/components/ErrorLog'
+// import ErrorLog from '@/components/ErrorLog'
 import ProfileDialog from './component/profile-dialog';
 import PasswordDialog from './component/password-dialog';
 // import Screenfull from '@/components/Screenfull'
