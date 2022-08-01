@@ -1,19 +1,20 @@
 <template>
   <div class="filter-container">
-    <el-form :inline="filterConfig.inline">
+    <el-form :inline="filterConfig.inline" :label-width="filterConfig.labelWidth" :label-position="filterConfig.labelPosition">
       <el-row :gutter="filterConfig.gutter">
-        <slot name="formItem"></slot>
+        <slot name="formItem" />
 
         <el-col
           v-for="(item, index) in filterConfig.filterList"
           :key="item.prop"
           :span="item.col ? item.col : filterConfig.col"
         >
-          <el-form-item :label="item.label" :prop="item.prop">
+          <el-form-item :label="item.label" :prop="item.prop" :label-width="item.labelWidth?item.labelWidth:(filterConfig.labelWidth?filterConfig.labelWidth:'80px')">
             <!-- input type: text | textarea | password-->
             <el-input
               v-if="item.type === 'input' || item.type === 'textarea' || item.type === 'password'"
               v-model="value[item.prop]"
+              :size="item.size"
               :type="item.type"
               :rows="item.type === 'textarea' ? item.rows : ''"
               :show-password="item.type === 'password' && item.showPassword ? true : false"
@@ -24,18 +25,20 @@
               :prefix-icon="item.type === 'text' ? item.prefix - icon : ''"
               :suffix-icon="item.type === 'text' ? item.suffix - icon : ''"
               :clearable="item.clearable ? item.clearable : false"
+              :style="{width:item.width?item.width:`calc(100% - ${item.labelWidth?item.labelWidth:(filterConfig.labelWidth?filterConfig.labelWidth:'80px')})`}"
             />
             <!-- radio -->
-            <el-radio-group v-if="item.type === 'radio'" v-model="value[item.prop]" @change="radioVal => {item.changeRadio? item.changeRadio(radioVal, item, index): ''}">
-              <el-radio v-for="(radio, index) in item.radioArr" :key="index" :label="radio[item.radioLabel?item.radioLabel:'label']":disabled="radio.disabled">{{ radio[item.radioLabel?item.radioLabel:'label'] }}</el-radio>
+            <el-radio-group v-if="item.type === 'radio'" v-model="value[item.prop]" :style="{width:item.width?item.width:`calc(100% - ${item.labelWidth?item.labelWidth:(filterConfig.labelWidth?filterConfig.labelWidth:'80px')})`}" @change="radioVal => {item.changeRadio? item.changeRadio(radioVal, item, index): ''}">
+              <el-radio v-for="(radio, radioIndex) in item.radioArr" :key="radioIndex" :label="radio[item.radioLabel?item.radioLabel:'label']" :disabled="radio.disabled">{{ radio[item.radioLabel?item.radioLabel:'label'] }}</el-radio>
             </el-radio-group>
             <!-- checkbox -->
             <el-checkbox-group
               v-if="item.type === 'checkbox'"
               v-model="value[item.prop]"
+              :style="{width:item.width?item.width:`calc(100% - ${item.labelWidth?item.labelWidth:(filterConfig.labelWidth?filterConfig.labelWidth:'80px')})`}"
               @change="checkVal => { item.changeCheck? item.changeCheck(checkVal, item, index): ''}"
             >
-              <el-checkbox v-for="(checkbox,index) in item.checkboxArr" :key="index" :label="checkbox[item.checkLabel?item.checkLabel:'label']" :disabled="checkbox.disabled" >{{ checkbox[item.checkLabel?item.checkLabel:'label'] }}</el-checkbox>
+              <el-checkbox v-for="(checkbox,index) in item.checkboxArr" :key="index" :label="checkbox[item.checkLabel?item.checkLabel:'label']" :disabled="checkbox.disabled">{{ checkbox[item.checkLabel?item.checkLabel:'label'] }}</el-checkbox>
             </el-checkbox-group>
             <!-- select -->
             <el-select
@@ -45,6 +48,7 @@
               :clearable="item.clearable"
               :multiple="item.multiple"
               :placeholder="item.placeholder"
+              :style="{width:item.width?item.width:`calc(100% - ${item.labelWidth?item.labelWidth:(filterConfig.labelWidth?filterConfig.labelWidth:'80px')})`}"
               @change="optionVal => {item.changeSelect? item.changeSelect(optionVal, item, index): ''}"
             >
               <el-option
@@ -55,6 +59,20 @@
                 :disabled="option.disabled"
               />
             </el-select>
+            <el-associate
+              v-if="item.type === 'associate'"
+              v-model="value[item.prop]"
+              class="el-associate"
+              :value-prop="item.valueProp"
+              :label-prop="item.labelProp"
+              :display-init="item.displayInit"
+              :columns="item.columns"
+              :clearable="item.clearable"
+              :multiple="item.multiple"
+              :query-method="({keyword,pageSize,currentPage})=>{item.changeSelect? item.queryMethod({keyword,pageSize,currentPage}): ''}"
+              :style="{width:item.width?item.width:`calc(100% - ${item.labelWidth?item.labelWidth:(filterConfig.labelWidth?filterConfig.labelWidth:'80px')})`}"
+              @change="optionVal => {item.changeSelect? item.changeSelect(value, selectedRows): ''}"
+            />
             <!-- cascader -->
             <el-cascader
               v-if="item.type === 'cascader'"
@@ -62,6 +80,7 @@
               :options="item.options"
               :props="item.props"
               :clearable="item.clearable ? true : false"
+              :style="{width:item.width?item.width:`calc(100% - ${item.labelWidth?item.labelWidth:(filterConfig.labelWidth?filterConfig.labelWidth:'80px')})`}"
               @change="value => {item.changeCascader? item.changeCascader(value, item, index): ''}"
             />
             <!-- number -->
@@ -71,6 +90,7 @@
               :min="item.min"
               :max="item.max"
               :size="item.size"
+              :style="{width:item.width?item.width:`calc(100% - ${item.labelWidth?item.labelWidth:(filterConfig.labelWidth?filterConfig.labelWidth:'80px')})`}"
               @change="(currentValue, oldValue) => {item.changeNumber? item.changeNumber(currentValue, oldValue, item, index): ''}"
             />
             <!-- timePicker -->
@@ -87,6 +107,7 @@
               :prefix-icon="item.prefixIcon ? item.prefixIcon : 'el-icon-time'"
               :clear-icon="item.clearIcon ? item.clearIcon : 'el-icon-circle-close'"
               :range-separator="item.rangeSeparator ? item.rangeSeparator : '至'"
+              :style="{width:item.width?item.width:`calc(100% - ${item.labelWidth?item.labelWidth:(filterConfig.labelWidth?filterConfig.labelWidth:'80px')})`}"
               @change="time => {item.changeTime ? item.changeTime(time, item, index) : ''}"
             />
             <!-- datePicker  --- subType:date daterange....-->
@@ -107,6 +128,7 @@
               :editable="item.editable"
               :clearable="item.clearable"
               :value-format="item.valueFormat"
+              :style="{width:item.width?item.width:`calc(100% - ${item.labelWidth?item.labelWidth:(filterConfig.labelWidth?filterConfig.labelWidth:'80px')})`}"
               @change="date => {item.changeDate ? item.changeDate(date, item, index) : ''}"
             />
             <!-- dateTimePicker -->
@@ -127,14 +149,19 @@
               :editable="item.editable"
               :clearable="item.clearable"
               :value-format="item.valueFormat"
+              :style="{width:item.width?item.width:`calc(100% - ${item.labelWidth?item.labelWidth:(filterConfig.labelWidth?filterConfig.labelWidth:'80px')})`}"
               @change="dateTime => {item.changeDateTime? item.changeDateTime(dateTime, item, index): ''}"
             />
           </el-form-item>
         </el-col>
+        <!-- 操作按钮 -->
         <el-col :span="filterConfig.operateCol ? filterConfig.operateCol : filterConfig.col">
           <el-form-item>
-            <el-button v-for="(item,index) in filterConfig.operates" :key="index" :type="item.type" :size="item.size" :disabled="item.disabled" :plain="item.plain" :icon="item.icon" @click.native.prevent="item.method ? item.method(item, index) : ''">{{ item.buttonLabel }}</el-button>
-            <slot name="operate"></slot>
+            <div class="operate-area">
+              <el-button v-for="(item,index) in filterConfig.operates" :key="index" :type="item.type" :size="item.size" :disabled="item.disabled" :plain="item.plain" :icon="item.icon" @click.native.prevent="item.method ? item.method(item, index) : ''">{{ item.buttonLabel }}</el-button>
+
+            </div>
+            <!-- <slot name="operate"></slot> -->
           </el-form-item>
         </el-col>
       </el-row>

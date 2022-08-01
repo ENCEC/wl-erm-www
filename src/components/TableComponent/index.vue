@@ -11,6 +11,8 @@
       @row-click="handleRowClick"
       @selection-change="handleSelectionChange"
     >
+      <!--region 序号-->
+      <el-table-column v-if="options.indexShow" type="index" label="序号" width="80px" align="center" />
       <!--region 选择框-->
       <el-table-column v-if="options.mutiSelect" type="selection" style="width: 55px;" />
       <!--endregion-->
@@ -20,16 +22,20 @@
           :key="column.label"
           :prop="column.prop"
           :label="column.label"
-          :align="column.align"
+          :align="column.align||'center'"
+          :min-width="column.minWidth"
           :width="column.width"
         >
           <template slot-scope="scope">
             <template v-if="!column.render">
               <template v-if="column.formatter">
-                <span v-html="column.formatter(scope.row, column)" />
+                <span :title="column.formatter(scope.row, column)" v-html="column.formatter(scope.row, column)" />
+              </template>
+              <template v-if="column.component==='switch'">
+                <el-switch v-model="scope.row[column.prop]" @change="column.method(scope.row,scope.row[column.prop])" />
               </template>
               <template v-else>
-                <span>{{ scope.row[column.prop] }}</span>
+                <span :title="scope.row[column.prop]">{{ scope.row[column.prop] }}</span>
               </template>
             </template>
             <template v-else>
@@ -68,10 +74,10 @@
 
     <el-pagination
       v-if="options.pagination"
-      :total="pagination.total"
+      :total="pagination.totalRecord"
       :page-sizes="[10, 20, 50]"
-      :page-size.sync="pagination.limit"
-      :current-page.sync="pagination.page"
+      :page-size.sync="pagination.pageSize"
+      :current-page.sync="pagination.currentPage"
       layout="total, sizes, prev, pager, next, jumper"
       prev-text="上一页"
       next-text="下一页"
@@ -109,6 +115,11 @@ export default {
   },
   props: {
     // 数据列表
+    listLoading: {
+      type: Boolean,
+      default: false
+    },
+    // 数据列表
     data: {
       type: Array,
       default: () => []
@@ -119,7 +130,10 @@ export default {
       default: () => []
     },
     // 操作按钮组 === label: 文本，type :类型（primary / success / warning / danger / info / text），show：是否显示，icon：按钮图标，plain：是否朴素按钮，disabled：是否禁用，method：回调方法
-    operates: {},
+    operates: {
+      type: Object,
+      default: () => {}
+    },
     options: {
       type: Object,
       default: () => {
@@ -131,11 +145,15 @@ export default {
       },
       pagination: true
     }, // table 表格的控制参数
-    pagination: Object // 分页
+    pagination: {
+      type: Object,
+      default: () => {}
+    }
   },
   // 数据
   data() {
     return {
+      status: false,
       pageIndex: 1,
       multipleSelection: [] // 多行选中
     };
