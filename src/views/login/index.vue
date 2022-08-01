@@ -47,7 +47,7 @@
           </span>
         </el-form-item>
       </el-tooltip>
-
+      <!-- 登录按钮 -->
       <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">
         {{ $t('login.logIn') }}
       </el-button>
@@ -63,7 +63,7 @@
           </span>
           <span>{{ $t('login.password') }} : {{ $t('login.any') }}</span>
         </div>
-
+        <!-- 第三方登录 -->
         <el-button class="thirdparty-button" type="primary" @click="showDialog=true">
           {{ $t('login.thirdparty') }}
         </el-button>
@@ -160,6 +160,7 @@ export default {
         this.$refs.password.focus()
       })
     },
+    // 登录
     handleLogin() {
       // this.$refs.loginForm.validate(valid => {
       //   if (valid) {
