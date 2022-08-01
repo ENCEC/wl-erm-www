@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-07-25 11:44:07
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-07-25 16:59:49
+ * @LastEditTime: 2022-07-25 17:32:42
  * @Description: 系统管理-用户管理-添加/编辑
 -->
 <template>
@@ -12,6 +12,7 @@
       :title="dialogTitle"
       width="700px"
       center
+      :close-on-click-modal="false"
       v-on="$listeners"
       @open="onOpen"
       @close="onClose"
@@ -28,11 +29,10 @@
         <div class="form-wrap">
           <el-row>
             <el-col :span="12">
-              <el-form-item label="用户名:" prop="username">
+              <el-form-item label="用户名:" prop="account">
                 <el-input
-                  v-model="formData.username"
+                  v-model="formData.account"
                   placeholder="请输入用户名"
-                  show-word-limit
                   clearable
                 />
               </el-form-item>
@@ -42,8 +42,6 @@
                 <el-input
                   v-model="formData.name"
                   placeholder="请输入姓名"
-                  show-word-limit
-                  size="mini"
                   clearable
                 />
               </el-form-item>
@@ -51,23 +49,21 @@
           </el-row>
           <el-row>
             <el-col :span="12">
-              <el-form-item label="联系电话:" prop="phone">
+              <el-form-item label="联系电话:" prop="mobile">
                 <el-input
-                  v-model="formData.phone"
+                  v-model="formData.mobile"
                   placeholder="请输入联系电话"
-                  show-word-limit
                   clearable
                 />
               </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item label="性别:" prop="sex">
-                <el-radio-group v-model="formData.sex" size="medium">
+                <el-radio-group v-model="formData.sex">
                   <el-radio
                     v-for="(item, index) in sexOptions"
                     :key="index"
                     :label="item.value"
-                    :disabled="item.disabled"
                   >{{ item.label }}</el-radio>
                 </el-radio-group>
               </el-form-item>
@@ -79,19 +75,17 @@
                 <el-input
                   v-model="formData.email"
                   placeholder="请输入电子邮箱"
-                  show-word-limit
                   clearable
                 />
               </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item label="在职状态:" prop="status">
-                <el-radio-group v-model="formData.status" size="medium">
+                <el-radio-group v-model="formData.status">
                   <el-radio
                     v-for="(item, index) in statusOptions"
                     :key="index"
                     :label="item.value"
-                    :disabled="item.disabled"
                   >{{ item.label }}</el-radio>
                 </el-radio-group>
               </el-form-item>
@@ -108,9 +102,9 @@
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item label="入职时间:" prop="staffTime">
+              <el-form-item label="入职时间:" prop="startTime">
                 <el-date-picker
-                  v-model="formData.staffTime"
+                  v-model="formData.startTime"
                   format="yyyy-MM-dd"
                   value-format="yyyy-MM-dd"
                   :style="{ width: '180px' }"
@@ -133,7 +127,6 @@
                     :key="index"
                     :label="item.label"
                     :value="item.value"
-                    :disabled="item.disabled"
                   />
                 </el-select>
               </el-form-item>
@@ -150,7 +143,6 @@
                     :key="index"
                     :label="item.label"
                     :value="item.value"
-                    :disabled="item.disabled"
                   />
                 </el-select>
               </el-form-item>
@@ -162,7 +154,7 @@
         <el-button
           type="primary"
           size="mini"
-          @click="handelConfirm"
+          @click="handleConfirm"
         >提交</el-button>
         <el-button size="mini" @click="close">取消</el-button>
       </div>
@@ -170,6 +162,8 @@
   </div>
 </template>
 <script>
+import { saveUemUser } from '@/api/user-manege';
+
 export default {
   components: {},
   inheritAttrs: false,
@@ -184,19 +178,19 @@ export default {
     return {
       editData: {},
       formData: {
-        username: '',
+        account: '',
         name: '',
-        phone: '',
+        mobile: '',
         sex: 'man',
         email: '',
         status: 2,
         workyear: undefined,
-        staffTime: null,
+        startTime: null,
         staffType: undefined,
         projectType: undefined
       },
       rules: {
-        username: [
+        account: [
           {
             required: true,
             message: '请输入用户名',
@@ -210,7 +204,7 @@ export default {
             trigger: 'blur'
           }
         ],
-        phone: [
+        mobile: [
           {
             required: true,
             message: '请输入联系电话',
@@ -255,7 +249,7 @@ export default {
             trigger: 'blur'
           }
         ],
-        staffTime: [
+        startTime: [
           {
             required: true,
             message: '请选择入职时间',
@@ -337,10 +331,15 @@ export default {
       this.$emit('update:visible', false);
     },
     // 提交信息
-    handelConfirm() {
+    handleConfirm() {
       this.$refs['elForm'].validate(valid => {
-        if (!valid) return;
-        this.close();
+        if (valid) {
+          saveUemUser(this.formData).then(res => {
+            console.log('【 res 】-337', res);
+            // this.close();
+          });
+        }
+        // return;
       });
     }
   }

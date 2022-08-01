@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-07-25 16:05:47
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-07-25 17:02:04
+ * @LastEditTime: 2022-07-25 17:33:23
  * @Description: 系统管理-菜单管理-添加/编辑
 -->
 <template>
@@ -12,6 +12,7 @@
       :title="dialogTitle"
       width="700px"
       center
+      :close-on-click-modal="false"
       v-on="$listeners"
       @open="onOpen"
       @close="onClose"

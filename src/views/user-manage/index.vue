@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-07-25 10:36:16
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-07-25 16:59:35
+ * @LastEditTime: 2022-07-25 17:10:18
  * @Description: 系统管理-用户管理
 -->
 <template>
@@ -152,7 +152,7 @@ export default {
   },
   computed: {},
   created() {
-    // this.getTableData();
+    this.getTableData();
   },
   methods: {
     // 获取表格数据
@@ -191,11 +191,15 @@ export default {
     // 删除
     handleDelete(id) {
       console.log('【 id 】-178', id);
-      this.$confirm('您确定要删除该用户吗？删除后该用户信息不可恢复。', '删除提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      })
+      this.$confirm(
+        '您确定要删除该用户吗？删除后该用户信息不可恢复。',
+        '删除提示',
+        {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }
+      )
         .then(() => {})
         .catch(() => {});
     }
