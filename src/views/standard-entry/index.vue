@@ -27,8 +27,6 @@
       </div>
     </el-dialog>
 
-    <examine-dialog ref="examineDialog" />
-
     <!-- 表格组件 -->
     <table-component
       :data="list"
@@ -44,14 +42,14 @@
 </template>
 
 <script>
-import { queryByTechnicalTitleName, queryUemUser, queryRoleByPage, querySysDictType, querySysPost, saveStandardEntry, queryStandardEntry } from '@/api/standard-entry.js'
+import request from '@/utils/request'
+// queryUemUser,queryByTechnicalTitleName, querySysDictType, queryStandardEntry
+import { queryRoleByPage, querySysPost, saveStandardEntry } from '@/api/standard-entry.js'
 import {
   sysPostStartStop,
-  saveSysPost,
   updateSysPost,
   deleteSysPost
 } from '@/api/sys-post.js';
-import examineDialog from './component/examine-dialog';
 import tableComponent from '@/components/TableComponent';
 import filterPanel from '@/components/FilterPanel';
 import formPanel from '@/components/FormPanel';
@@ -140,7 +138,7 @@ const ordinatorColumns = [
 
 export default {
   name: 'StandardEntry',
-  components: { tableComponent, filterPanel, formPanel, examineDialog },
+  components: { tableComponent, filterPanel, formPanel },
   data() {
     return {
       // 弹窗表格的加载状态
@@ -163,7 +161,7 @@ export default {
           {
             type: 'select',
             class: 'filter-item',
-            prop: 'entryType',
+            prop: 'itemType',
             // width: "200px",
             label: '条目类型',
             placeholder: '请选择条目类型',
@@ -185,7 +183,7 @@ export default {
             mulitiple: true,
             clearable: true,
             queryMethod: this.postQueryMethod,
-            changeSelect: (value, selectedRows) => {
+            changeSelect: () => {
               //   this.listQuery.status=optionVal
             }
           },
@@ -202,7 +200,7 @@ export default {
             mulitiple: true,
             clearable: true,
             queryMethod: this.technicalQueryMethod,
-            changeSelect: (value, selectedRows) => {
+            changeSelect: () => {
               //   this.listQuery.status=optionVal
             }
           },
@@ -218,7 +216,7 @@ export default {
             mulitiple: true,
             clearable: true,
             queryMethod: this.technicalQueryMethod,
-            changeSelect: (value, selectedRows) => {
+            changeSelect: () => {
               //   this.listQuery.status=optionVal
             }
           },
@@ -274,7 +272,7 @@ export default {
             mulitiple: true,
             clearable: true,
             queryMethod: this.ordinatorQueryMethod,
-            changeSelect: (value, selectedRows) => {
+            changeSelect: () => {
               //   this.listQuery.status=optionVal
             }
           },
@@ -347,7 +345,7 @@ export default {
             optionValue: 'key',
             optionKey: 'key',
             options: statusTypeOptions,
-            changeSelect: (optionVal, item, index) => {
+            changeSelect: (optionVal) => {
               this.listQuery.status = optionVal;
             }
           }
@@ -408,29 +406,28 @@ export default {
         {
           prop: 'applyPostId',
           label: '执行岗位',
-          formatter: (row, column, cellValue) => {
+          formatter: (row) => {
             return this.getApplyPostName(row.applyPostId);
           }
         },
         {
           prop: 'actionRoleId',
           label: '执行角色',
-          width: '110',
-          formatter: (row, column, cellValue) => {
+          formatter: (row) => {
             return this.getActionRoleName(row.actionRoleId);
           }
         },
         {
           prop: 'actionTime',
           label: '执行时间',
-          formatter: (row, column, cellValue) => {
+          formatter: (row) => {
             return `入职后第<span style="color:#DA251D">${row.actionTime}</span>天`;
           }
         },
         {
           prop: 'ordinatorId',
           label: '统筹人',
-          formatter: (row, column, cellValue) => {
+          formatter: (row) => {
             return this.getOrdinatorName(row.ordinatorId);
           }
         },
@@ -521,7 +518,8 @@ export default {
       dialogStatus: '',
       textMap: {
         update: '编辑岗位',
-        create: '新增岗位'
+        create: '新增岗位',
+        examine: '条目详细信息'
       },
       dialogPvVisible: false,
       rules: {
@@ -568,7 +566,7 @@ export default {
             });
           });
         })
-        .catch((err) => {
+        .catch(() => {
           this.$message.error('初始化岗位失败');
         });
     },
@@ -587,7 +585,7 @@ export default {
             });
           });
         })
-        .catch((err) => {
+        .catch(() => {
           this.$message.error('初始化岗位失败');
         });
     },
@@ -607,7 +605,7 @@ export default {
             });
           });
         })
-        .catch((err) => {
+        .catch(() => {
           this.$message.error('初始化岗位失败');
         });
     },
@@ -664,16 +662,16 @@ export default {
       };
       this.getList();
     },
-    handleModifyStatus(row, status) {
+    handleModifyStatus(row) {
       const params = Object.assign({}, row, { status: row.status ? 0 : 1 });
       sysPostStartStop(params)
-        .then((res) => {
+        .then(() => {
           this.$message({
             message: '操作成功',
             type: 'success'
           });
         })
-        .catch((err) => {
+        .catch(() => {
           this.$message({
             message: '操作失败',
             type: 'error'
@@ -696,6 +694,7 @@ export default {
       });
     },
     handleExamine(row) {
+      this.temp = Object.assign({}, row); // copy obj
       this.dialogStatus = 'examine';
       this.formConfig.formItemList.push(
         {
@@ -728,7 +727,7 @@ export default {
           //   this.temp.author = 'vue-element-admin'
           this.dialogButtonLoading = true;
           saveStandardEntry(this.temp)
-            .then((res) => {
+            .then(() => {
               // this.list.unshift(this.temp);
               this.dialogFormVisible = false;
               this.handleResetForm();
@@ -742,7 +741,7 @@ export default {
 
               this.getList();
             })
-            .catch((err) => {
+            .catch(() => {
               this.$message({
                 title: '失败',
                 message: '创建失败',
@@ -771,7 +770,7 @@ export default {
               this.dialogFormVisible = false;
               this.getList();
             })
-            .catch((err) => {
+            .catch(() => {
               this.$message({
                 title: '失败',
                 message: '修改失败',
@@ -794,14 +793,14 @@ export default {
       )
         .then(() => {
           deleteSysPost(row.postId)
-            .then((res) => {
+            .then(() => {
               this.$message({
                 type: 'success',
                 message: '删除成功!'
               });
               this.getList();
             })
-            .catch((err) => {
+            .catch(() => {
               this.$message({
                 type: 'error',
                 message: '删除失败!'
@@ -837,9 +836,15 @@ export default {
       }
       this.$refs['formPanel'].$refs['dataForm'].clearValidate();
     },
-    getApplyPostName(ids) {},
-    getActionRoleName(ids) {},
-    getOrdinatorName(ids) {},
+    getApplyPostName(ids) {
+      return ids
+    },
+    getActionRoleName(ids) {
+      return ids
+    },
+    getOrdinatorName(ids) {
+      return ids
+    },
     postQueryMethod({ keyword, pageSize, currentPage }) {
       return request({
         url: '/sysPost/querySysPost',

@@ -117,10 +117,23 @@ export const asyncRoutes = [
     meta: { title: 'standard-entry', icon: 'user' },
     children: [
       {
-        path: 'standard_entry',
+        path: 'standard-entry',
         component: () => import('@/views/standard-entry/index'),
         name: 'StandardEntry',
         meta: { title: '规范条目管理' }
+      }]
+  },
+  // 规范细则管理
+  {
+    path: '/standard-detail',
+    component: Layout,
+    meta: { title: 'standard-detail', icon: 'user' },
+    children: [
+      {
+        path: 'standard-detail',
+        component: () => import('@/views/standard-detail/index'),
+        name: 'StandardDetail',
+        meta: { title: '规范细则管理' }
       }]
   },
   { path: '*', redirect: '/404', hidden: true }
