@@ -9,7 +9,7 @@ import service from '../utils/request';
  * @namespace ds
  */
 const ds = window.ds.noConflict();
-const {client, taskMessenger, createUploader} = ds;
+const { client, taskMessenger, createUploader } = ds;
 
 // var client = createDaoServiceClient();
 
@@ -58,12 +58,12 @@ ds.types.DaoServiceClient.prototype.execute = function(requestBody = {}) {
   return service.post(url, requestBody, {
     headers: {
       'X-Requested-With': 'XMLHttpRequest',
-      'content-type': 'application/json;charset=utf-8',
+      'content-type': 'application/json;charset=utf-8'
     }
   }).then(response => {
     if (response.debugInfo && console.log) {
       console.log(`%c数据服务请求 "${requestBody.tag}" 执行的SQL有: `,
-          'color: red; font-style: italic');
+        'color: red; font-style: italic');
       response.debugInfo.forEach(line => {
         console.log(line);
       });
@@ -79,24 +79,24 @@ ds.types.DaoServiceClient.prototype.executeCustom = function(requestBody = {}) {
   const url = getCustomApiUrl(this, requestBody);
   return service.post(url, requestBody, {
     headers: {
-      'X-Requested-With': 'XMLHttpRequest',
+      'X-Requested-With': 'XMLHttpRequest'
     }
   })
-  .then(response => {
-    if (response['debugInfo'] && console.log) {
-      response['debugInfo'].forEach(line => {
-        console.log(`%c数据服务请求 "${requestBody.tag}" 执行的SQL有: ${line}`,
+    .then(response => {
+      if (response['debugInfo'] && console.log) {
+        response['debugInfo'].forEach(line => {
+          console.log(`%c数据服务请求 "${requestBody.tag}" 执行的SQL有: ${line}`,
             'color: red; font-style: italic');
-      });
-    }
-    if (requestBody.action === 'get') {
-      if (response.data.length > 1) {
-        throw new Error('自定义查询单条记录，实际结果有多条');
+        });
       }
-      response.data = response.data[0];
-    }
-    return response;
-  });
+      if (requestBody.action === 'get') {
+        if (response.data.length > 1) {
+          throw new Error('自定义查询单条记录，实际结果有多条');
+        }
+        response.data = response.data[0];
+      }
+      return response;
+    });
 };
 
 ds.types.DaoServiceClient.prototype.promiseResolved = response => Promise.resolve(response);

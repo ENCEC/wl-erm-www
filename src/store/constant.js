@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-07-22 16:25:46
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-01 18:23:33
+ * @LastEditTime: 2022-08-02 11:08:20
  * @Description: 字典
  */
 export const TASK_TYPE = {
@@ -11,14 +11,25 @@ export const TASK_TYPE = {
   error: '错误'
 }
 
-export const TASK_STATUS = {
-  '100': '未开始',
-  '110': '进行中',
-  '130': '成功',
-  '80': '失败',
-  '90': '取消'
+// export const TASK_STATUS = {
+//   '100': '未开始',
+//   '110': '进行中',
+//   '130': '成功',
+//   '80': '失败',
+//   '90': '取消'
+// }
+// 禁用启用
+export const VALID_STATUS = {
+  '': '所有',
+  'false': '禁用',
+  'true': '启用'
 }
-
+// 任务状态
+export const TASK_STATUS = {
+  '100': '待完成',
+  '110': '执行中',
+  '130': '已完成'
+}
 export const DS_FORMAT = {
   'yyyyMMdd': 'yyyyMMdd',
   'yyyyMM': 'yyyyMM',

@@ -1,13 +1,13 @@
 <!--
  * @Author: Hongzf
- * @Date: 2022-08-01 19:02:14
+ * @Date: 2022-08-02 10:15:04
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-02 10:13:46
- * @Description: 员工管理-员工管理
+ * @LastEditTime: 2022-08-02 14:22:15
+ * @Description: 员工管理-任务分配
 -->
 
 <template>
-  <div class="app-container user-manage">
+  <div class="app-container staff-task">
     <!-- 查询组件 -->
     <filter-panel :filter-config="filterConfig" :value="filterForm" />
     <!-- 表格 Start -->
@@ -30,14 +30,6 @@
       :type="openType"
       @getTableData="getTableData"
     />
-    <!-- 转正 -->
-    <RegularDialog
-      v-if="regularDialogVisible"
-      :visible.sync="regularDialogVisible"
-      :edit-data="editData"
-      :type="openType"
-      @getTableData="getTableData"
-    />
   </div>
 </template>
 <script>
@@ -45,20 +37,18 @@ import filterPanel from '@/components/FilterPanel';
 import tableComponent from '@/components/TableComponent';
 import { filterConfig, tableConfig, columns, operates } from './config-data.js';
 import CreateDialog from './component/create-dialog';
-import RegularDialog from './component/regular-dialog';
 import {
   queryUemUser,
   uemUserStartStop,
   deleteUemUser
-} from '@/api/user-manage';
+} from '@/api/staff-task';
 import tableMix from '@/mixins/table-mixin';
 export default {
-  name: 'UserManage',
+  name: 'StaffTask',
   components: {
     filterPanel,
     tableComponent,
-    CreateDialog,
-    RegularDialog
+    CreateDialog
   },
   mixins: [tableMix],
   data() {
@@ -68,7 +58,7 @@ export default {
       filterForm: {
         account: undefined,
         name: undefined,
-        isValid: undefined
+        isValid: ''
       },
       // 表格
       records: [],
@@ -112,7 +102,7 @@ export default {
       this.openType = type
       this.editData = { uemUserId: item.uemUserId || '' };
       // 编辑/查看
-      if (type === 'detail' || type === 'edit') {
+      if (['detail', 'edit', 'add'].includes(type)) {
         this.dialogVisible = true;
       }
       // 转正
@@ -131,7 +121,7 @@ export default {
     // 删除用户信息
     handleDelete(uemUserId) {
       this.$confirm(
-        '您确定要删除该用户吗？删除后该用户信息不可恢复。',
+        '您确定要删除该任务信息吗？删除后该任务信息不可恢复。',
         '删除提示',
         {
           confirmButtonText: '确定',
@@ -149,7 +139,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.user-manage {
+.staff-task {
   // 操作栏
   .operate-wrap {
     span {

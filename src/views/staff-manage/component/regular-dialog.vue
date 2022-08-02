@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-01 18:07:40
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-01 19:00:03
+ * @LastEditTime: 2022-08-02 09:09:29
  * @Description:
 -->
 
@@ -314,7 +314,7 @@ export default {
     },
     // 在职状态 （0：试用员工 1：正式员工 2：离职员工）
     jobStatusOptions() {
-      return this.$dict.getDictOptions('JOB_STATUS').filter(item => item.value === 0 || item.value === 1)
+      return this.$dict.getDictOptions('JOB_STATUS').filter(item => item.value.toString() === '0' || item.value.toString() === '1')
     }
   },
   watch: {},
