@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:15:03
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-02 17:27:22
+ * @LastEditTime: 2022-08-02 17:55:42
  * @Description:
 -->
 
@@ -147,7 +147,7 @@
 </template>
 <script>
 import TaskTable from './task-table'
-import { getUemUser, saveUemUser, editUemUser } from '@/api/staff-manage';
+import { getUemUser, saveUemUser, editUemUser } from '@/api/user-manage';
 import { formRules } from './rules';
 
 export default {

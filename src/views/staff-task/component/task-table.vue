@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-07-26 14:43:35
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-02 14:23:43
+ * @LastEditTime: 2022-08-02 18:52:39
  * @Description:
 -->
 <template>
@@ -24,16 +24,12 @@
       <el-table-column prop="resourceSort" label="执行顺序" />
       <el-table-column prop="isValid" label="负责人" min-width="130">
         <template slot-scope="scope">
-          <!-- <el-switch
-            v-model="scope.row.isValid"
-            active-color="#0050AC"
-            @change="changeStatus(scope.row)"
-          /> -->
           <el-associate
             v-model="scope.row.creatorName"
             :columns="associateColumns"
-            value-prop="id"
-            label-prop="teacherName"
+            value-prop="uemUserId"
+            label-prop="name"
+            clearable
             :query-method="queryMethod"
           />
         </template>
@@ -53,21 +49,17 @@
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
     />
-    <!-- 新增/修改用户 -->
-    <!-- <CreateDialog v-if="dialogVisible" :visible.sync="dialogVisible" :edit-data="editData" @getTableData="getTableData" /> -->
   </div>
 </template>
 <script>
-// import CreateDialog from './component/create-dialog';
+import {
+  queryStaffByPage
+} from '@/api/staff-manage';
 import { queryResourceByPage, updateResourceStatus } from '@/api/menu-manage';
 import tableMix from '@/mixins/table-mixin';
-import ds from '@/daoService/DaoServiceClientES6Adapter';
-// const student = ds.QStudent
 export default {
   name: 'MenuManage',
-  components: {
-    // CreateDialog
-  },
+  components: {},
   mixins: [tableMix],
   // inheritAttrs: false,
   props: {
@@ -89,35 +81,53 @@ export default {
       total: 0,
       associateColumns: [
         {
-          title: '教师名称',
-          field: 'teacherName'
-        },
-        {
-          title: '教师性别',
-          field: 'sex'
+          title: '姓名',
+          field: 'name'
         }
+        // {
+        //   title: '教师性别',
+        //   field: 'sex'
+        // }
       ],
       queryMethod({
         keyword,
         pageSize,
         currentPage
+
       }) {
-        console.log('【 currentPage 】-134', currentPage)
-        const data = {
-          currentPage: currentPage,
-          pageSize: pageSize,
-          keyword: keyword
-        }
-        return new Promise((resolve, reject) => {
-          ds.QTeacher.select(ds.QTeacher.teacherName, ds.QTeacher.sex).where(ds.QTeacher.teacherName._like$_(keyword)).paging(currentPage, pageSize).execute().then(res => {
+        console.log('【  pageSize,currentPage 】-108', pageSize, currentPage)
+        return new Promise((resolve) => {
+          queryStaffByPage({
+            name: keyword,
+            pageSize,
+            currentPage
+          }).then((res) => {
+            // console.log('【 res 】-111', res)
+            const records = res.records
             resolve({
-              records: res.data.records,
-              total: res.data.totalRecord,
-              recordStart: res.data.recordStart,
-              recordEnd: res.data.recordEnd
-            })
-          })
-        })
+              records,
+              total: res.totalRecord
+            });
+          });
+        }).catch((err) => {
+          console.log(err);
+        });
+        // console.log('【 currentPage 】-134', currentPage)
+        // const data = {
+        //   currentPage: currentPage,
+        //   pageSize: pageSize,
+        //   keyword: keyword
+        // }
+        // return new Promise((resolve, reject) => {
+        //   ds.QTeacher.select(ds.QTeacher.teacherName, ds.QTeacher.sex).where(ds.QTeacher.teacherName._like$_(keyword)).paging(currentPage, pageSize).execute().then(res => {
+        //     resolve({
+        //       records: res.data.records,
+        //       total: res.data.totalRecord,
+        //       recordStart: res.data.recordStart,
+        //       recordEnd: res.data.recordEnd
+        //     })
+        //   })
+        // })
       }
     };
   },
