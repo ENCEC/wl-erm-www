@@ -95,42 +95,6 @@ export const asyncRoutes = [
         name: 'StaffManage',
         meta: { title: '员工管理' }
       }
-      // {
-      //   path: 'list',
-      //   component: () => import('@/views/demo-page/index'),
-      //   name: 'List',
-      //   meta: { title: '表格' }
-      // }
-      // {
-      //   path: 'form',
-      //   component: () => import('@/views/demo-page/create'),
-      //   name: 'Form',
-      //   meta: { title: 'demoForm' }
-      // },
-      // {
-      //   path: 'myvue',
-      //   component: () => import('@/views/myVue'),
-      //   name: 'myVue',
-      //   meta: { title: '联想控件练习' }
-      // },
-      // {
-      //   path: 'uploadFile',
-      //   component: () => import('@/views/uploadImage'),
-      //   name: 'uploadFile',
-      //   meta: { title: '图片上传示例' }
-      // },
-      // {
-      //   path: 'export',
-      //   component: () => import('@/views/export'),
-      //   name: 'export',
-      //   meta: { title: '导入导出示例' }
-      // }
-      // {
-      //   path: 'tabindex',
-      //   component: () => import('@/views/demo-page/tabindex'),
-      //   name: 'TabIndex',
-      //   meta: { title: '焦点切换' }
-      // }
     ]
   },
   // 员工管理
@@ -144,6 +108,19 @@ export const asyncRoutes = [
         component: () => import('@/views/staff-manage/index'),
         name: 'StaffManage',
         meta: { title: '员工管理' }
+      }]
+  },
+  // 规范条目管理
+  {
+    path: '/standard-entry',
+    component: Layout,
+    meta: { title: 'standard-entry', icon: 'user' },
+    children: [
+      {
+        path: 'standard_entry',
+        component: () => import('@/views/standard-entry/index'),
+        name: 'StandardEntry',
+        meta: { title: '规范条目管理' }
       }]
   },
   { path: '*', redirect: '/404', hidden: true }

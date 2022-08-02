@@ -48,7 +48,9 @@ module.exports = {
       //   }
       // },
       '/': {
-        target: 'http://172.16.7.146:8082/',
+        // target: 'http://172.16.7.146:8082/',
+        target: 'http://172.16.18.90:8082/', // 魏琪
+        // target: 'http://172.16.19.84:8082/', // 谭锦鹏
         ws: true,
         changeOrigin: true,
         pathRewrite: {
