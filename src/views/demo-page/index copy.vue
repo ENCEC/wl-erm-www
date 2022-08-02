@@ -16,7 +16,7 @@
           placeholder="选择日期"
         />
       </el-form-item>
-      <el-form-item label="教师名称2:">
+      <el-form-item label="教师名称:">
         <el-associate
           v-model="teacherName"
           :columns="columns"
@@ -32,10 +32,6 @@
         <el-button @click="handleOpen()">弹框编辑</el-button>
       </el-form-item>
     </el-form>
-    <div style="margin: 20px">
-      <button @click="runCommand('exportFile')">导出</button>
-      <button @click="runCommand('importFile')">导入</button>
-    </div>
     <el-table
       highlight-current-row
       :data="records"
@@ -74,7 +70,7 @@
     </el-table>
     <el-pagination
       style="margin: 10px"
-      :current-page.sync="form.currentPage"
+      :current-page.sync="currentPage"
       :page-size="10"
       layout="total, prev, pager, next"
       :total="total"
@@ -95,8 +91,8 @@
 <script>
 
 // import CreateDemo from './component/detail'
-import ds, { dsc } from '@/daoService/DaoServiceClientES6Adapter';
-const student = ds.QStudent
+import ds from '@/daoService/DaoServiceClientES6Adapter';
+var student = ds.QStudent
 
 export default {
   name: 'Demo',
@@ -132,7 +128,6 @@ export default {
         pageSize,
         currentPage
       }) {
-        console.log('【 currentPage 】-134', currentPage)
         const data = {
           currentPage: currentPage,
           pageSize: pageSize,
@@ -152,28 +147,8 @@ export default {
     }
   },
   computed: {},
-  created() {
-    this.query()
-  },
+  created() {},
   methods: {
-    // 导入
-    runCommand: function(sign) {
-      console.log('【 sign 】-157', sign, student)
-      // var code;
-      // code = document.getElementById(sign).value;
-      // var func = new Function(code);
-      // func();
-      // 42334
-      // 教师姓名和学生性别？
-      if (sign === 'exportFile') dsc.withModel(student).forExport(student.name, student.email, student.age, student.birthday, student.sex, student.teacherId).async(false).where(student.age.eq$('30')).tag('export_student_list').execute();// this.callable
-      if (sign === 'importFile') dsc.forImport().tag('import_student_list').execute(this.onFileUploadOk, this.onFileUploadFail);
-    },
-    onFileUploadOk: function(data) {
-      alert(JSON.stringify(data, null, 4));
-    },
-    onFileUploadFail: function(data) {
-      alert(JSON.stringify(data, null, 4));
-    },
     query() {
       student.select(student.id, student.name, student.email, student.birthday, student.age, student.teachers.sex, student.teachers.teacherName, student.teacherId, student.fileKey)
         .where(student.name._like$_(this.form.name)).paging(this.form.currentPage, this.form.pageSize).execute().then(res => {

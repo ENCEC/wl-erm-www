@@ -846,26 +846,26 @@ export default {
       return ids
     },
     postQueryMethod({ keyword, pageSize, currentPage }) {
-      return request({
-        url: '/sysPost/querySysPost',
-        method: 'post',
-        data: {
-          postName: keyword,
-          pageSize,
-          currentPage
-        }
-      });
+      // return request({
+      //   url: '/sysPost/querySysPost',
+      //   method: 'post',
+      //   data: {
+      //     postName: keyword,
+      //     pageSize,
+      //     currentPage
+      //   }
+      // });
     },
     technicalQueryMethod({ keyword, pageSize, currentPage }) {
-      return request({
-        url: '/sysTechnicalTitle/queryByTechnicalTitleName',
-        method: 'get',
-        params: {
-          technicalTitleName: keyword,
-          pageSize,
-          currentPage
-        }
-      });
+      // return request({
+      //   url: '/sysTechnicalTitle/queryByTechnicalTitleName',
+      //   method: 'get',
+      //   params: {
+      //     technicalTitleName: keyword,
+      //     pageSize,
+      //     currentPage
+      //   }
+      // });
     }
   }
 };

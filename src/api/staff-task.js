@@ -1,24 +1,24 @@
 /*
  * @Author: Hongzf
- * @Date: 2022-08-01 19:02:14
+ * @Date: 2022-08-02 10:19:50
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-02 17:10:46
- * @Description:
+ * @LastEditTime: 2022-08-02 10:20:20
+ * @Description: 员工管理-任务分配
  */
 
 import request from '@/utils/request';
 // 列表
-export function queryStaffByPage(data) {
+export function queryUemUser(data) {
   return request({
-    url: '/uemUserManage/queryStaffByPage',
+    url: '/uemUserManage/queryUemUser',
     method: 'post',
     data
   });
 }
-// 根据id获取详情信息
-export function queryStaffById(query) {
+// 获取信息
+export function getUemUser(query) {
   return request({
-    url: '/uemUserManage/queryStaffById',
+    url: '/uemUserManage/getUemUser',
     method: 'get',
     params: query
   });

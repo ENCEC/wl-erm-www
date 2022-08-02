@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-01 13:52:08
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-01 18:12:53
+ * @LastEditTime: 2022-08-02 17:43:40
  * @Description:
  */
 
@@ -27,76 +27,49 @@ export const filterConfig = _this => {
       {
         type: 'select',
         label: '入职部门',
-        prop: 'isValid',
+        prop: 'uemDeptId',
         width: '200px',
         clearable: true,
         placeholder: '请选择入职部门',
         col: 8,
-        optionLabel: 'label',
-        optionValue: 'value',
-        optionKey: 'value',
-        options: [
-          {
-            value: true,
-            label: '启用'
-          },
-          {
-            value: false,
-            label: '禁用'
-          }
-        ]
+        optionLabel: 'deptName',
+        optionValue: 'uemDeptId',
+        optionKey: 'uemDeptId',
+        options: []
       },
       // 入职岗位
       {
         type: 'select',
         label: '入职岗位',
-        prop: 'isValid',
+        prop: 'staffDutyCode',
         width: '200px',
         clearable: true,
         placeholder: '请选择入职岗位',
         col: 8,
-        optionLabel: 'label',
-        optionValue: 'value',
-        optionKey: 'value',
-        options: [
-          {
-            value: true,
-            label: '启用'
-          },
-          {
-            value: false,
-            label: '禁用'
-          }
-        ]
+        optionLabel: 'staffDuty',
+        optionValue: 'staffDutyCode',
+        optionKey: 'staffDutyCode',
+        options: []
       },
       // 岗位职称
       {
         type: 'select',
         label: '岗位职称',
-        prop: 'isValid',
+        prop: 'technicalTitleId',
         width: '200px',
         clearable: true,
         placeholder: '请选择岗位职称',
         col: 8,
-        optionLabel: 'label',
-        optionValue: 'value',
-        optionKey: 'value',
-        options: [
-          {
-            value: true,
-            label: '启用'
-          },
-          {
-            value: false,
-            label: '禁用'
-          }
-        ]
+        optionLabel: 'technicalName',
+        optionValue: 'technicalTitleId',
+        optionKey: 'technicalTitleId',
+        options: []
       },
       // 在职状态
       {
         type: 'select',
         label: '在职状态',
-        prop: 'isValid',
+        prop: 'jobStatus',
         width: '200px',
         clearable: true,
         placeholder: '请选择在职状态',
@@ -104,33 +77,12 @@ export const filterConfig = _this => {
         optionLabel: 'label',
         optionValue: 'value',
         optionKey: 'value',
-        options: [
-          {
-            value: '',
-            label: '所有'
-          },
-          {
-            value: true,
-            label: '试用员工'
-          },
-          {
-            value: false,
-            label: '正式员工'
-          }
-        ]
-      }
+        options: [{ value: '', label: '全部' }, ..._this.$dict.getDictOptions('JOB_STATUS').filter(item => item.value.toString() === '0' || item.value.toString() === '1')],
+        changeSelect: (optionVal) => {
+          _this.filterForm.jobStatus = optionVal
+        } }
     ],
     operates: [
-      // {
-      //   type: 'primary',
-      //   buttonLabel: '新增用户',
-      //   btnType: 'primary',
-      //   //   icon: 'el-icon-search',
-      //   method: (item, index) => {
-      //     console.log('【 item, index 】-88', item, index);
-      //     _this.handleOpen();
-      //   }
-      // },
       {
         type: 'primary',
         buttonLabel: '查询',
@@ -169,7 +121,6 @@ export const columns = _this => {
     {
       prop: 'name',
       label: '姓名'
-
     },
     {
       prop: 'sex',
@@ -184,20 +135,20 @@ export const columns = _this => {
       label: '联系电话'
     },
     {
-      prop: 'email',
+      prop: 'deptName',
       label: '入职部门'
     },
     {
-      prop: 'email',
+      prop: 'staffDuty',
       label: '入职岗位'
     },
     {
-      prop: 'email',
+      prop: 'technicalName',
       label: '岗位职称'
     },
     {
-      prop: 'isValid',
-      label: '员工状态',
+      prop: 'jobStatus',
+      label: '在职状态',
       width: '100',
       component: 'switch',
       method: (row, status) => {
