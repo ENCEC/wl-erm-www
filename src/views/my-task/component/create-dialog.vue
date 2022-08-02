@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:15:03
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-02 17:27:22
+ * @LastEditTime: 2022-08-02 14:18:50
  * @Description:
 -->
 
@@ -15,7 +15,6 @@
       center
       :close-on-click-modal="false"
       top="10vh"
-      destroy-on-close
       v-on="$listeners"
     >
       <el-form
@@ -25,6 +24,7 @@
         size="mini"
         label-width="100px"
         :inline="true"
+        destroy-on-close
         :disabled="type === 'detail'"
       >
         <div class="form-wrap">

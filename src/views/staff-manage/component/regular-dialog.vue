@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-01 18:07:40
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-02 09:09:29
+ * @LastEditTime: 2022-08-02 17:34:19
  * @Description:
 -->
 
@@ -77,18 +77,18 @@
           </el-row>
           <el-row>
             <el-col :span="12">
-              <el-form-item label="入职部门:" prop="deptCode">
+              <el-form-item label="入职部门:" prop="uemDeptId">
                 <el-select
-                  v-model="formData.deptCode"
+                  v-model="formData.uemDeptId"
                   placeholder="请选择入职部门"
                   clearable
                   class="input-width"
                 >
                   <el-option
-                    v-for="(item, index) in projectTypeOptions"
-                    :key="index"
-                    :label="item.label"
-                    :value="item.value"
+                    v-for="(item) in deptOptions"
+                    :key="'uemDeptId'+item.uemDeptId"
+                    :label="item.deptName"
+                    :value="item.uemDeptId"
                   />
                 </el-select>
               </el-form-item>
@@ -102,10 +102,10 @@
                   class="input-width"
                 >
                   <el-option
-                    v-for="(item, index) in staffTypeOptions"
-                    :key="index"
-                    :label="item.label"
-                    :value="item.value"
+                    v-for="(item,index) in staffDutyOptions"
+                    :key="'staffDutyCode'+index+item.staffDutyCode"
+                    :label="item.staffDuty"
+                    :value="item.staffDutyCode"
                   />
                 </el-select>
               </el-form-item>
@@ -239,6 +239,7 @@
 <script>
 import { getUemUser, saveUemUser, editUemUser } from '@/api/staff-manage';
 import { formRules } from './rules';
+import { queryStaffDutyBySelect, queryDepartmentBySelect } from '@/api/select';
 
 export default {
   components: {},
@@ -270,7 +271,7 @@ export default {
         graduateSchool: '', //
         speciality: '', // 在校专业
         entryDate: '', // 入职时间
-        deptCode: '', // 入职部门
+        uemDeptId: '', // 入职部门
         staffDutyCode: '', // 入职岗位
         technicalName: '', // 岗位职称
         email: '',
@@ -281,28 +282,8 @@ export default {
       typeOptions: this.$dict.getDictOptions('TYPE'),
       maritalStatusOptions: this.$dict.getDictOptions('MARITAL_STATUS'),
       educationOptions: this.$dict.getDictOptions('EDUCATION'),
-      // TODO
-      staffTypeOptions: [
-        {
-          label: '选项一',
-          value: '1'
-        },
-        {
-          label: '选项二',
-          value: '2'
-        }
-      ],
-      // TODO
-      projectTypeOptions: [
-        {
-          label: '选项一',
-          value: 1
-        },
-        {
-          label: '选项二',
-          value: 2
-        }
-      ]
+      staffDutyOptions: [],
+      deptOptions: []
     };
   },
   computed: {
@@ -319,13 +300,18 @@ export default {
   },
   watch: {},
   created() {
-    // console.log('【 this.$dict 】-431', this.$dict.getDictOptions('44'))
+    this.getSelectOptions()
   },
   mounted() {
     // console.log('【 this.$dict 】-431', this.$store.getters.language, this.$dict)
     // this.$refs['elForm'].clearValidate();
   },
   methods: {
+    // 获取下拉信息
+    async getSelectOptions() {
+      this.staffDutyOptions = await queryStaffDutyBySelect()
+      this.deptOptions = await queryDepartmentBySelect()
+    },
     // 关闭弹框
     close() {
       this.$emit('update:visible', false);

@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-07-22 16:25:46
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-02 11:08:20
+ * @LastEditTime: 2022-08-02 17:10:24
  * @Description: 字典
  */
 export const TASK_TYPE = {
@@ -43,7 +43,6 @@ export const SEX = {
   '1': '女'
 }
 // 转正类型
-// 性别
 export const TYPE = {
   '0': '正常转正',
   '1': '提前转正'

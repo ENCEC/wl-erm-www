@@ -140,6 +140,12 @@ export const asyncRoutes = [
     meta: { title: '员工管理', icon: 'user' },
     children: [
       {
+        path: 'my-task',
+        component: () => import('@/views/my-task/index'),
+        name: '我的任务',
+        meta: { title: '我的任务' }
+      },
+      {
         path: 'staff-task',
         component: () => import('@/views/staff-task/index'),
         name: 'StaffTask',

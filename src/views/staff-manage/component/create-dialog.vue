@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-01 13:52:08
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-02 09:10:14
+ * @LastEditTime: 2022-08-02 17:28:08
  * @Description:
 -->
 
@@ -15,6 +15,7 @@
       center
       :close-on-click-modal="false"
       top="10vh"
+      destroy-on-close
       v-on="$listeners"
     >
       <el-form
@@ -24,7 +25,7 @@
         size="mini"
         label-width="100px"
         :inline="true"
-        destroy-on-close
+        :disabled="type === 'detail'"
       >
         <div class="form-wrap">
           <el-row>
@@ -143,10 +144,10 @@
                   class="input-width"
                 >
                   <el-option
-                    v-for="(item, index) in projectTypeOptions"
-                    :key="index"
-                    :label="item.label"
-                    :value="item.value"
+                    v-for="(item,index) in projectTypeOptions"
+                    :key="'projectId2'+index+item.projectId"
+                    :label="item.projectName"
+                    :value="item.projectId"
                   />
                 </el-select>
               </el-form-item>
@@ -215,18 +216,18 @@
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item label="入职部门:" prop="deptCode">
+              <el-form-item label="入职部门:" prop="uemDeptId">
                 <el-select
-                  v-model="formData.deptCode"
+                  v-model="formData.uemDeptId"
                   placeholder="请选择入职部门"
                   clearable
                   class="input-width"
                 >
                   <el-option
-                    v-for="(item, index) in projectTypeOptions"
-                    :key="index"
-                    :label="item.label"
-                    :value="item.value"
+                    v-for="(item) in deptOptions"
+                    :key="'uemDeptId'+item.uemDeptId"
+                    :label="item.deptName"
+                    :value="item.uemDeptId"
                   />
                 </el-select>
               </el-form-item>
@@ -242,27 +243,27 @@
                   class="input-width"
                 >
                   <el-option
-                    v-for="(item, index) in staffTypeOptions"
-                    :key="index"
-                    :label="item.label"
-                    :value="item.value"
+                    v-for="(item,index) in staffDutyOptions"
+                    :key="'staffDutyCode'+index+item.staffDutyCode"
+                    :label="item.staffDuty"
+                    :value="item.staffDutyCode"
                   />
                 </el-select>
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item label="岗位职称:" prop="technicalName">
+              <el-form-item label="岗位职称:" prop="technicalTitleId">
                 <el-select
-                  v-model="formData.technicalName"
+                  v-model="formData.technicalTitleId"
                   placeholder="请选择岗位职称"
                   clearable
                   class="input-width"
                 >
                   <el-option
-                    v-for="(item, index) in staffTypeOptions"
-                    :key="index"
-                    :label="item.label"
-                    :value="item.value"
+                    v-for="(item) in technicalOptions"
+                    :key="'technicalTitleId'+item.technicalTitleId"
+                    :label="item.technicalName"
+                    :value="item.technicalTitleId"
                   />
                 </el-select>
               </el-form-item>
@@ -290,7 +291,7 @@
           </el-row>
           <el-row>
             <el-col :span="12">
-              <!-- 联想控件 -->
+              <!-- TODO 联想控件 -->
               <el-form-item label="归属项目:" prop="projectId">
                 <el-select
                   v-model="formData.projectId"
@@ -299,17 +300,47 @@
                   class="input-width"
                 >
                   <el-option
-                    v-for="(item, index) in projectTypeOptions"
-                    :key="index"
-                    :label="item.label"
-                    :value="item.value"
+                    v-for="(item,index) in projectTypeOptions"
+                    :key="'projectId'+index+item.projectId"
+                    :label="item.projectName"
+                    :value="item.projectId"
                   />
                 </el-select>
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item label="个人简历:" prop="projectId">
+              <el-form-item label="个人简历:">
                 <el-button type="text">个人简历</el-button>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="12">
+              <el-form-item
+                v-if="type === 'detail'"
+                label="创建时间:"
+              >
+                <el-input
+                  v-model="formData.createTime"
+                  placeholder="请输入创建时间"
+                  clearable
+                  class="input-width"
+                  disabled
+                />
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item
+                v-if="type === 'detail'"
+                label="创建人:"
+              >
+                <el-input
+                  v-model="formData.creatorName"
+                  placeholder="请输入创建人"
+                  clearable
+                  class="input-width"
+                  disabled
+                />
               </el-form-item>
             </el-col>
           </el-row>
@@ -317,6 +348,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button
+          v-if="type !== 'detail'"
           type="primary"
           size="mini"
           @click="handleConfirm"
@@ -326,13 +358,14 @@
           :plain="true"
           size="mini"
           @click="close"
-        >取消</el-button>
+        >{{ type === 'detail'?'关闭':'取消' }}</el-button>
       </div>
     </el-dialog>
   </div>
 </template>
 <script>
-import { getUemUser, saveUemUser, editUemUser } from '@/api/staff-manage';
+import { queryStaffById, editUemUser } from '@/api/staff-manage';
+import { queryTechnicalNameBySelect, queryStaffDutyBySelect, queryProjectNameBySelect, queryDepartmentBySelect } from '@/api/select';
 import { formRules } from './rules';
 
 export default {
@@ -343,6 +376,11 @@ export default {
     editData: {
       type: Object,
       default: () => {}
+    },
+    // 弹窗类型
+    type: {
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -365,9 +403,9 @@ export default {
         graduateSchool: '', //
         speciality: '', // 在校专业
         entryDate: '', // 入职时间
-        deptCode: '', // 入职部门
+        uemDeptId: '', // 入职部门
         staffDutyCode: '', // 入职岗位
-        technicalName: '', // 岗位职称
+        technicalTitleId: '', // 岗位职称
         email: '',
         seniority: '', // 工作年限
         projectId: ''// 归属项目
@@ -375,36 +413,17 @@ export default {
       sexOptions: this.$dict.getDictOptions('SEX'),
       maritalStatusOptions: this.$dict.getDictOptions('MARITAL_STATUS'),
       educationOptions: this.$dict.getDictOptions('EDUCATION'),
-      // TODO
-      staffTypeOptions: [
-        {
-          label: '选项一',
-          value: '1'
-        },
-        {
-          label: '选项二',
-          value: '2'
-        }
-      ],
-      // TODO
-      projectTypeOptions: [
-        {
-          label: '选项一',
-          value: 1
-        },
-        {
-          label: '选项二',
-          value: 2
-        }
-      ]
+      technicalOptions: [], // 岗位职称
+      staffDutyOptions: [],
+      projectTypeOptions: [],
+      deptOptions: []
     };
   },
   computed: {
     // 弹框标题
     dialogTitle() {
       this.editData.uemUserId && this.getDetailInfo();
-      // console.log('【 this.editData 】-246', this.editData);
-      return this.editData.uemUserId ? '编辑员工信息' : '新增用户';
+      return this.type === 'detail' ? '员工详细信息' : '编辑员工信息';
     },
     // 在职状态 （0：试用员工 1：正式员工 2：离职员工）
     jobStatusOptions() {
@@ -413,10 +432,9 @@ export default {
   },
   watch: {},
   created() {
-    // console.log('【 this.$dict 】-431', this.$dict.getDictOptions('44'))
+    this.getSelectOptions()
   },
   mounted() {
-    // console.log('【 this.$dict 】-431', this.$store.getters.language, this.$dict)
     // this.$refs['elForm'].clearValidate();
   },
   methods: {
@@ -427,22 +445,34 @@ export default {
     },
     // 获取用户信息
     getDetailInfo() {
-      getUemUser({
+      queryStaffById({
         uemUserId: this.editData.uemUserId
       }).then(res => {
         this.formData = {
           ...this.formData,
-          ...res.data,
-          sex: res.data.sex ? 0 : 1
+          ...res,
+          jobStatus: res.jobStatus || '',
+          entryDate: res.entryDate || '',
+          uemDeptId: res.uemDeptId || '',
+          staffDutyCode: res.staffDutyCode || '',
+          technicalTitleId: res.technicalTitleId || '',
+          projectId: res.projectId || '',
+          sex: res.sex ? '0' : '1'
         };
       });
+    },
+    // 获取下拉信息
+    async getSelectOptions() {
+      this.technicalOptions = await queryTechnicalNameBySelect()
+      this.staffDutyOptions = await queryStaffDutyBySelect()
+      this.projectTypeOptions = await queryProjectNameBySelect()
+      this.deptOptions = await queryDepartmentBySelect()
     },
     // 提交表单信息
     handleConfirm() {
       this.$refs['elForm'].validate(valid => {
         if (valid) {
-          const funcName = this.editData.uemUserId ? editUemUser : saveUemUser;
-          funcName(this.formData).then(res => {
+          editUemUser(this.formData).then(res => {
             this.$message.success(res.data);
             this.$emit('getTableData', '');
             this.close();

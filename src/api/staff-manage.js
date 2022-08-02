@@ -1,23 +1,24 @@
 /*
  * @Author: Hongzf
- * @Date: 2022-07-25 13:53:17
+ * @Date: 2022-08-01 19:02:14
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-01 14:27:02
- * @Description: 系统管理-员工管理
+ * @LastEditTime: 2022-08-02 17:10:46
+ * @Description:
  */
+
 import request from '@/utils/request';
 // 列表
-export function queryUemUser(data) {
+export function queryStaffByPage(data) {
   return request({
-    url: '/uemUserManage/queryUemUser',
+    url: '/uemUserManage/queryStaffByPage',
     method: 'post',
     data
   });
 }
-// 获取信息
-export function getUemUser(query) {
+// 根据id获取详情信息
+export function queryStaffById(query) {
   return request({
-    url: '/uemUserManage/getUemUser',
+    url: '/uemUserManage/queryStaffById',
     method: 'get',
     params: query
   });

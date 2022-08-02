@@ -1,23 +1,23 @@
 /*
  * @Author: Hongzf
- * @Date: 2022-08-01 13:52:08
+ * @Date: 2022-08-02 10:15:04
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-02 17:21:24
+ * @LastEditTime: 2022-08-02 10:20:52
  * @Description:
  */
 
 export const formRules = {
+  account: [
+    {
+      required: true,
+      message: '请输入用户名',
+      trigger: 'blur'
+    }
+  ],
   name: [
     {
       required: true,
       message: '请输入姓名',
-      trigger: 'blur'
-    }
-  ],
-  idCard: [
-    {
-      pattern: /(^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$)|(^[1-9]\d{5}\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{2}$)/,
-      message: '身份证号格式错误',
       trigger: 'blur'
     }
   ],
@@ -73,24 +73,10 @@ export const formRules = {
       trigger: 'change'
     }
   ],
-  uemDeptId: [
-    {
-      required: true,
-      message: '请选择入职部门',
-      trigger: 'change'
-    }
-  ],
   staffDutyCode: [
     {
       required: true,
       message: '请选择入职岗位',
-      trigger: 'change'
-    }
-  ],
-  technicalTitleId: [
-    {
-      required: true,
-      message: '请选择岗位职称',
       trigger: 'change'
     }
   ],
