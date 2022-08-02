@@ -9,6 +9,7 @@ import * as ElementUi from 'ec-light-vue'
 import './styles/element-variables.scss'
 
 import '@/styles/index.scss' // global css
+import '@/styles/common.scss' // global css
 
 import App from './App'
 import store from './store'

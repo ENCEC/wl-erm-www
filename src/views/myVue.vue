@@ -1,16 +1,16 @@
 <template>
-<div id="root">
-  <el-associate
-    v-model="selected"
-    :columns="columns"
-    clearable
-    valueProp="id"
-    labelProp="name"
-    :queryMethod="queryMethod"
-    :focusOnClear="false"
-    :multiple="true"
-  ></el-associate>
-</div>
+  <div id="root">
+    <el-associate
+      v-model="selected"
+      :columns="columns"
+      clearable
+      value-prop="id"
+      label-prop="name"
+      :query-method="queryMethod"
+      :focus-on-clear="false"
+      :multiple="true"
+    />
+  </div>
 </template>
 
 <script>
@@ -23,12 +23,12 @@ ds.client.config({
   serviceCode: 'QS',
   excelImportConfig: {
     filter: 'csv,xls,xlsx', // 文件类型过滤器
-    maxsize: 10, // 文件上传大小限制，单位：M
-  },
+    maxsize: 10 // 文件上传大小限制，单位：M
+  }
 });
 
 export default {
-  name: "myVue",
+  name: 'MyVue',
   data() {
     return {
       selected: [],
@@ -39,9 +39,9 @@ export default {
     }
   },
   methods: {
-    async queryMethod({keyword, pageSize, currentPage}) {
-      let student = ds.QStudent
-      let {success, data} = await student
+    async queryMethod({ keyword, pageSize, currentPage }) {
+      const student = ds.QStudent
+      const { success, data } = await student
         .select(student.id, student.name, student.email)
         .where(student.name._like$_(keyword).or(student.email._like$_(keyword)))
         .paging(currentPage, pageSize)
