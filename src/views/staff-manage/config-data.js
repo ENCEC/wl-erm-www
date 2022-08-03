@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-01 13:52:08
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-03 10:32:21
+ * @LastEditTime: 2022-08-03 15:38:32
  * @Description:
  */
 
@@ -168,8 +168,9 @@ export const operates = _this => {
         type: 'text',
         show: true,
         disabled: false,
-        method: (index, row) => {
-          console.log('【 index 】-163', index)
+        method: (row, index) => {
+          console.log('【 row 】-172', row)
+          // console.log('【 index 】-163', index)
           _this.handleOpen(row, 'edit');
         }
       },

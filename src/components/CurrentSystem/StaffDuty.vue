@@ -2,17 +2,19 @@
  * @Author: Hongzf
  * @Date: 2022-08-03 09:55:18
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-03 10:19:22
+ * @LastEditTime: 2022-08-03 16:13:56
  * @Description: 入职岗位-下拉
 -->
 
 <template>
   <el-select
     v-model="selectVal"
+    v-bind="$attrs"
     filterable
     placeholder="请选择入职岗位"
     clearable
     :disabled="disabled"
+    v-on="$listeners"
     @change="handleChange"
   >
     <el-option

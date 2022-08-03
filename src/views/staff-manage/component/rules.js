@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-01 13:52:08
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-02 17:21:24
+ * @LastEditTime: 2022-08-03 16:29:02
  * @Description:
  */
 
@@ -99,6 +99,25 @@ export const formRules = {
       required: true,
       message: '请选择归属项目',
       trigger: 'change'
+    }
+  ],
+  offerType: [{
+    required: true,
+    message: '请选择转正类型',
+    trigger: 'change'
+  }],
+  faceRemark: [
+    {
+      required: true,
+      message: '请输入面谈评语',
+      trigger: 'blur'
+    }
+  ],
+  offerRemark: [
+    {
+      required: true,
+      message: '请输入转正评语',
+      trigger: 'blur'
     }
   ]
 };

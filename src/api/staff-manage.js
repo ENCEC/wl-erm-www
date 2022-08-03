@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-01 19:02:14
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-02 17:10:46
+ * @LastEditTime: 2022-08-03 15:28:39
  * @Description:
  */
 
@@ -23,7 +23,7 @@ export function queryStaffById(query) {
     params: query
   });
 }
-// 管理员新增用户
+// 新增
 export function saveUemUser(data) {
   return request({
     url: '/uemUserManage/saveUemUser',
@@ -32,9 +32,9 @@ export function saveUemUser(data) {
   });
 }
 // 修改用户信息
-export function editUemUser(data) {
+export function updateStaff(data) {
   return request({
-    url: '/uemUserManage/editUemUser',
+    url: '/uemUserManage/updateStaff',
     method: 'post',
     data
   });

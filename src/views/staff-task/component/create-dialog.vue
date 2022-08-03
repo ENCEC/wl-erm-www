@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:15:03
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-03 15:00:24
+ * @LastEditTime: 2022-08-03 18:33:21
  * @Description:
 -->
 
@@ -66,10 +66,10 @@
                   class="input-width"
                 >
                   <el-option
-                    v-for="(item, index) in taskTypeOptions"
-                    :key="index"
+                    v-for="(item) in taskTypeOptions"
+                    :key="item.value"
                     :label="item.label"
-                    :value="item.value"
+                    :value="item.label"
                   />
                 </el-select>
               </el-form-item>
@@ -79,7 +79,7 @@
             <el-col :span="24">
               <el-form-item label="员工任务:" prop="taskList">
                 <div class="table-wrap">
-                  <TaskTable ref="tableForm" :selected-list.sync="selectedData" :type="type" :records="records" @getSelectedData="getSelectedData" />
+                  <TaskTable ref="tableForm" :selected-list.sync="selectedData" :type="type" :records="records" :task-type="formData.taskType" @getSelectedData="getSelectedData" />
                 </div>
               </el-form-item>
             </el-col>
@@ -165,17 +165,7 @@ export default {
         taskType: '', //
         taskDetailInfoDtoList: []// 列表勾选值
       },
-      // TODO
-      taskTypeOptions: [
-        {
-          label: '选项一',
-          value: '1'
-        },
-        {
-          label: '选项二',
-          value: '2'
-        }
-      ]
+      taskTypeOptions: this.$dict.getDictOptions('TASK_TYPE')
     };
   },
   computed: {
@@ -220,7 +210,8 @@ export default {
           ...result,
           status: result.status.toString()
         };
-        this.records = result.records
+        this.records = result.taskDetailInfoDtoList
+        console.log('【 this.records 】-224', this.records)
       });
     },
     // 提交表单信息

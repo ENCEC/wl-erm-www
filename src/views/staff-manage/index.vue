@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-01 19:02:14
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-03 15:14:46
+ * @LastEditTime: 2022-08-03 15:21:03
  * @Description: 员工管理-员工管理
 -->
 
@@ -74,7 +74,9 @@ export default {
         jobStatus: ''
       },
       // 表格
-      records: [],
+      records: [{
+        uemUserId: '1'
+      }],
       listLoading: false,
       tableConfig,
       columns: columns(this),
@@ -105,7 +107,7 @@ export default {
     },
     // 获取表格数据
     getTableData() {
-      this.listLoading = true;
+      // this.listLoading = true;
       queryStaffByPage({
         pageNo: this.params.currentPage,
         pageSize: this.params.pageSize,
@@ -144,7 +146,7 @@ export default {
     // 删除用户信息
     handleDelete(uemUserId) {
       this.$confirm(
-        '您确定要删除该用户吗？删除后该用户信息不可恢复。',
+        '您确定要删除该员工信息吗？删除后该员工信息不可恢复。',
         '删除提示',
         {
           confirmButtonText: '确定',

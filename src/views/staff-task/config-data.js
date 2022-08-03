@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:15:04
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-03 15:12:23
+ * @LastEditTime: 2022-08-03 18:27:21
  * @Description:
  */
 
@@ -32,7 +32,6 @@ export const filterConfig = _this => {
         placeholder: '请输入分配对象',
         col: 8
       },
-      // 入职部门
       {
         type: 'select',
         label: '任务类型',
@@ -44,9 +43,8 @@ export const filterConfig = _this => {
         optionLabel: 'label',
         optionValue: 'value',
         optionKey: 'value',
-        options: _this.$dict.getDictOptions('VALID_STATUS')
+        options: _this.$dict.getDictOptions('TASK_TYPE')
       },
-      // 入职岗位
       {
         type: 'select',
         label: '任务状态',
@@ -118,33 +116,45 @@ export const columns = _this => {
     {
       prop: 'executor',
       label: '执行人'
-      // formatter: (row, column) => {
-      //   return row.sex ? '男' : '女'
-      //   // TODO
-      // }
+
     },
     {
       prop: 'taskType',
-      label: '任务类型'
+      label: '任务类型',
+      formatter: (row, column) => {
+        return _this.$dict.getDictNameByCode('TASK_TYPE', row.taskType)
+      }
     },
     {
       prop: 'status',
-      label: '任务状态'
+      label: '任务状态',
+      formatter: (row, column) => {
+        return _this.$dict.getDictNameByCode('TASK_STATUS', row.status)
+      }
     },
     // TODO
     {
       prop: 'planEndDate',
-      label: '完成时间'
+      label: '完成时间',
+      formatter: (row, column) => {
+        const val = row.planEndDate
+        const date = val ? _this.$moment(parseInt(val)).format('YYYY-MM-DD') : '';
+        return date
+      }
     },
     {
       prop: 'dispatchers',
       label: '分配人'
     },
     // TODO
-
     {
       prop: 'publishDate',
-      label: '创建时间'
+      label: '创建时间',
+      formatter: (row, column) => {
+        const val = row.publishDate
+        const date = val ? _this.$moment(parseInt(val)).format('YYYY-MM-DD') : '';
+        return date
+      }
     }
     // {
     //   prop: 'isValid',

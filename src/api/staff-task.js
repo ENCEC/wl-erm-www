@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:19:50
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-03 15:05:16
+ * @LastEditTime: 2022-08-03 15:45:44
  * @Description: 员工管理-任务分配
  */
 
@@ -11,6 +11,14 @@ import request from '@/utils/request';
 export function queryTaskInfoPage(data) {
   return request({
     url: '/taskInfo/queryTaskInfoPage',
+    method: 'post',
+    data
+  });
+}
+// 弹框-列表
+export function queryStandardFullDetailByTaskType(data) {
+  return request({
+    url: '/taskInfo/queryStandardFullDetailByTaskType',
     method: 'post',
     data
   });

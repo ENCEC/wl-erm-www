@@ -2,19 +2,21 @@
  * @Author: Hongzf
  * @Date: 2022-08-03 10:20:28
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-03 14:42:28
+ * @LastEditTime: 2022-08-03 16:13:44
  * @Description:联想控件-用户
 -->
 
 <template>
   <el-associate
     v-model="selectVal"
+    v-bind="$attrs"
     :columns="associateColumns"
     value-prop="uemUserId"
     label-prop="name"
     clearable
     :query-method="queryMethod"
     :disabled="disabled"
+    v-on="$listeners"
     @change="handleChange"
   />
   <!-- <el-select

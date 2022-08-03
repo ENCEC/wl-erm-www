@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-01 13:52:08
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-02 17:28:08
+ * @LastEditTime: 2022-08-03 15:37:20
  * @Description:
 -->
 
@@ -209,6 +209,7 @@
                 <el-date-picker
                   v-model="formData.entryDate"
                   format="yyyy-MM-dd"
+                  value-format="yyyy-MM-dd"
                   class="input-width"
                   placeholder="请选择入职时间"
                   clearable
@@ -236,19 +237,7 @@
           <el-row>
             <el-col :span="12">
               <el-form-item label="入职岗位:" prop="staffDutyCode">
-                <el-select
-                  v-model="formData.staffDutyCode"
-                  placeholder="请选择入职岗位"
-                  clearable
-                  class="input-width"
-                >
-                  <el-option
-                    v-for="(item,index) in staffDutyOptions"
-                    :key="'staffDutyCode'+index+item.staffDutyCode"
-                    :label="item.staffDuty"
-                    :value="item.staffDutyCode"
-                  />
-                </el-select>
+                <StaffDuty v-model="formData.staffDutyCode" class="input-width" />
               </el-form-item>
             </el-col>
             <el-col :span="12">
@@ -364,12 +353,12 @@
   </div>
 </template>
 <script>
-import { queryStaffById, editUemUser } from '@/api/staff-manage';
-import { queryTechnicalNameBySelect, queryStaffDutyBySelect, queryProjectNameBySelect, queryDepartmentBySelect } from '@/api/select';
+import { queryStaffById, updateStaff } from '@/api/staff-manage';
+import { queryTechnicalNameBySelect, queryProjectNameBySelect, queryDepartmentBySelect } from '@/api/select';
 import { formRules } from './rules';
-
+import StaffDuty from '@/components/CurrentSystem/StaffDuty.vue'
 export default {
-  components: {},
+  components: { StaffDuty },
   // inheritAttrs: false,
   props: {
     // 编辑信息
@@ -388,12 +377,12 @@ export default {
       rules: formRules, // 验证规则
       formData: {
         account: '',
-        name: '',
-        sex: '',
+        name: '123',
+        sex: 0,
         birthday: '',
-        jobStatus: '', // 在职状态（0：试用员工 1：正式员工 2：离职员工）
+        jobStatus: '0', // 在职状态（0：试用员工 1：正式员工 2：离职员工）
         idCard: '',
-        mobile: '',
+        mobile: '13960081319',
         address: '', // 现住址
         sourceAddress: '', // 户籍地址
         maritalStatus: '', // 婚姻状况（0：未婚 1：已婚 2：离婚）
@@ -402,19 +391,18 @@ export default {
         graduateDate: '', // 毕业时间
         graduateSchool: '', //
         speciality: '', // 在校专业
-        entryDate: '', // 入职时间
-        uemDeptId: '', // 入职部门
-        staffDutyCode: '', // 入职岗位
-        technicalTitleId: '', // 岗位职称
+        entryDate: '2022-08-17', // 入职时间
+        uemDeptId: '1', // 入职部门
+        staffDutyCode: 'DEV', // 入职岗位
+        technicalTitleId: '1', // 岗位职称
         email: '',
-        seniority: '', // 工作年限
-        projectId: ''// 归属项目
+        seniority: '1', // 工作年限
+        projectId: '1'// 归属项目
       },
       sexOptions: this.$dict.getDictOptions('SEX'),
       maritalStatusOptions: this.$dict.getDictOptions('MARITAL_STATUS'),
       educationOptions: this.$dict.getDictOptions('EDUCATION'),
       technicalOptions: [], // 岗位职称
-      staffDutyOptions: [],
       projectTypeOptions: [],
       deptOptions: []
     };
@@ -464,7 +452,6 @@ export default {
     // 获取下拉信息
     async getSelectOptions() {
       this.technicalOptions = await queryTechnicalNameBySelect()
-      this.staffDutyOptions = await queryStaffDutyBySelect()
       this.projectTypeOptions = await queryProjectNameBySelect()
       this.deptOptions = await queryDepartmentBySelect()
     },
@@ -472,7 +459,7 @@ export default {
     handleConfirm() {
       this.$refs['elForm'].validate(valid => {
         if (valid) {
-          editUemUser(this.formData).then(res => {
+          updateStaff({ uemUserId: this.editData.uemUserId, ...this.formData }).then(res => {
             this.$message.success(res.data);
             this.$emit('getTableData', '');
             this.close();
@@ -486,7 +473,7 @@ export default {
 <style lang="scss">
 .staff-dialog {
   .form-wrap {
-    // height: 350px;
+    height:500px;
     margin-bottom: 20px;
     .input-width {
       width: 180px;
