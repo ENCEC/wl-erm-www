@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:15:04
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-03 10:58:57
+ * @LastEditTime: 2022-08-03 15:12:23
  * @Description:
  */
 
@@ -26,7 +26,7 @@ export const filterConfig = _this => {
       {
         type: 'input',
         label: '分配对象',
-        prop: 'name2',
+        prop: 'executor',
         width: '200px',
         clearable: true,
         placeholder: '请输入分配对象',
@@ -36,7 +36,7 @@ export const filterConfig = _this => {
       {
         type: 'select',
         label: '任务类型',
-        prop: 'isValid2',
+        prop: 'taskType',
         width: '200px',
         clearable: true,
         placeholder: '请选择任务类型',
@@ -50,7 +50,7 @@ export const filterConfig = _this => {
       {
         type: 'select',
         label: '任务状态',
-        prop: 'isValid',
+        prop: 'status',
         width: '200px',
         clearable: true,
         placeholder: '请选择任务状态',
@@ -60,7 +60,7 @@ export const filterConfig = _this => {
         optionKey: 'value',
         options: [{ value: '', label: '全部' }, ..._this.$dict.getDictOptions('TASK_STATUS')],
         changeSelect: (optionVal) => {
-          _this.filterForm.isValid = optionVal
+          _this.filterForm.status = optionVal
         }
       }
     ],
@@ -131,6 +131,7 @@ export const columns = _this => {
       prop: 'status',
       label: '任务状态'
     },
+    // TODO
     {
       prop: 'planEndDate',
       label: '完成时间'
@@ -139,6 +140,8 @@ export const columns = _this => {
       prop: 'dispatchers',
       label: '分配人'
     },
+    // TODO
+
     {
       prop: 'publishDate',
       label: '创建时间'
@@ -165,8 +168,7 @@ export const operates = _this => {
         show: true,
         disabled: false,
         method: (row, index) => {
-          console.log('【 index, row 】-168', index, row)
-          // console.log('【 index 】-163', index)
+          console.log('【 index 】-171', index)
           _this.handleOpen(row, 'edit');
         }
       },
@@ -176,8 +178,7 @@ export const operates = _this => {
         type: 'text',
         show: true,
         disabled: false,
-        method: (row, index) => {
-          console.log('【 index 】-180', index)
+        method: (row) => {
           _this.handleOpen(row, 'detail');
         }
       },
@@ -188,8 +189,8 @@ export const operates = _this => {
         type: 'text',
         show: true,
         plain: false,
-        method: (index, row) => {
-          _this.handleDelete(row.uemUserId)
+        method: (row) => {
+          _this.handleDelete(row.taskInfoId)
         }
       }
     ],

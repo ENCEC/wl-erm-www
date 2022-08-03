@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:15:03
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-03 13:32:26
+ * @LastEditTime: 2022-08-03 15:00:24
  * @Description:
 -->
 
@@ -66,7 +66,7 @@
                   class="input-width"
                 >
                   <el-option
-                    v-for="(item, index) in staffTypeOptions"
+                    v-for="(item, index) in taskTypeOptions"
                     :key="index"
                     :label="item.label"
                     :value="item.value"
@@ -79,7 +79,7 @@
             <el-col :span="24">
               <el-form-item label="员工任务:" prop="taskList">
                 <div class="table-wrap">
-                  <TaskTable ref="tableForm" :type="type" :records="records" />
+                  <TaskTable ref="tableForm" :selected-list.sync="selectedData" :type="type" :records="records" @getSelectedData="getSelectedData" />
                 </div>
               </el-form-item>
             </el-col>
@@ -136,8 +136,7 @@
 <script>
 import TaskTable from './task-table'
 import UserAssociate from '@/components/CurrentSystem/UserAssociate'
-
-import { getTaskInfoDetail, saveUemUser, editUemUser } from '@/api/staff-task';
+import { getTaskInfoDetail, saveTaskInfo, updateTaskInfo } from '@/api/staff-task';
 import { formRules } from './rules';
 
 export default {
@@ -157,15 +156,17 @@ export default {
   data() {
     return {
       records: [],
+      selectedData: [],
       rules: formRules, // 验证规则
       formData: {
         taskTitle: '',
-        status: '', // 在职状态（0：试用员工 1：正式员工 2：离职员工）
         executor: '', // 执行人
-        taskType: '' //
+        status: '', // 在职状态（0：试用员工 1：正式员工 2：离职员工）
+        taskType: '', //
+        taskDetailInfoDtoList: []// 列表勾选值
       },
       // TODO
-      staffTypeOptions: [
+      taskTypeOptions: [
         {
           label: '选项一',
           value: '1'
@@ -181,8 +182,6 @@ export default {
     // 弹框标题
     dialogTitle() {
       this.editData.taskInfoId && this.getDetailInfo();
-      console.log('【 this.editData.taskInfoId 】-184', this.editData.taskInfoId)
-      // return this.editData.taskInfoId ? '编辑任务信息' : '';
       return this.editData.taskInfoId
         ? this.type === 'detail'
           ? '任务详细信息'
@@ -198,6 +197,14 @@ export default {
   created() {},
   mounted() {},
   methods: {
+    // 表格勾选
+    getSelectedData(val) {
+      console.log('【getSelectedData-val 】-202', val)
+      this.formData.taskDetailInfoDtoList = val.map(item => {
+        const { standardDetailId, ordinator } = item
+        return { standardDetailId, ordinator }
+      })
+    },
     // 关闭弹框
     close() {
       this.$emit('update:visible', false);
@@ -205,24 +212,24 @@ export default {
     },
     // 获取详细信息
     getDetailInfo() {
-      // const
       getTaskInfoDetail({ taskInfoId: this.editData.taskInfoId }).then(res => {
         console.log('【 res 】-211', res)
-        const info = res.data
+        const result = res.data
         this.formData = {
           ...this.formData,
-          ...info,
-          status: info.status.toString()
+          ...result,
+          status: result.status.toString()
         };
-        this.records = info.records
+        this.records = result.records
       });
     },
     // 提交表单信息
     handleConfirm() {
-      this.$refs.tableForm.validateTableForm()
+      const isTableFormValid = this.$refs.tableForm.validateTableForm()
+      console.log('【 isTableFormValid 】-230', isTableFormValid)
       this.$refs['elForm'].validate(valid => {
-        if (valid) {
-          const funcName = this.editData.taskInfoId ? editUemUser : saveUemUser;
+        if (isTableFormValid && valid) {
+          const funcName = this.editData.taskInfoId ? updateTaskInfo : saveTaskInfo;
           funcName(this.formData).then(res => {
             this.$message.success(res.data);
             this.$emit('getTableData', '');

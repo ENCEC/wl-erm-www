@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:15:04
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-03 10:52:06
+ * @LastEditTime: 2022-08-03 15:04:54
  * @Description: 员工管理-任务分配
 -->
 
@@ -40,7 +40,7 @@ import CreateDialog from './component/create-dialog';
 import {
   queryTaskInfoPage,
   uemUserStartStop,
-  deleteUemUser
+  deleteTaskInfo
 } from '@/api/staff-task';
 import tableMix from '@/mixins/table-mixin';
 export default {
@@ -130,7 +130,7 @@ export default {
           type: 'warning'
         }
       ).then(() => {
-        deleteUemUser({ taskInfoId }).then(res => {
+        deleteTaskInfo({ taskInfoId }).then(res => {
           this.$message.success('操作成功');
           this.getTableData();
         });

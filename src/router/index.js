@@ -83,20 +83,20 @@ export const constantRoutes = [
  */
 export const asyncRoutes = [
   // hotRouter,
-  {
-    path: '/demo',
-    component: Layout,
-    meta: { title: 'demo', icon: 'user' },
-    children: [
-      // 系统管理
-      {
-        path: 'staff-manage',
-        component: () => import('@/views/staff-manage/index'),
-        name: 'StaffManage',
-        meta: { title: '员工管理' }
-      }
-    ]
-  },
+  // {
+  //   path: '/demo',
+  //   component: Layout,
+  //   meta: { title: 'demo', icon: 'user' },
+  //   children: [
+  //     // 系统管理
+  //     {
+  //       path: 'staff-manage',
+  //       component: () => import('@/views/staff-manage/index'),
+  //       name: 'StaffManage',
+  //       meta: { title: '员工管理' }
+  //     }
+  //   ]
+  // },
   // 员工管理
   {
     path: '/staff',

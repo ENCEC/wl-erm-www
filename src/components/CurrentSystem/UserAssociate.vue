@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-03 10:20:28
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-03 10:57:48
+ * @LastEditTime: 2022-08-03 14:42:28
  * @Description:联想控件-用户
 -->
 
@@ -14,6 +14,7 @@
     label-prop="name"
     clearable
     :query-method="queryMethod"
+    :disabled="disabled"
     @change="handleChange"
   />
   <!-- <el-select
@@ -40,8 +41,8 @@
 </template>
 <script>
 import {
-  queryStaffByPage
-} from '@/api/staff-manage';
+  queryUser
+} from '@/api/select';
 // import { getSupplier } from '@/api/procurement-manage'
 export default {
   props: {
@@ -76,10 +77,10 @@ export default {
       }) {
         console.log('【  pageSize,currentPage 】-108', pageSize, currentPage)
         return new Promise((resolve) => {
-          queryStaffByPage({
+          queryUser({
             name: keyword,
             pageSize,
-            currentPage
+            pageNo: currentPage
           }).then((res) => {
             // console.log('【 res 】-111', res)
             const records = res.records
