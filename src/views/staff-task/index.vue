@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:15:04
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-02 14:22:15
+ * @LastEditTime: 2022-08-03 10:52:06
  * @Description: 员工管理-任务分配
 -->
 
@@ -38,7 +38,7 @@ import tableComponent from '@/components/TableComponent';
 import { filterConfig, tableConfig, columns, operates } from './config-data.js';
 import CreateDialog from './component/create-dialog';
 import {
-  queryUemUser,
+  queryTaskInfoPage,
   uemUserStartStop,
   deleteUemUser
 } from '@/api/staff-task';
@@ -83,7 +83,7 @@ export default {
     // 获取表格数据
     getTableData() {
       this.listLoading = true;
-      queryUemUser({
+      queryTaskInfoPage({
         pageNo: this.params.currentPage,
         pageSize: this.params.pageSize,
         ...this.filterForm
@@ -99,8 +99,9 @@ export default {
     },
     // 打开弹框
     handleOpen(item = {}, type) {
+      console.log('【 item  】-102', item)
       this.openType = type
-      this.editData = { uemUserId: item.uemUserId || '' };
+      this.editData = { taskInfoId: item.taskInfoId || '' };
       // 编辑/查看
       if (['detail', 'edit', 'add'].includes(type)) {
         this.dialogVisible = true;
@@ -112,14 +113,14 @@ export default {
     },
     // 启用/禁用用户
     changeStatus(item) {
-      const uemUserId = item.uemUserId;
+      const taskInfoId = item.taskInfoId;
       const isValid = item.isValid;
-      uemUserStartStop({ uemUserId, isValid }).then(res => {
+      uemUserStartStop({ taskInfoId, isValid }).then(res => {
         this.$message.success('操作成功');
       });
     },
     // 删除用户信息
-    handleDelete(uemUserId) {
+    handleDelete(taskInfoId) {
       this.$confirm(
         '您确定要删除该任务信息吗？删除后该任务信息不可恢复。',
         '删除提示',
@@ -129,7 +130,7 @@ export default {
           type: 'warning'
         }
       ).then(() => {
-        deleteUemUser({ uemUserId }).then(res => {
+        deleteUemUser({ taskInfoId }).then(res => {
           this.$message.success('操作成功');
           this.getTableData();
         });

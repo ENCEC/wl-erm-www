@@ -2,15 +2,23 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:19:50
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-02 10:20:20
+ * @LastEditTime: 2022-08-03 10:35:47
  * @Description: 员工管理-任务分配
  */
 
 import request from '@/utils/request';
 // 列表
-export function queryUemUser(data) {
+export function queryTaskInfoPage(data) {
   return request({
-    url: '/uemUserManage/queryUemUser',
+    url: '/taskInfo/queryTaskInfoPage',
+    method: 'post',
+    data
+  });
+}
+// 获取信息
+export function getTaskInfoDetail(data) {
+  return request({
+    url: '/taskInfo/getTaskInfoDetail',
     method: 'post',
     data
   });
@@ -18,7 +26,7 @@ export function queryUemUser(data) {
 // 获取信息
 export function getUemUser(query) {
   return request({
-    url: '/uemUserManage/getUemUser',
+    url: '/taskInfo/getTaskInfoDetail',
     method: 'get',
     params: query
   });

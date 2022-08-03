@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:15:04
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-02 10:20:52
+ * @LastEditTime: 2022-08-03 09:53:19
  * @Description:
  */
 
@@ -10,7 +10,7 @@ export const formRules = {
   account: [
     {
       required: true,
-      message: '请输入用户名',
+      message: '请输入标题',
       trigger: 'blur'
     }
   ],

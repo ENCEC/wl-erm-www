@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:15:04
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-02 14:06:02
+ * @LastEditTime: 2022-08-03 10:58:57
  * @Description:
  */
 
@@ -17,7 +17,7 @@ export const filterConfig = _this => {
       {
         type: 'input',
         label: '标题',
-        prop: 'name',
+        prop: 'taskTitle',
         width: '200px',
         clearable: true,
         placeholder: '请输入标题',
@@ -104,18 +104,19 @@ export const tableConfig = {
   highlightCurrentRow: true, // 是否支持当前行高亮显示
   mutiSelect: false, // 是否支持列表项选中功能
   indexShow: true,
-  pagination: true
+  pagination: true,
+  height: '340px'
 };
 
 // 表格列
 export const columns = _this => {
   return [
     {
-      prop: 'name',
+      prop: 'taskTitle',
       label: '标题'
     },
     {
-      prop: 'sex',
+      prop: 'executor',
       label: '执行人'
       // formatter: (row, column) => {
       //   return row.sex ? '男' : '女'
@@ -123,23 +124,23 @@ export const columns = _this => {
       // }
     },
     {
-      prop: 'mobile',
+      prop: 'taskType',
       label: '任务类型'
     },
     {
-      prop: 'email',
+      prop: 'status',
       label: '任务状态'
     },
     {
-      prop: 'email',
+      prop: 'planEndDate',
       label: '完成时间'
     },
     {
-      prop: 'email',
+      prop: 'dispatchers',
       label: '分配人'
     },
     {
-      prop: 'email',
+      prop: 'publishDate',
       label: '创建时间'
     }
     // {
@@ -163,8 +164,9 @@ export const operates = _this => {
         type: 'text',
         show: true,
         disabled: false,
-        method: (index, row) => {
-          console.log('【 index 】-163', index)
+        method: (row, index) => {
+          console.log('【 index, row 】-168', index, row)
+          // console.log('【 index 】-163', index)
           _this.handleOpen(row, 'edit');
         }
       },
@@ -174,8 +176,8 @@ export const operates = _this => {
         type: 'text',
         show: true,
         disabled: false,
-        method: (index, row) => {
-          console.log('【 index 】-163', index)
+        method: (row, index) => {
+          console.log('【 index 】-180', index)
           _this.handleOpen(row, 'detail');
         }
       },
