@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-01 17:25:40
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-03 18:31:57
+ * @LastEditTime: 2022-08-04 11:37:17
  * @Description: 字典
  */
 import * as dicts from '@/store/constant'
@@ -19,7 +19,7 @@ const getDictOptions = (dicName) => {
 // 根据code获取中文
 const getDictNameByCode = (dicName, code) => {
   const dicObj = dicts[dicName]
-  return dicObj[code] || '-'
+  return dicObj[code] || ''
 }
 export default {
   getDictOptions,

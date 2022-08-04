@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-01 13:52:08
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-03 15:38:32
+ * @LastEditTime: 2022-08-04 13:28:54
  * @Description:
  */
 
@@ -127,8 +127,7 @@ export const columns = _this => {
       prop: 'sex',
       label: '性别',
       formatter: (row, column) => {
-        return row.sex ? '男' : '女'
-        // TODO
+        return row.sex ? '女' : '男'
       }
     },
     {
@@ -151,9 +150,8 @@ export const columns = _this => {
       prop: 'jobStatus',
       label: '在职状态',
       width: '100',
-      component: 'switch',
-      method: (row, status) => {
-        _this.changeStatus(row);
+      formatter: (row, column) => {
+        return _this.$dict.getDictNameByCode('JOB_STATUS', row.jobStatus)
       }
     }
   ];
@@ -180,8 +178,7 @@ export const operates = _this => {
         type: 'text',
         show: true,
         disabled: false,
-        method: (index, row) => {
-          console.log('【 index 】-163', index)
+        method: (row) => {
           _this.handleOpen(row, 'detail');
         }
       },

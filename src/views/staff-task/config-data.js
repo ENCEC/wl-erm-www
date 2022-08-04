@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:15:04
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-03 18:27:21
+ * @LastEditTime: 2022-08-04 09:34:10
  * @Description:
  */
 
@@ -41,8 +41,8 @@ export const filterConfig = _this => {
         placeholder: '请选择任务类型',
         col: 8,
         optionLabel: 'label',
-        optionValue: 'value',
-        optionKey: 'value',
+        optionValue: 'label',
+        optionKey: 'label',
         options: _this.$dict.getDictOptions('TASK_TYPE')
       },
       {
@@ -120,10 +120,10 @@ export const columns = _this => {
     },
     {
       prop: 'taskType',
-      label: '任务类型',
-      formatter: (row, column) => {
-        return _this.$dict.getDictNameByCode('TASK_TYPE', row.taskType)
-      }
+      label: '任务类型'
+      // formatter: (row, column) => {
+      //   return _this.$dict.getDictNameByCode('TASK_TYPE', row.taskType)
+      // }
     },
     {
       prop: 'status',

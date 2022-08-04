@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 15:36:16
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-03 15:14:42
+ * @LastEditTime: 2022-08-04 14:15:41
  * @Description: 员工管理-我的任务
 -->
 
@@ -41,7 +41,7 @@ import {
   queryUemUser,
   uemUserStartStop,
   deleteUemUser
-} from '@/api/staff-task';
+} from '@/api/user-manage';
 import tableMix from '@/mixins/table-mixin';
 export default {
   name: 'StaffTask',
@@ -82,7 +82,7 @@ export default {
   methods: {
     // 获取表格数据
     getTableData() {
-      this.listLoading = true;
+      // this.listLoading = true;
       queryUemUser({
         pageNo: this.params.currentPage,
         pageSize: this.params.pageSize,
@@ -100,7 +100,7 @@ export default {
     // 打开弹框
     handleOpen(item = {}, type) {
       this.openType = type
-      this.editData = { uemUserId: item.uemUserId || '' };
+      this.editData = { taskInfoId: item.uemUserId || '' };
       // 编辑/查看
       if (['detail', 'edit', 'add'].includes(type)) {
         this.dialogVisible = true;

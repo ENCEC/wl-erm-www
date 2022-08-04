@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-01 13:52:08
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-03 15:37:20
+ * @LastEditTime: 2022-08-04 13:37:04
  * @Description:
 -->
 
@@ -42,11 +42,13 @@
               <!-- 性别（0男，1女） -->
               <el-form-item label="性别:" prop="sex">
                 <el-radio-group v-model="formData.sex">
-                  <el-radio
+                  <!-- <el-radio
                     v-for="item in sexOptions"
                     :key="'sex' + item.value"
                     :label="item.value"
-                  >{{ item.label }}</el-radio>
+                  >{{ item.label }}</el-radio> -->
+                  <el-radio :label="false">男</el-radio>
+                  <el-radio :label="true">女</el-radio>
                 </el-radio-group>
               </el-form-item>
             </el-col>
@@ -206,10 +208,10 @@
           <el-row>
             <el-col :span="12">
               <el-form-item label="入职时间:" prop="entryDate">
+                <!-- value-format="yyyy-MM-dd" -->
                 <el-date-picker
                   v-model="formData.entryDate"
                   format="yyyy-MM-dd"
-                  value-format="yyyy-MM-dd"
                   class="input-width"
                   placeholder="请选择入职时间"
                   clearable
@@ -376,13 +378,12 @@ export default {
     return {
       rules: formRules, // 验证规则
       formData: {
-        account: '',
         name: '123',
         sex: 0,
         birthday: '',
-        jobStatus: '0', // 在职状态（0：试用员工 1：正式员工 2：离职员工）
+        jobStatus: '', // 在职状态（0：试用员工 1：正式员工 2：离职员工）
         idCard: '',
-        mobile: '13960081319',
+        mobile: '',
         address: '', // 现住址
         sourceAddress: '', // 户籍地址
         maritalStatus: '', // 婚姻状况（0：未婚 1：已婚 2：离婚）
@@ -391,13 +392,13 @@ export default {
         graduateDate: '', // 毕业时间
         graduateSchool: '', //
         speciality: '', // 在校专业
-        entryDate: '2022-08-17', // 入职时间
-        uemDeptId: '1', // 入职部门
-        staffDutyCode: 'DEV', // 入职岗位
-        technicalTitleId: '1', // 岗位职称
+        entryDate: '', // 入职时间
+        uemDeptId: '', // 入职部门
+        staffDutyCode: '', // 入职岗位
+        technicalTitleId: '', // 岗位职称
         email: '',
-        seniority: '1', // 工作年限
-        projectId: '1'// 归属项目
+        seniority: '', // 工作年限
+        projectId: ''// 归属项目
       },
       sexOptions: this.$dict.getDictOptions('SEX'),
       maritalStatusOptions: this.$dict.getDictOptions('MARITAL_STATUS'),
@@ -444,8 +445,7 @@ export default {
           uemDeptId: res.uemDeptId || '',
           staffDutyCode: res.staffDutyCode || '',
           technicalTitleId: res.technicalTitleId || '',
-          projectId: res.projectId || '',
-          sex: res.sex ? '0' : '1'
+          projectId: res.projectId || ''
         };
       });
     },
@@ -473,7 +473,7 @@ export default {
 <style lang="scss">
 .staff-dialog {
   .form-wrap {
-    height:500px;
+    min-height:480px;
     margin-bottom: 20px;
     .input-width {
       width: 180px;

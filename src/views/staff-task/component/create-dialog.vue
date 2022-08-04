@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:15:03
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-03 18:33:21
+ * @LastEditTime: 2022-08-04 09:21:44
  * @Description:
 -->
 
@@ -160,7 +160,7 @@ export default {
       rules: formRules, // 验证规则
       formData: {
         taskTitle: '',
-        executor: '', // 执行人
+        executor: '6957613061678637056', // 执行人
         status: '', // 在职状态（0：试用员工 1：正式员工 2：离职员工）
         taskType: '', //
         taskDetailInfoDtoList: []// 列表勾选值
@@ -191,8 +191,9 @@ export default {
     getSelectedData(val) {
       console.log('【getSelectedData-val 】-202', val)
       this.formData.taskDetailInfoDtoList = val.map(item => {
-        const { standardDetailId, ordinator } = item
-        return { standardDetailId, ordinator }
+        const { standardDetailId } = item
+        // ordinator
+        return { standardDetailId, ordinator: '6957613061678637056' }
       })
     },
     // 关闭弹框
@@ -218,6 +219,10 @@ export default {
     handleConfirm() {
       const isTableFormValid = this.$refs.tableForm.validateTableForm()
       console.log('【 isTableFormValid 】-230', isTableFormValid)
+      if (!this.formData.taskDetailInfoDtoList.length) {
+        this.$message.error('请选择任务');
+        return false
+      }
       this.$refs['elForm'].validate(valid => {
         if (isTableFormValid && valid) {
           const funcName = this.editData.taskInfoId ? updateTaskInfo : saveTaskInfo;

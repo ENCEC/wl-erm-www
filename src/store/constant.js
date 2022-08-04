@@ -2,10 +2,20 @@
  * @Author: Hongzf
  * @Date: 2022-07-22 16:25:46
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-03 18:29:12
+ * @LastEditTime: 2022-08-04 15:01:47
  * @Description: 字典
  */
-
+// 完成情况
+export const COMPLETE_RESULT = {
+  '0': '优秀',
+  '1': '良好',
+  '3': '一般'
+}
+// 完成结果
+export const COMPLETION = {
+  '0': '已完成',
+  '1': '退回重做'
+}
 // 禁用启用
 export const VALID_STATUS = {
   '': '所有',

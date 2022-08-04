@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-07-26 14:43:35
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-03 18:56:17
+ * @LastEditTime: 2022-08-04 14:06:54
  * @Description:
 -->
 <template>
@@ -29,7 +29,8 @@
           </template>
         </el-table-column>
         <el-table-column v-if="type!=='detail'" prop="actionPeriod" label="执行周期(工时)" min-width="130" />
-        <el-table-column prop="taskName" label="任务名称" />
+        <!-- taskName -->
+        <el-table-column prop="detailName" label="任务名称" />
         <el-table-column prop="actionSerialNum" label="执行顺序" />
         <el-table-column v-if="type==='detail'" prop="ordinator" label="负责人" />
         <el-table-column v-if="type!=='detail'" prop="ordinator" label="负责人" min-width="130">
@@ -41,13 +42,22 @@
                 { required: scope.row.required && !scope.row.checked, message: '请选择姓名', trigger: ['blur','change'] }
               ]"
             >
-              <UserAssociate v-model="scope.row.ordinator" :disabled="scope.row.checked" />
+              <!-- :disabled="scope.row.checked"  -->
+              <UserAssociate v-model="scope.row.ordinator" />
               <!-- <el-input v-model="scope.row.ordinator" placeholder="" /> -->
             </el-form-item>
           </template>
         </el-table-column>
-        <el-table-column prop="planEndDate" label="计划完成日期" min-width="120" />
-        <el-table-column v-if="type==='detail'" prop="endDate" label="实际完成日期" min-width="120" />
+        <el-table-column prop="planEndDate" label="计划完成日期" min-width="120">
+          <template slot-scope="scope">
+            {{ scope.row.planEndDate? $moment(parseInt(scope.row.planEndDate)).format('YYYY-MM-DD') : '' }}
+          </template>
+        </el-table-column>
+        <el-table-column v-if="type==='detail'" prop="endDate" label="实际完成日期" min-width="120">
+          <template slot-scope="scope">
+            {{ scope.row.endDate? $moment(parseInt(scope.row.endDate)).format('YYYY-MM-DD') : '' }}
+          </template>
+        </el-table-column>
         <el-table-column v-if="type==='detail'" prop="progress" label="完成进度(%)" min-width="100" />
         <!-- TODO -->
         <el-table-column v-if="type==='detail'" prop="resultAccess" label="完成结果" />
@@ -98,47 +108,49 @@ export default {
     return {
       // 表单数据
       tableForm: {
-        tableData: [{
-          taskTitle: 'taskTitle',
-          ordinator: '6958664088091697152',
-          required: true,
-          checked: true,
-          actionPeriod: 1,
-          actionSerialNum: 0,
-          actionTime: 2,
-          // applyDate: null,
-          // approvalDate: null,
-          // approver: null,
-          // endDate: null,
-          // executor: null
-          // faceRemark: null
-          // faceTime: null
-          // leader: null
-          // offerRemark: null
-          // offerType: null
-          // ordinator: null
-          // pageNo: null
-          // pageSize: null
-          planEndDate: 1636732800000,
-          planStartDate: 1636732800000,
-          progress: null,
-          resultAccess: null,
-          standardDetailId: '11',
-          standardDetailName: '细则名称1',
-          standardEntryId: '1111',
-          standardEntryName: '规范条目11111',
-          startDate: null,
-          status: 0,
-          taskDetailId: '6960507338410762240',
-          taskInfoId: '6960507337878085632',
-          taskName: null
-        },
-        {
-          taskTitle: 'taskTitle',
-          ordinator: '',
-          required: true,
-          checked: true
-        }]
+        tableData: [
+        //   {
+        //   taskTitle: 'taskTitle',
+        //   ordinator: '6958664088091697152',
+        //   required: true,
+        //   checked: true,
+        //   actionPeriod: 1,
+        //   actionSerialNum: 0,
+        //   actionTime: 2,
+        //   // applyDate: null,
+        //   // approvalDate: null,
+        //   // approver: null,
+        //   // endDate: null,
+        //   // executor: null
+        //   // faceRemark: null
+        //   // faceTime: null
+        //   // leader: null
+        //   // offerRemark: null
+        //   // offerType: null
+        //   // ordinator: null
+        //   // pageNo: null
+        //   // pageSize: null
+        //   planEndDate: 1636732800000,
+        //   planStartDate: 1636732800000,
+        //   progress: null,
+        //   resultAccess: null,
+        //   standardDetailId: '11',
+        //   standardDetailName: '细则名称1',
+        //   standardEntryId: '1111',
+        //   standardEntryName: '规范条目11111',
+        //   startDate: null,
+        //   status: 0,
+        //   taskDetailId: '6960507338410762240',
+        //   taskInfoId: '6960507337878085632',
+        //   taskName: null
+        // },
+        // {
+        //   taskTitle: 'taskTitle',
+        //   ordinator: '',
+        //   required: true,
+        //   checked: true
+        // }
+        ]
       },
       // 验证规则
       tableFormRules: {
@@ -166,7 +178,10 @@ export default {
           this.tableForm.tableData = newVal
         } else {
           // 设置默认选中状态
-          this.handleToggleRowSelection(this.$refs.multipleTable)
+          this.$nextTick(() => {
+            const tableRef = this.$refs.multipleTable
+            this.handleToggleRowSelection(tableRef)
+          })
         }
       }
     }
@@ -193,18 +208,18 @@ export default {
   methods: {
     // 判断复选框的勾选状态
     handleToggleRowSelection(tableRef) {
-      this.$nextTick(() => {
-        console.log('【tableRef】', tableRef)
-        this.tableForm.tableData.forEach((tableItem) => {
-          this.records.forEach((selectedItem) => {
+      // this.$nextTick(() => {
+      console.log('【tableRef】', tableRef)
+      this.tableForm.tableData.forEach((tableItem) => {
+        this.records.forEach((selectedItem) => {
           // console.log('【selectedItem】', selectedItem)
-            if (tableItem.taskInfoId === selectedItem.taskInfoId) {
+          if (tableItem.standardEntryId === selectedItem.standardEntryId) {
             // 相等则为选中状态
-              tableRef && tableRef.toggleRowSelection(tableItem, true)
-            }
-          })
+            tableRef && tableRef.toggleRowSelection(tableItem, true)
+          }
         })
       })
+      // })
     },
     // 获取表格数据
     getTableData() {
