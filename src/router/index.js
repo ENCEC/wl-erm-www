@@ -120,20 +120,34 @@ export const asyncRoutes = [
         component: () => import('@/views/staff-manage/index'),
         name: 'StaffManage',
         meta: { title: '员工管理' }
-      }]
+      },
+      {
+        path: 'staff-info',
+        component: () => import('@/views/staff-info/index'),
+        name: 'StaffInfo',
+        meta: { title: '员工信息' }
+      }
+    ]
   },
   // 规范条目管理
   {
-    path: '/standard-entry',
+    path: '/standard',
     component: Layout,
-    meta: { title: 'standard-entry', icon: 'user' },
+    meta: { title: '字典管理', icon: 'user' },
     children: [
       {
         path: 'standard-entry',
         component: () => import('@/views/standard-entry/index'),
         name: 'StandardEntry',
         meta: { title: '规范条目管理' }
-      }]
+      },
+      {
+        path: 'standard-detail',
+        component: () => import('@/views/standard-detail/index'),
+        name: 'StandardDetail',
+        meta: { title: '规范细则管理' }
+      }
+    ]
   },
   // 规范细则管理
   {

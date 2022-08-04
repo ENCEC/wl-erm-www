@@ -65,11 +65,11 @@
               class="el-associate"
               :value-prop="item.valueProp"
               :label-prop="item.labelProp"
-              :display-init="item.displayInit"
+              :display-init="item.labelProp"
               :columns="item.columns"
               :clearable="item.clearable"
               :multiple="item.multiple"
-              :query-method="({keyword,pageSize,currentPage})=>{item.changeSelect? item.queryMethod({keyword,pageSize,currentPage}): ''}"
+              :query-method="item.queryMethod"
               :style="{width:item.width?item.width:'100%'}"
               @change="optionVal => {item.changeSelect? item.changeSelect(value, selectedRows): ''}"
             />

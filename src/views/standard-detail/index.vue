@@ -47,7 +47,9 @@ import {
   standardDetailStartStop,
   addStandardDetail,
   updateStandardDetail,
-  deleteStandardDetail
+  deleteStandardDetail,
+  selectEntryNameSpecies,
+  selectItemTypeSpecies
 } from '@/api/standard-detail.js';
 import tableComponent from '@/components/TableComponent';
 import filterPanel from '@/components/FilterPanel';
@@ -61,9 +63,7 @@ const statusTypeOptions = [
 // 条目类型
 const entryTypeOptions = [];
 // 规范条目
-const entryOptions = [
-  { key: 1111, display_name: '规范条目11111' }
-];
+const entryOptions = [];
 
 export default {
   name: 'StandardDetail',
@@ -95,7 +95,7 @@ export default {
           {
             type: 'select',
             class: 'filter-item',
-            prop: 'standardEntryId;',
+            prop: 'entryName',
             // width: "200px",
             label: '规范条目',
             placeholder: '请选择规范条目',
@@ -106,10 +106,10 @@ export default {
           },
           {
             type: 'textarea',
-            prop: 'detailName;',
+            prop: 'detailName',
             col: 24,
             label: '细则名称',
-            autopageSize: { minRows: 2, maxRows: 4 },
+            autoSize: { minRows: 2, maxRows: 4 },
             placeholder: '请输入细则名称'
           },
           {
@@ -143,7 +143,7 @@ export default {
           {
             type: 'select',
             class: 'filter-item',
-            prop: 'standardEntryId;',
+            prop: 'entryName',
             // width: "200px",
             label: '规范条目',
             placeholder: '请选择规范条目',
@@ -236,12 +236,8 @@ export default {
           align: 'center'
         },
         {
-          prop: 'standardEntryId',
-          label: '规范条目',
-          formatter: (row) => {
-            // return this.getStandardEntryName(row.standardEntryId);
-            return row ? '' : ''
-          }
+          prop: 'entryName',
+          label: '规范条目'
         },
         {
           prop: 'actionSerialNum',
@@ -322,7 +318,7 @@ export default {
         pageSize: 20,
         totalRecord: 0,
         detailName: '',
-        standardEntryId: '',
+        entryName: '',
         status: '',
         itemType: ''
       },
@@ -331,15 +327,15 @@ export default {
       entryOptions,
       temp: {
         itemType: '',
-        standardEntryId: '',
+        entryName: '',
         actionSerialNum: '',
         detailName: ''
       },
       dialogFormVisible: false,
       dialogStatus: '',
       textMap: {
-        update: '编辑岗位',
-        create: '新增岗位',
+        update: '编辑细则',
+        create: '新增细则',
         examine: '细则详细信息'
       },
       dialogPvVisible: false,
@@ -347,7 +343,7 @@ export default {
         detailName: [
           { required: true, message: '请输入细则名称', trigger: 'change' }
         ],
-        standardEntryId: [
+        entryName: [
           { required: true, message: '请选择规范条目', trigger: 'change' }
         ]
       },
@@ -356,47 +352,47 @@ export default {
   },
   created() {
     this.getList();
-    // this.initEntryOptions();
-    // this.initEntryTypeSelect();
+    this.initEntryOptions();
+    this.initEntryTypeSelect();
   },
   methods: {
-    // initEntryTypeSelect() {
-    //   const params = {
-    //     pageSize: 1000,
-    //     currentPage: 1
-    //   };
-    //   querySysPost(params)
-    //     .then((res) => {
-    //       res.data.records.forEach((item) => {
-    //         this.entryTypeOptions.push({
-    //           key: item.postId,
-    //           display_name: item.postName
-    //         });
-    //       });
-    //     })
-    //     .catch(() => {
-    //       this.$message.error('初始化岗位失败');
-    //     });
-    // },
-    // initEntryOptions() {
-    //   const params = {
-    //     pageSize: 1000,
-    //     currentPage: 1,
-    //     status: '0'
-    //   };
-    //   querySysPost(params)
-    //     .then((res) => {
-    //       res.data.records.forEach((item) => {
-    //         this.entryOptions.push({
-    //           key: item.standardEntryId,
-    //           display_name: item.entryName
-    //         });
-    //       });
-    //     })
-    //     .catch(() => {
-    //       this.$message.error('初始化岗位失败');
-    //     });
-    // },
+    initEntryTypeSelect() {
+      const params = {
+        pageSize: 1000,
+        currentPage: 1
+      };
+      selectItemTypeSpecies(params)
+        .then((res) => {
+          res.data.forEach((item) => {
+            this.entryTypeOptions.push({
+              key: item,
+              display_name: item
+            });
+          });
+        })
+        .catch(() => {
+          this.$message.error('初始化条目类型失败');
+        });
+    },
+    initEntryOptions() {
+      const params = {
+        pageSize: 1000,
+        currentPage: 1,
+        status: '0'
+      };
+      selectEntryNameSpecies(params)
+        .then((res) => {
+          res.data.forEach((item) => {
+            this.entryOptions.push({
+              key: item,
+              display_name: item
+            });
+          });
+        })
+        .catch(() => {
+          this.$message.error('初始化规范条目失败');
+        });
+    },
     handleIndexChange(currentPage) {
       this.listQuery.currentPage = currentPage;
       this.getList();
@@ -409,7 +405,6 @@ export default {
     getList() {
       this.listLoading = true;
       queryStandardDetail(this.listQuery).then((response) => {
-        debugger
         this.list = response.data.records;
         this.list.forEach((item, index) => {
           item.count =
@@ -430,14 +425,14 @@ export default {
         pageSize: 20,
         totalRecord: 0,
         standardDetailId: '',
-        standardEntryId: '',
+        entryName: '',
         status: '',
         itemType: ''
       };
       this.getList();
     },
     handleModifyStatus(row) {
-      const params = Object.assign({}, row, { status: row.status ? 0 : 1 });
+      const params = Object.assign({}, row);
       standardDetailStartStop(params)
         .then(() => {
           this.$message({
@@ -468,6 +463,7 @@ export default {
       });
     },
     handleExamine(row) {
+      this.temp = Object.assign({}, row); // copy obj
       this.dialogStatus = 'examine';
       this.dialogFormVisible = true;
       this.$nextTick(() => {
@@ -477,22 +473,18 @@ export default {
     createData() {
       this.$refs['formPanel'].$refs['dataForm'].validate((valid) => {
         if (valid) {
-          //   this.temp.id = parseInt(Math.random() * 100) + 1024 // mock a id
-          //   this.temp.author = 'vue-element-admin'
           this.dialogButtonLoading = true;
           addStandardDetail(this.temp)
             .then(() => {
-              // this.list.unshift(this.temp);
-              this.dialogFormVisible = false;
-              this.handleResetForm();
+              // this.handleResetForm();
               this.$message({
                 title: '成功',
                 message: '创建成功',
                 type: 'success',
                 duration: 0
               });
+              this.dialogFormVisible = false;
               this.dialogButtonLoading = false;
-
               this.getList();
             })
             .catch(() => {
@@ -502,6 +494,7 @@ export default {
                 type: 'error',
                 duration: 2000
               });
+              this.dialogFormVisible = false;
             });
         }
       });
@@ -518,7 +511,7 @@ export default {
                 type: 'success',
                 duration: 2000
               });
-              this.handleResetForm();
+              // this.handleResetForm();
               this.dialogFormVisible = false;
               this.getList();
             })
@@ -529,6 +522,7 @@ export default {
                 type: 'error',
                 duration: 2000
               });
+              this.dialogFormVisible = false;
             });
         }
       });
@@ -544,7 +538,7 @@ export default {
         }
       )
         .then(() => {
-          deleteStandardDetail(row.postId)
+          deleteStandardDetail(row.standardDetailId)
             .then(() => {
               this.$message({
                 type: 'success',
@@ -569,21 +563,23 @@ export default {
     handleResetForm() {
       this.temp = {
         itemType: '',
-        standardEntryId: '',
+        entryName: '',
         actionSerialNum: '',
         detailName: ''
       };
     },
     handleDialogClose() {
-      // this.handleResetForm();
-      this.$refs['formPanel'].$refs['dataForm'].clearValidate();
-    },
-    getStandardEntryName(standardEntryId) {
-      const find = this.entryOptions.find((item) => {
-        return (item.key === standardEntryId);
+      this.$nextTick(() => {
+        this.handleResetForm();
       });
-      return find.display_name ? find.display_name : '';
+      this.$refs['formPanel'].$refs['dataForm'].clearValidate();
     }
+    // getStandardEntryName(entryName) {
+    //   const find = this.entryOptions.find((item) => {
+    //     return item.key === entryName;
+    //   });
+    //   return find.display_name ? find.display_name : "";
+    // },
   }
 };
 </script>
