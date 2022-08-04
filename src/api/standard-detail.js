@@ -40,10 +40,28 @@ export function updateStandardDetail(data) {
 export function deleteStandardDetail(standardDetailId) {
   return request({
     url: '/standardDetail/deleteStandardDetail',
-    method: 'post',
+    method: 'get',
     params: {
       standardDetailId
     }
+  })
+}
+
+// 规范条目
+export function selectEntryNameSpecies() {
+  return request({
+    url: '/standardDetail/selectEntryNameSpecies',
+    method: 'get'
+
+  })
+}
+
+// 条目类型
+export function selectItemTypeSpecies() {
+  return request({
+    url: '/standardDetail/selectItemTypeSpecies',
+    method: 'get'
+
   })
 }
 

@@ -18,7 +18,7 @@
       />
       <div slot="footer" class="dialog-footer">
         <el-button
-          v-if="dialogStatus!=='examine'"
+          v-if="dialogStatus !== 'examine'"
           :loading="dialogButtonLoading"
           type="primary"
           @click="dialogStatus === 'create' ? createData() : updateData()"
@@ -42,14 +42,18 @@
 </template>
 
 <script>
-import request from '@/utils/request'
-// queryUemUser,queryByTechnicalTitleName, querySysDictType, queryStandardEntry
-import { queryRoleByPage, querySysPost, saveStandardEntry } from '@/api/standard-entry.js'
 import {
-  sysPostStartStop,
-  updateSysPost,
-  deleteSysPost
-} from '@/api/sys-post.js';
+  queryByTechnicalTitleName,
+  queryUemUser,
+  querySysPost,
+  saveStandardEntry,
+  queryStandardEntry,
+  queryRoleByPage,
+  querySysDictType,
+  updateStandardEntry,
+  deleteStandardEntry,
+  updateStatus
+} from '@/api/standard-entry.js';
 import tableComponent from '@/components/TableComponent';
 import filterPanel from '@/components/FilterPanel';
 import formPanel from '@/components/FormPanel';
@@ -60,12 +64,12 @@ const statusTypeOptions = [
   { key: '', display_name: '所有' }
 ];
 // 条目类型
-const entryTypeOptions = [
-];
+const entryTypeOptions = [];
 // 适用岗位
-const postTypeOptions = [];
+const postOptions = [];
+const userOptions = [];
 // 执行角色
-const roleTypeOptions = [];
+const roleOptions = [];
 // 适用岗位联想控件
 const postColumns = [
   {
@@ -83,10 +87,6 @@ const postColumns = [
   {
     field: 'createTime',
     title: '创建时间'
-  },
-  {
-    field: 'status',
-    title: '状态'
   }
 ];
 const technicalColumns = [
@@ -109,32 +109,27 @@ const technicalColumns = [
   {
     field: 'createTime',
     title: '创建人'
-  },
-  {
-    field: 'status',
-    title: '状态'
   }
 ];
 
 const ordinatorColumns = [
   {
-    filed: 'account',
+    field: 'account',
     title: '用户名'
   },
   {
-    filed: 'name',
+    field: 'name',
     title: '姓名'
-
   },
   {
-    filed: 'mobile',
+    field: 'mobile',
     title: '联系电话'
   },
   {
-    filed: 'email',
+    field: 'email',
     title: '电子邮箱'
   }
-]
+];
 
 export default {
   name: 'StandardEntry',
@@ -178,9 +173,8 @@ export default {
             col: 24,
             valueProp: 'postId',
             labelProp: 'postName',
-            displayInit: 'postName',
             columns: postColumns,
-            mulitiple: true,
+            multiple: true,
             clearable: true,
             queryMethod: this.postQueryMethod,
             changeSelect: () => {
@@ -193,11 +187,10 @@ export default {
             prop: 'applyProfessorId',
             col: 24,
             // width: "200px",
-            valueProp: 'techncalTitleId',
+            valueProp: 'technicalTitleId',
             labelProp: 'technicalName',
-            displayInit: 'technicalName',
             columns: technicalColumns,
-            mulitiple: true,
+            multiple: true,
             clearable: true,
             queryMethod: this.technicalQueryMethod,
             changeSelect: () => {
@@ -205,20 +198,16 @@ export default {
             }
           },
           {
-            type: 'associate',
-            label: '执行角色',
+            type: 'select',
+            class: 'filter-item',
             prop: 'actionRoleId',
             // width: "200px",
-            valueProp: 'name',
-            labelProp: 'name',
-            displayInit: 'name',
-            columns: technicalColumns,
-            mulitiple: true,
-            clearable: true,
-            queryMethod: this.technicalQueryMethod,
-            changeSelect: () => {
-              //   this.listQuery.status=optionVal
-            }
+            label: '执行角色',
+            placeholder: '请选择执行角色',
+            optionLabel: 'display_name',
+            optionValue: 'key',
+            optionKey: 'key',
+            options: roleOptions
           },
           {
             type: 'number',
@@ -246,12 +235,12 @@ export default {
             col: 8,
             radioArr: [
               {
-                label: 0,
+                label: true,
                 disabled: false,
                 labelText: '是'
               },
               {
-                label: 1,
+                label: false,
                 disabled: false,
                 labelText: '否'
               }
@@ -265,14 +254,22 @@ export default {
             label: '统筹人',
             prop: 'ordinatorId',
             // width: "200px",
-            valueProp: 'name',
+            valueProp: 'uemUserId',
             labelProp: 'name',
-            displayInit: 'name',
             columns: ordinatorColumns,
-            mulitiple: true,
+            multiple: true,
             clearable: true,
             queryMethod: this.ordinatorQueryMethod,
             changeSelect: () => {
+              debugger;
+              //   this.listQuery.status=optionVal
+            },
+            blur: () => {
+              debugger;
+              //   this.listQuery.status=optionVal
+            },
+            focus: () => {
+              debugger;
               //   this.listQuery.status=optionVal
             }
           },
@@ -281,12 +278,13 @@ export default {
             prop: 'actionRemark',
             col: 24,
             label: '执行说明',
-            autopageSize: { minRows: 2, maxRows: 4 },
+            autosize: { minRows: 2, maxRows: 4 },
             placeholder: '请输入执行说明'
           },
           {
             type: 'number',
             prop: 'actionSerialNum',
+            min: 1,
             col: 12,
             label: '执行序号',
             placeholder: '请输入执行序号'
@@ -313,30 +311,36 @@ export default {
           },
           {
             type: 'associate',
-            class: 'filter-item',
+            label: '适用岗位',
             prop: 'applyPostId',
             // width: "200px",
-            label: '适用岗位',
-            placeholder: '请选择适用岗位',
-            options: postTypeOptions
+            valueProp: 'postId',
+            labelProp: 'postName',
+            displayInit: 'postName',
+            columns: postColumns,
+            multiple: false,
+            clearable: true,
+            queryMethod: this.postQueryMethod,
+            changeSelect: () => {
+              //   this.listQuery.status=optionVal
+            }
           },
           {
             type: 'select',
             class: 'filter-item',
-            prop: 'roleName',
+            prop: 'actionRoleId',
             // width: "200px",
             label: '执行角色',
             placeholder: '请选择执行角色',
             optionLabel: 'display_name',
             optionValue: 'key',
             optionKey: 'key',
-            options: roleTypeOptions
+            options: roleOptions
           },
           {
             type: 'select',
             label: '状态',
             prop: 'status',
-            labelWidth: '40px',
             // col: 8,
             // width: '200px',
             clearable: true,
@@ -497,8 +501,9 @@ export default {
       },
       statusTypeOptions,
       entryTypeOptions,
-      postTypeOptions,
-      roleTypeOptions,
+      postOptions,
+      userOptions,
+      roleOptions,
       postColumns,
       technicalColumns,
       temp: {
@@ -517,8 +522,8 @@ export default {
       dialogFormVisible: false,
       dialogStatus: '',
       textMap: {
-        update: '编辑岗位',
-        create: '新增岗位',
+        update: '编辑条目',
+        create: '新增条目',
         examine: '条目详细信息'
       },
       dialogPvVisible: false,
@@ -548,6 +553,7 @@ export default {
   created() {
     this.getList();
     this.initPostSelect();
+    this.initUserOptions();
     this.initRoleSelect();
     this.initEntryTypeSelect();
   },
@@ -557,17 +563,35 @@ export default {
         pageSize: 1000,
         currentPage: 1
       };
-      querySysPost(params)
+      querySysDictType(params)
         .then((res) => {
           res.data.records.forEach((item) => {
             this.entryTypeOptions.push({
-              key: item.postId,
-              display_name: item.postName
+              key: item.sysDictTypeId,
+              display_name: item.dictTypeName
             });
           });
         })
         .catch(() => {
-          this.$message.error('初始化岗位失败');
+          this.$message.error('初始化条目类型失败');
+        });
+    },
+    initUserOptions() {
+      const params = {
+        pageSize: 1000,
+        currentPage: 1
+      };
+      queryUemUser(params)
+        .then((res) => {
+          res.data.records.forEach((item) => {
+            this.userOptions.push({
+              key: item.uemUserId,
+              display_name: item.name
+            });
+          });
+        })
+        .catch(() => {
+          this.$message.error('初始化统筹人失败');
         });
     },
     initPostSelect() {
@@ -579,7 +603,7 @@ export default {
       querySysPost(params)
         .then((res) => {
           res.data.records.forEach((item) => {
-            this.postTypeOptions.push({
+            this.postOptions.push({
               key: item.postId,
               display_name: item.postName
             });
@@ -597,16 +621,15 @@ export default {
       };
       queryRoleByPage(params)
         .then((res) => {
-          debugger;
           res.data.records.forEach((item) => {
-            this.roleTypeOptions.push({
-              key: item.postId,
-              display_name: item.postName
+            this.roleOptions.push({
+              key: item.sysRoleId,
+              display_name: item.roleName
             });
           });
         })
         .catch(() => {
-          this.$message.error('初始化岗位失败');
+          this.$message.error('初始化角色信息失败');
         });
     },
     handleIndexChange(currentPage) {
@@ -619,37 +642,47 @@ export default {
     },
     changePagination() {},
     getList() {
-      // this.listLoading = true;
-      // queryStandardEntry(this.listQuery).then((response) => {
-      //   this.list = response.data.records;
-      //   this.list.forEach((item, index) => {
-      //     item.count =
-      //       (this.listQuery.currentPage - 1) * this.listQuery.pageSize +
-      //       index +
-      //       1;
-      //     item.status = item.status === 0;
-      //   });
-      //   this.totalRecord = response.data.totalRecord;
-      //   this.listQuery.totalRecord = response.data.totalRecord;
-      //   // Just to simulate the time of the request
-      //   this.listLoading = false;
-      // });
-      this.list = [
-        {
-          entryName: '测试条目',
-          entryType: '',
-          applyPostId: '',
-          applyProfessorId: '',
-          actionRoleId: '',
-          actionTime: 1,
-          actionPeriod: '',
-          status: 0,
-          isNeed: 1,
-          ordinatorId: '',
-          actionRemark: '一些些',
-          actionSerialNum: 2
-        }
-      ];
+      this.listLoading = true;
+      queryStandardEntry(this.listQuery).then((response) => {
+        this.list = response.data.records;
+        this.list.forEach((item, index) => {
+          item.count =
+            (this.listQuery.currentPage - 1) * this.listQuery.pageSize +
+            index +
+            1;
+          item.applyPostId = item.applyPostId
+            ? item.applyPostId.split(',')
+            : [];
+          item.applyProfessorId = item.applyProfessorId
+            ? item.applyProfessorId.split(',')
+            : [];
+          item.ordinatorId = item.ordinatorId
+            ? item.ordinatorId.split(',')
+            : [];
+        });
+        this.totalRecord = response.data.totalRecord;
+        this.listQuery.totalRecord = response.data.totalRecord;
+        // Just to simulate the time of the request
+        this.$nextTick(() => {
+          this.listLoading = false;
+        });
+      });
+      // this.list = [
+      //   {
+      //     entryName: "测试条目",
+      //     entryType: "",
+      //     applyPostId: "",
+      //     applyProfessorId: "",
+      //     actionRoleId: "",
+      //     actionTime: 1,
+      //     actionPeriod: "",
+      //     status: 0,
+      //     isNeed: 1,
+      //     ordinatorId: "",
+      //     actionRemark: "一些些",
+      //     actionSerialNum: 2,
+      //   },
+      // ];
     },
 
     resetListQuery() {
@@ -657,14 +690,17 @@ export default {
         currentPage: 1,
         pageSize: 20,
         totalRecord: 0,
-        postName: '',
+        entryName: '',
+        applyPostId: '',
+        actionRoleId: '',
         status: ''
       };
       this.getList();
     },
     handleModifyStatus(row) {
-      const params = Object.assign({}, row, { status: row.status ? 0 : 1 });
-      sysPostStartStop(params)
+      debugger
+      const params = Object.assign({}, row);
+      updateStatus(params)
         .then(() => {
           this.$message({
             message: '操作成功',
@@ -713,7 +749,7 @@ export default {
           // width: "200px",
           label: '创建人',
           placeholder: '请输入创建人名称'
-        },
+        }
       );
       this.dialogFormVisible = true;
       this.$nextTick(() => {
@@ -723,22 +759,22 @@ export default {
     createData() {
       this.$refs['formPanel'].$refs['dataForm'].validate((valid) => {
         if (valid) {
-          //   this.temp.id = parseInt(Math.random() * 100) + 1024 // mock a id
-          //   this.temp.author = 'vue-element-admin'
+          const tempData = Object.assign({}, this.temp);
           this.dialogButtonLoading = true;
-          saveStandardEntry(this.temp)
+          tempData.applyPostId = tempData.applyPostId.join(',');
+          tempData.applyProfessorId = tempData.applyProfessorId.join(',');
+          tempData.ordinatorId = tempData.ordinatorId.join(',');
+          saveStandardEntry(tempData)
             .then(() => {
-              // this.list.unshift(this.temp);
-              this.dialogFormVisible = false;
-              this.handleResetForm();
+              // this.handleResetForm();
               this.$message({
                 title: '成功',
                 message: '创建成功',
                 type: 'success',
                 duration: 0
               });
+              this.dialogFormVisible = false;
               this.dialogButtonLoading = false;
-
               this.getList();
             })
             .catch(() => {
@@ -748,6 +784,7 @@ export default {
                 type: 'error',
                 duration: 2000
               });
+              this.dialogButtonLoading = false;
             });
         }
       });
@@ -755,10 +792,12 @@ export default {
     updateData() {
       this.$refs['formPanel'].$refs['dataForm'].validate((valid) => {
         if (valid) {
-          const tempData = Object.assign({}, this.temp, {
-            status: this.temp.status ? '0' : '1'
-          });
-          updateSysPost(tempData)
+          const tempData = Object.assign({}, this.temp);
+          this.dialogButtonLoading = true;
+          tempData.applyPostId = tempData.applyPostId.join(',');
+          tempData.applyProfessorId = tempData.applyProfessorId.join(',');
+          tempData.ordinatorId = tempData.ordinatorId.join(',');
+          updateStandardEntry(tempData)
             .then(() => {
               this.$message({
                 title: '成功',
@@ -766,8 +805,9 @@ export default {
                 type: 'success',
                 duration: 2000
               });
-              this.handleResetForm();
+              // this.handleResetForm();
               this.dialogFormVisible = false;
+              this.dialogButtonLoading = false;
               this.getList();
             })
             .catch(() => {
@@ -777,13 +817,14 @@ export default {
                 type: 'error',
                 duration: 2000
               });
+              this.dialogButtonLoading = false;
             });
         }
       });
     },
     handleDelete(row) {
       this.$confirm(
-        '您确定要删除该规范条目信息吗?删除后该岗位信息不可恢复',
+        '您确定要删除该规范条目信息吗?删除后该规范条目信息不可恢复。',
         '提示',
         {
           confirmButtonText: '确定',
@@ -792,7 +833,7 @@ export default {
         }
       )
         .then(() => {
-          deleteSysPost(row.postId)
+          deleteStandardEntry(row.standardEntryId)
             .then(() => {
               this.$message({
                 type: 'success',
@@ -830,42 +871,95 @@ export default {
       };
     },
     handleDialogClose() {
-      // this.handleResetForm();
+      this.$nextTick(() => {
+        this.handleResetForm();
+      });
       if (this.dialogStatus === 'examine') {
-        this.formConfig.formItemList.splice(-2, 2)
+        this.formConfig.formItemList.splice(-2, 2);
       }
       this.$refs['formPanel'].$refs['dataForm'].clearValidate();
     },
     getApplyPostName(ids) {
-      return ids
+      const result = [];
+      this.postOptions.forEach((item) => {
+        ids.forEach((id) => {
+          if (id === item.key) {
+            result.push(item.display_name);
+          }
+        });
+      });
+      return result.join(',');
     },
-    getActionRoleName(ids) {
-      return ids
+    getActionRoleName(actionRoleId) {
+      const find = this.roleOptions.find((item) => {
+        return item.key === actionRoleId;
+      });
+      if (find) {
+        return find.display_name;
+      }
+      return '';
     },
     getOrdinatorName(ids) {
-      return ids
+      const result = [];
+      this.userOptions.forEach((item) => {
+        ids.forEach((id) => {
+          if (id === item.key) {
+            result.push(item.display_name);
+          }
+        });
+      });
+      return result.join(',');
     },
     postQueryMethod({ keyword, pageSize, currentPage }) {
-      // return request({
-      //   url: '/sysPost/querySysPost',
-      //   method: 'post',
-      //   data: {
-      //     postName: keyword,
-      //     pageSize,
-      //     currentPage
-      //   }
-      // });
+      return new Promise((resolve) => {
+        querySysPost({
+          postName: keyword,
+          pageSize,
+          currentPage
+        }).then((res) => {
+          const records = res.data.records;
+          resolve({
+            records,
+            total: res.data.totalRecord
+          });
+        });
+      }).catch((err) => {
+        console.log(err);
+      });
     },
     technicalQueryMethod({ keyword, pageSize, currentPage }) {
-      // return request({
-      //   url: '/sysTechnicalTitle/queryByTechnicalTitleName',
-      //   method: 'get',
-      //   params: {
-      //     technicalTitleName: keyword,
-      //     pageSize,
-      //     currentPage
-      //   }
-      // });
+      return new Promise((resolve) => {
+        queryByTechnicalTitleName({
+          technicalName: keyword,
+          pageSize,
+          currentPage
+        }).then((res) => {
+          const records = res.data.records;
+          resolve({
+            records,
+            total: res.data.totalRecord
+          });
+        });
+      }).catch((err) => {
+        console.log(err);
+      });
+    },
+    ordinatorQueryMethod({ keyword, pageSize, currentPage }) {
+      return new Promise((resolve) => {
+        queryUemUser({
+          name: keyword,
+          pageSize,
+          currentPage
+        }).then((res) => {
+          const records = res.data.records;
+          resolve({
+            records,
+            total: res.data.totalRecord
+          });
+        });
+      }).catch((err) => {
+        console.log(err);
+      });
     }
   }
 };

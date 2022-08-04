@@ -3,7 +3,7 @@ import request from '@/utils/request'
 // 查询职称
 export function queryByTechnicalTitleName(data) {
   return request({
-    url: '/standardEntry/sysTechnicalTitle/querySysPost',
+    url: '/standardEntry/sysTechnicalTitle/queryByTechnicalTitleName',
     method: 'post',
     data
   })
@@ -57,8 +57,39 @@ export function queryRoleByPage(data) {
 // 查询条目类型
 export function querySysDictType(data) {
   return request({
-    url: '/sysDictType/querySysDictType',
+    url: '/standardEntry/sysDictType/querySysDictType',
     method: 'post',
     data
+  })
+}
+
+// 编辑条目
+export function updateStandardEntry(data) {
+  return request({
+    url: '/standardEntry/updateStandardEntry',
+    method: 'post',
+    data
+  })
+}
+
+// 删除条目
+export function deleteStandardEntry(standardEntryId) {
+  return request({
+    url: '/standardEntry/deleteStandardEntry',
+    method: 'get',
+    params: {
+      standardEntryId
+    }
+  })
+}
+
+// 启用/禁用条目
+export function updateStatus({ standardEntryId, status }) {
+  return request({
+    url: '/standardEntry/updateStatus',
+    method: 'get',
+    params: {
+      standardEntryId, status
+    }
   })
 }
