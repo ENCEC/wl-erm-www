@@ -38,11 +38,13 @@
     </div>
     <!-- 用户资料-->
     <ProfileDialog
+      v-if="profileDialogVisible"
       :visible.sync="profileDialogVisible"
       :edit-data="editData"
     />
     <!-- 修改密码 -->
     <PasswordDialog
+      v-if="passwordDialogVisible"
       :visible.sync="passwordDialogVisible"
       :edit-data="editData"
     />

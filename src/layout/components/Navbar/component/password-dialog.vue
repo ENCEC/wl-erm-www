@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-01 15:55:04
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-01 17:40:58
+ * @LastEditTime: 2022-08-04 18:02:41
  * @Description: 修改密码
 -->
 
@@ -36,7 +36,7 @@
                   v-model="formData.password"
                   placeholder="只能输入数字或字母，且必须包含数字和字母"
                   type="password"
-                  style="width:350px"
+                  class="input-width"
                   clearable
                 />
               </el-form-item>
@@ -47,7 +47,7 @@
                   v-model="formData.rePassword"
                   placeholder="请输入确认密码"
                   type="password"
-                  style="width:350px"
+                  class="input-width"
                   clearable
                 />
               </el-form-item>
@@ -72,7 +72,8 @@
   </div>
 </template>
 <script>
-import { saveUemUser, editUemUser } from '@/api/staff-manage';
+import { updatePassword } from '@/api/login';
+import { aesEncrypt } from '@/utils/util'
 export default {
   components: {},
   props: {},
@@ -141,10 +142,10 @@ export default {
     handleConfirm() {
       this.$refs['elForm'].validate(valid => {
         if (valid) {
-          const funcName = this.editData.uemUserId ? editUemUser : saveUemUser;
-          funcName(this.formData).then(res => {
+          updatePassword({
+            newPassword: aesEncrypt(this.formData.rePassword)
+          }).then(res => {
             this.$message.success(res.data);
-            this.$emit('getTableData', '');
             this.close();
           });
         }
@@ -156,9 +157,9 @@ export default {
 <style lang="scss">
 .password-dialog {
   .form-wrap {
-    height: 160px;
+    height: 140px;
     .input-width {
-      width: 180px;
+      width: 300px;
     }
   }
   // 底部按钮

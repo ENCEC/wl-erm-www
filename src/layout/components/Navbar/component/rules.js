@@ -46,43 +46,17 @@ export const formRules = {
       trigger: 'blur'
     }
   ],
-  jobStatus: [
+  userType: [
     {
       required: true,
-      message: '在职状态不能为空',
+      message: '请选择用户类型',
       trigger: 'change'
     }
   ],
-  seniority: [
+  uemDeptId: [
     {
       required: true,
-      message: '请输入工作年限',
-      trigger: 'blur'
-    },
-    {
-      pattern: /^[0-9]*$/,
-      message: '请输入数字',
-      trigger: 'blur'
-    }
-  ],
-  entryDate: [
-    {
-      required: true,
-      message: '请选择入职时间',
-      trigger: 'change'
-    }
-  ],
-  staffDutyCode: [
-    {
-      required: true,
-      message: '请选择入职岗位',
-      trigger: 'change'
-    }
-  ],
-  projectId: [
-    {
-      required: true,
-      message: '请选择归属项目',
+      message: '请选择所属部门',
       trigger: 'change'
     }
   ]

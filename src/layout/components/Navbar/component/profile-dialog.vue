@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-01 15:41:40
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-01 17:40:47
+ * @LastEditTime: 2022-08-04 17:41:30
  * @Description: 用户资料
 -->
 
@@ -71,17 +71,18 @@
             </el-col>
           </el-row>
           <el-row>
+            <!-- TODO -->
             <el-col :span="12">
-              <el-form-item label="用户类型:" prop="staffDutyCode">
+              <el-form-item label="用户类型:" prop="userType">
                 <el-select
-                  v-model="formData.staffDutyCode"
-                  placeholder="请选择入职岗位"
+                  v-model="formData.userType"
+                  placeholder="请选择用户类型"
                   clearable
                   disabled
                   class="input-width"
                 >
                   <el-option
-                    v-for="(item, index) in staffTypeOptions"
+                    v-for="(item, index) in userTypeOptions"
                     :key="index"
                     :label="item.label"
                     :value="item.value"
@@ -91,21 +92,8 @@
             </el-col>
             <el-col :span="12">
               <!-- 联想控件 -->
-              <el-form-item label="所属部门:" prop="projectId">
-                <el-select
-                  v-model="formData.projectId"
-                  placeholder="请选择归属项目"
-                  clearable
-                  class="input-width"
-                  disabled
-                >
-                  <el-option
-                    v-for="(item, index) in projectTypeOptions"
-                    :key="index"
-                    :label="item.label"
-                    :value="item.value"
-                  />
-                </el-select>
+              <el-form-item label="所属部门:" prop="uemDeptId">
+                <Department v-model="formData.uemDeptId" placeholder="请选择所属部门" class="input-width" disabled />
               </el-form-item>
             </el-col>
           </el-row>
@@ -113,10 +101,10 @@
             <el-col :span="12">
               <el-form-item label="创建时间:">
                 <el-date-picker
-                  v-model="formData.entryDate"
+                  v-model="formData.createTime"
                   format="yyyy-MM-dd"
                   class="input-width"
-                  placeholder="请选择入职时间"
+                  placeholder="请选择创建时间"
                   clearable
                   disabled
                 />
@@ -125,8 +113,8 @@
             <el-col :span="12">
               <el-form-item label="创建人:">
                 <el-input
-                  v-model="formData.seniority"
-                  placeholder="请输入工作年限"
+                  v-model="formData.creatorName"
+                  placeholder="请输入创建人"
                   clearable
                   disabled
                 />
@@ -152,11 +140,12 @@
   </div>
 </template>
 <script>
-import { getUemUser, saveUemUser, editUemUser } from '@/api/user-manage';
+import { getLoginUserInfo, updateUemUserInfo } from '@/api/login';
 import { formRules } from './rules';
+import Department from '@/components/CurrentSystem/Department.vue'
 
 export default {
-  components: {},
+  components: { Department },
   // inheritAttrs: false,
   props: {
     // 编辑信息
@@ -172,38 +161,12 @@ export default {
         account: '',
         name: '',
         mobile: '',
-        sex: '',
         email: '',
-        jobStatus: '', // 在职状态（0：试用员工 1：正式员工 2：离职员工）
-        seniority: '', // 工作年限
-        entryDate: '', // 入职时间
-        staffDutyCode: '',
-        projectId: ''
+        userType: '',
+        uemDeptId: ''
       },
-      // TODO（0男，1女）
-      sexOptions: [
-        {
-          label: '男',
-          value: 0
-        },
-        {
-          label: '女',
-          value: 1
-        }
-      ],
-      // 在职状态 //TODO
-      jobStatusOptions: [
-        {
-          label: '试用员工',
-          value: '0'
-        },
-        {
-          label: ' 正式员工',
-          value: '1'
-        }
-      ],
       // TODO
-      staffTypeOptions: [
+      userTypeOptions: [
         {
           label: '选项一',
           value: '1'
@@ -211,17 +174,6 @@ export default {
         {
           label: '选项二',
           value: '2'
-        }
-      ],
-      // TODO
-      projectTypeOptions: [
-        {
-          label: '选项一',
-          value: 1
-        },
-        {
-          label: '选项二',
-          value: 2
         }
       ]
     };
@@ -236,6 +188,7 @@ export default {
   },
   watch: {},
   created() {
+    this.getDetailInfo();
   },
   mounted() {
     // this.$refs['elForm'].clearValidate();
@@ -248,13 +201,12 @@ export default {
     },
     // 获取用户信息
     getDetailInfo() {
-      getUemUser({
+      getLoginUserInfo({
         uemUserId: this.editData.uemUserId
       }).then(res => {
         this.formData = {
           ...this.formData,
-          ...res.data,
-          sex: res.data.sex ? 0 : 1
+          ...res.data
         };
       });
     },
@@ -262,10 +214,8 @@ export default {
     handleConfirm() {
       this.$refs['elForm'].validate(valid => {
         if (valid) {
-          const funcName = this.editData.uemUserId ? editUemUser : saveUemUser;
-          funcName(this.formData).then(res => {
+          updateUemUserInfo(this.formData).then(res => {
             this.$message.success(res.data);
-            this.$emit('getTableData', '');
             this.close();
           });
         }

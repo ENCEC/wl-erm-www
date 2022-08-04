@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:15:04
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-03 18:18:40
+ * @LastEditTime: 2022-08-04 19:11:27
  * @Description: 员工管理-任务分配
 -->
 
@@ -81,7 +81,7 @@ export default {
   methods: {
     // 获取表格数据
     getTableData() {
-      this.listLoading = true;
+      // this.listLoading = true;
       queryTaskInfoPage({
         pageNo: this.params.currentPage,
         pageSize: this.params.pageSize,
