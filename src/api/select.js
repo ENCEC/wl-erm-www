@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-01 19:02:14
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-02 16:35:59
+ * @LastEditTime: 2022-08-03 14:04:47
  * @Description: 下拉框接口
  */
 
@@ -35,6 +35,15 @@ export function queryStaffDutyBySelect(data) {
 export function queryTechnicalNameBySelect(data) {
   return request({
     url: '/uemUserManage/queryTechnicalNameBySelect',
+    method: 'post',
+    data
+  });
+}
+// 用户列表
+export function queryUser(data) {
+  return request({
+    // url: '/uemUserManage/queryUemUser',
+    url: '/uemUserManage/queryStaffByPage',
     method: 'post',
     data
   });

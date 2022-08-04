@@ -2,64 +2,59 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:19:50
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-02 10:20:20
+ * @LastEditTime: 2022-08-03 15:45:44
  * @Description: 员工管理-任务分配
  */
 
 import request from '@/utils/request';
 // 列表
-export function queryUemUser(data) {
+export function queryTaskInfoPage(data) {
   return request({
-    url: '/uemUserManage/queryUemUser',
+    url: '/taskInfo/queryTaskInfoPage',
     method: 'post',
     data
   });
 }
-// 获取信息
-export function getUemUser(query) {
+// 弹框-列表
+export function queryStandardFullDetailByTaskType(data) {
   return request({
-    url: '/uemUserManage/getUemUser',
-    method: 'get',
-    params: query
-  });
-}
-// 管理员新增用户
-export function saveUemUser(data) {
-  return request({
-    url: '/uemUserManage/saveUemUser',
-    method: 'post',
-    data
-  });
-}
-// 修改用户信息
-export function editUemUser(data) {
-  return request({
-    url: '/uemUserManage/editUemUser',
+    url: '/taskInfo/queryStandardFullDetailByTaskType',
     method: 'post',
     data
   });
 }
 
-// 启用/禁用用户
-export function uemUserStartStop(data) {
+// 获取详情
+export function getTaskInfoDetail(data) {
   return request({
-    url: '/uemUserManage/uemUserStartStop',
+    url: '/taskInfo/getTaskInfoDetail',
     method: 'post',
     data
   });
 }
-// 删除用户信息
-export function deleteUemUser(data) {
+
+// 新增
+export function saveTaskInfo(data) {
   return request({
-    url: '/uemUserManage/deleteUemUser',
+    url: '/taskInfo/saveTaskInfo',
     method: 'post',
     data
   });
 }
-// 管理员重置用户密码
-export function resetUemUserPassword(data) {
+
+// 修改
+export function updateTaskInfo(data) {
   return request({
-    url: '/uemUserManage/resetUemUserPassword',
+    url: '/taskInfo/updateTaskInfo',
+    method: 'post',
+    data
+  });
+}
+
+// 删除
+export function deleteTaskInfo(data) {
+  return request({
+    url: '/taskInfo/deleteTaskInfo',
     method: 'post',
     data
   });

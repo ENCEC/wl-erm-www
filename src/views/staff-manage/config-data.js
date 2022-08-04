@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-01 13:52:08
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-02 17:43:40
+ * @LastEditTime: 2022-08-03 15:38:32
  * @Description:
  */
 
@@ -112,7 +112,8 @@ export const tableConfig = {
   highlightCurrentRow: true, // 是否支持当前行高亮显示
   mutiSelect: false, // 是否支持列表项选中功能
   indexShow: true,
-  pagination: true
+  pagination: true,
+  height: '340px'
 };
 
 // 表格列
@@ -167,8 +168,9 @@ export const operates = _this => {
         type: 'text',
         show: true,
         disabled: false,
-        method: (index, row) => {
-          console.log('【 index 】-163', index)
+        method: (row, index) => {
+          console.log('【 row 】-172', row)
+          // console.log('【 index 】-163', index)
           _this.handleOpen(row, 'edit');
         }
       },

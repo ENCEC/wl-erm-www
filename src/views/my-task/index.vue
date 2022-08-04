@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 15:36:16
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-02 15:37:32
+ * @LastEditTime: 2022-08-03 15:14:42
  * @Description: 员工管理-我的任务
 -->
 
@@ -151,14 +151,6 @@ export default {
   .pagination-wrap {
     margin: 10px;
     float: right;
-  }
-  // 重置密码
-  .password-dialog {
-    height: 55px;
-    text-align: center;
-    .password {
-      color: rgb(194, 22, 22);
-    }
   }
 }
 </style>

@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:15:03
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-02 17:55:42
+ * @LastEditTime: 2022-08-03 18:33:21
  * @Description:
 -->
 
@@ -11,7 +11,7 @@
     <el-dialog
       :title="dialogTitle"
       v-bind="$attrs"
-      width="900px"
+      width="1000px"
       center
       :close-on-click-modal="false"
       top="10vh"
@@ -30,18 +30,18 @@
         <div class="form-wrap">
           <el-row>
             <el-col :span="12">
-              <el-form-item label="标题:" prop="name">
+              <el-form-item label="标题:" prop="taskTitle">
                 <el-input
-                  v-model="formData.name"
-                  placeholder="请输入姓名"
+                  v-model="formData.taskTitle"
+                  placeholder="请输入标题"
                   clearable
                 />
               </el-form-item>
             </el-col>
             <el-col :span="12">
               <!-- 在职状态（0：试用员工 1：正式员工 2：离职员工） -->
-              <el-form-item label="在职状态:" prop="jobStatus">
-                <el-radio-group v-model="formData.jobStatus">
+              <el-form-item label="在职状态:" prop="status">
+                <el-radio-group v-model="formData.status">
                   <el-radio
                     v-for="item in jobStatusOptions"
                     :key="'jobStatus' + item.value"
@@ -53,35 +53,23 @@
           </el-row>
           <el-row>
             <el-col :span="12">
-              <el-form-item label="入职岗位:" prop="staffDutyCode">
-                <el-select
-                  v-model="formData.staffDutyCode"
-                  placeholder="请选择入职岗位"
-                  clearable
-                  class="input-width"
-                >
-                  <el-option
-                    v-for="(item, index) in staffTypeOptions"
-                    :key="index"
-                    :label="item.label"
-                    :value="item.value"
-                  />
-                </el-select>
+              <el-form-item label="执行人:" prop="executor">
+                <UserAssociate v-model="formData.executor" class="input-width" />
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item label="岗位职称:" prop="technicalName">
+              <el-form-item label="任务类型:" prop="taskType">
                 <el-select
-                  v-model="formData.technicalName"
-                  placeholder="请选择岗位职称"
+                  v-model="formData.taskType"
+                  placeholder="请选择任务类型"
                   clearable
                   class="input-width"
                 >
                   <el-option
-                    v-for="(item, index) in staffTypeOptions"
-                    :key="index"
+                    v-for="(item) in taskTypeOptions"
+                    :key="item.value"
                     :label="item.label"
-                    :value="item.value"
+                    :value="item.label"
                   />
                 </el-select>
               </el-form-item>
@@ -91,7 +79,7 @@
             <el-col :span="24">
               <el-form-item label="员工任务:" prop="taskList">
                 <div class="table-wrap">
-                  <TaskTable :type="type" />
+                  <TaskTable ref="tableForm" :selected-list.sync="selectedData" :type="type" :records="records" :task-type="formData.taskType" @getSelectedData="getSelectedData" />
                 </div>
               </el-form-item>
             </el-col>
@@ -147,12 +135,12 @@
 </template>
 <script>
 import TaskTable from './task-table'
-import { getUemUser, saveUemUser, editUemUser } from '@/api/user-manage';
+import UserAssociate from '@/components/CurrentSystem/UserAssociate'
+import { getTaskInfoDetail, saveTaskInfo, updateTaskInfo } from '@/api/staff-task';
 import { formRules } from './rules';
 
 export default {
-  components: { TaskTable },
-  // inheritAttrs: false,
+  components: { UserAssociate, TaskTable },
   props: {
     // 编辑信息
     editData: {
@@ -167,32 +155,24 @@ export default {
   },
   data() {
     return {
+      records: [],
+      selectedData: [],
       rules: formRules, // 验证规则
       formData: {
-        name: '',
-        jobStatus: '', // 在职状态（0：试用员工 1：正式员工 2：离职员工）
-        staffDutyCode: '', // 入职岗位
-        technicalName: '' // 岗位职称
+        taskTitle: '',
+        executor: '', // 执行人
+        status: '', // 在职状态（0：试用员工 1：正式员工 2：离职员工）
+        taskType: '', //
+        taskDetailInfoDtoList: []// 列表勾选值
       },
-      // TODO
-      staffTypeOptions: [
-        {
-          label: '选项一',
-          value: '1'
-        },
-        {
-          label: '选项二',
-          value: '2'
-        }
-      ]
+      taskTypeOptions: this.$dict.getDictOptions('TASK_TYPE')
     };
   },
   computed: {
     // 弹框标题
     dialogTitle() {
-      this.editData.uemUserId && this.getDetailInfo();
-      // return this.editData.uemUserId ? '编辑任务信息' : '';
-      return this.editData.uemUserId
+      this.editData.taskInfoId && this.getDetailInfo();
+      return this.editData.taskInfoId
         ? this.type === 'detail'
           ? '任务详细信息'
           : '编辑任务信息'
@@ -207,27 +187,40 @@ export default {
   created() {},
   mounted() {},
   methods: {
+    // 表格勾选
+    getSelectedData(val) {
+      console.log('【getSelectedData-val 】-202', val)
+      this.formData.taskDetailInfoDtoList = val.map(item => {
+        const { standardDetailId, ordinator } = item
+        return { standardDetailId, ordinator }
+      })
+    },
     // 关闭弹框
     close() {
       this.$emit('update:visible', false);
       this.$refs['elForm'].resetFields();
     },
-    // 获取用户信息
+    // 获取详细信息
     getDetailInfo() {
-      getUemUser({
-        uemUserId: this.editData.uemUserId
-      }).then(res => {
+      getTaskInfoDetail({ taskInfoId: this.editData.taskInfoId }).then(res => {
+        console.log('【 res 】-211', res)
+        const result = res.data
         this.formData = {
           ...this.formData,
-          ...res.data
+          ...result,
+          status: result.status.toString()
         };
+        this.records = result.taskDetailInfoDtoList
+        console.log('【 this.records 】-224', this.records)
       });
     },
     // 提交表单信息
     handleConfirm() {
+      const isTableFormValid = this.$refs.tableForm.validateTableForm()
+      console.log('【 isTableFormValid 】-230', isTableFormValid)
       this.$refs['elForm'].validate(valid => {
-        if (valid) {
-          const funcName = this.editData.uemUserId ? editUemUser : saveUemUser;
+        if (isTableFormValid && valid) {
+          const funcName = this.editData.taskInfoId ? updateTaskInfo : saveTaskInfo;
           funcName(this.formData).then(res => {
             this.$message.success(res.data);
             this.$emit('getTableData', '');
@@ -242,13 +235,13 @@ export default {
 <style lang="scss">
 .staff-dialog {
   .form-wrap {
-    // height: 350px;
+    height: 460px;
     margin-bottom: 20px;
     .input-width {
       width: 180px;
     }
     .table-wrap{
-      width:700px;
+      width:750px;
     }
   }
   // 底部按钮

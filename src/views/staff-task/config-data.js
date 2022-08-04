@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:15:04
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-02 14:06:02
+ * @LastEditTime: 2022-08-03 18:27:21
  * @Description:
  */
 
@@ -17,7 +17,7 @@ export const filterConfig = _this => {
       {
         type: 'input',
         label: '标题',
-        prop: 'name',
+        prop: 'taskTitle',
         width: '200px',
         clearable: true,
         placeholder: '请输入标题',
@@ -26,17 +26,16 @@ export const filterConfig = _this => {
       {
         type: 'input',
         label: '分配对象',
-        prop: 'name2',
+        prop: 'executor',
         width: '200px',
         clearable: true,
         placeholder: '请输入分配对象',
         col: 8
       },
-      // 入职部门
       {
         type: 'select',
         label: '任务类型',
-        prop: 'isValid2',
+        prop: 'taskType',
         width: '200px',
         clearable: true,
         placeholder: '请选择任务类型',
@@ -44,13 +43,12 @@ export const filterConfig = _this => {
         optionLabel: 'label',
         optionValue: 'value',
         optionKey: 'value',
-        options: _this.$dict.getDictOptions('VALID_STATUS')
+        options: _this.$dict.getDictOptions('TASK_TYPE')
       },
-      // 入职岗位
       {
         type: 'select',
         label: '任务状态',
-        prop: 'isValid',
+        prop: 'status',
         width: '200px',
         clearable: true,
         placeholder: '请选择任务状态',
@@ -60,7 +58,7 @@ export const filterConfig = _this => {
         optionKey: 'value',
         options: [{ value: '', label: '全部' }, ..._this.$dict.getDictOptions('TASK_STATUS')],
         changeSelect: (optionVal) => {
-          _this.filterForm.isValid = optionVal
+          _this.filterForm.status = optionVal
         }
       }
     ],
@@ -104,43 +102,59 @@ export const tableConfig = {
   highlightCurrentRow: true, // 是否支持当前行高亮显示
   mutiSelect: false, // 是否支持列表项选中功能
   indexShow: true,
-  pagination: true
+  pagination: true,
+  height: '340px'
 };
 
 // 表格列
 export const columns = _this => {
   return [
     {
-      prop: 'name',
+      prop: 'taskTitle',
       label: '标题'
     },
     {
-      prop: 'sex',
+      prop: 'executor',
       label: '执行人'
-      // formatter: (row, column) => {
-      //   return row.sex ? '男' : '女'
-      //   // TODO
-      // }
+
     },
     {
-      prop: 'mobile',
-      label: '任务类型'
+      prop: 'taskType',
+      label: '任务类型',
+      formatter: (row, column) => {
+        return _this.$dict.getDictNameByCode('TASK_TYPE', row.taskType)
+      }
     },
     {
-      prop: 'email',
-      label: '任务状态'
+      prop: 'status',
+      label: '任务状态',
+      formatter: (row, column) => {
+        return _this.$dict.getDictNameByCode('TASK_STATUS', row.status)
+      }
+    },
+    // TODO
+    {
+      prop: 'planEndDate',
+      label: '完成时间',
+      formatter: (row, column) => {
+        const val = row.planEndDate
+        const date = val ? _this.$moment(parseInt(val)).format('YYYY-MM-DD') : '';
+        return date
+      }
     },
     {
-      prop: 'email',
-      label: '完成时间'
-    },
-    {
-      prop: 'email',
+      prop: 'dispatchers',
       label: '分配人'
     },
+    // TODO
     {
-      prop: 'email',
-      label: '创建时间'
+      prop: 'publishDate',
+      label: '创建时间',
+      formatter: (row, column) => {
+        const val = row.publishDate
+        const date = val ? _this.$moment(parseInt(val)).format('YYYY-MM-DD') : '';
+        return date
+      }
     }
     // {
     //   prop: 'isValid',
@@ -163,8 +177,8 @@ export const operates = _this => {
         type: 'text',
         show: true,
         disabled: false,
-        method: (index, row) => {
-          console.log('【 index 】-163', index)
+        method: (row, index) => {
+          console.log('【 index 】-171', index)
           _this.handleOpen(row, 'edit');
         }
       },
@@ -174,8 +188,7 @@ export const operates = _this => {
         type: 'text',
         show: true,
         disabled: false,
-        method: (index, row) => {
-          console.log('【 index 】-163', index)
+        method: (row) => {
           _this.handleOpen(row, 'detail');
         }
       },
@@ -186,8 +199,8 @@ export const operates = _this => {
         type: 'text',
         show: true,
         plain: false,
-        method: (index, row) => {
-          _this.handleDelete(row.uemUserId)
+        method: (row) => {
+          _this.handleDelete(row.taskInfoId)
         }
       }
     ],

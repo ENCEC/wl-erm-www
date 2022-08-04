@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-01 18:07:40
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-02 17:34:19
+ * @LastEditTime: 2022-08-03 16:33:36
  * @Description:
 -->
 
@@ -11,7 +11,7 @@
     <el-dialog
       :title="'员工转正'"
       v-bind="$attrs"
-      width="720px"
+      width="750px"
       center
       :close-on-click-modal="false"
       top="10vh"
@@ -95,19 +95,7 @@
             </el-col>
             <el-col :span="12">
               <el-form-item label="入职岗位:" prop="staffDutyCode">
-                <el-select
-                  v-model="formData.staffDutyCode"
-                  placeholder="请选择入职岗位"
-                  clearable
-                  class="input-width"
-                >
-                  <el-option
-                    v-for="(item,index) in staffDutyOptions"
-                    :key="'staffDutyCode'+index+item.staffDutyCode"
-                    :label="item.staffDuty"
-                    :value="item.staffDutyCode"
-                  />
-                </el-select>
+                <StaffDuty v-model="formData.staffDutyCode" class="input-width" />
               </el-form-item>
             </el-col>
           </el-row>
@@ -125,12 +113,12 @@
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <!-- 性别（0男，1女） -->
-              <el-form-item label="转正类型:" prop="sex">
-                <el-radio-group v-model="formData.sex">
+              <!-- TODO -->
+              <el-form-item label="转正类型:" prop="offerType">
+                <el-radio-group v-model="formData.offerType">
                   <el-radio
                     v-for="item in typeOptions"
-                    :key="'sex' + item.value"
+                    :key="'offerType' + item.value"
                     :label="item.value"
                   >{{ item.label }}</el-radio>
                 </el-radio-group>
@@ -138,6 +126,7 @@
             </el-col>
           </el-row>
           <el-row>
+            <!-- TODO -->
             <el-col :span="12">
               <el-form-item label="转员工答辩成绩:" prop="graduateSchool" label-width="120px">
                 <el-input
@@ -148,6 +137,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="12">
+              <!-- TODO -->
               <el-form-item label="附件:" prop="speciality">
                 上传
               </el-form-item>
@@ -157,27 +147,16 @@
           <el-row>
             <el-col :span="24">
               <el-form-item label="面谈评语:" prop="technicalName">
-                <el-select
-                  v-model="formData.technicalName"
-                  placeholder="请选择面谈人"
-                  clearable
-                  class="input-width"
-                >
-                  <el-option
-                    v-for="(item, index) in staffTypeOptions"
-                    :key="index"
-                    :label="item.label"
-                    :value="item.value"
-                  />
-                </el-select>
+                <UserAssociate v-model="formData.graduateSchool" placeholder="请选择面谈人" class="input-width" />
               </el-form-item>
             </el-col>
           </el-row>
+          <!-- 面谈评语 -->
           <el-row>
             <el-col :span="24">
-              <el-form-item label=" " prop="technicalName">
+              <el-form-item label=" " prop="faceRemark" :hide-required-asterisk="false">
                 <el-input
-                  v-model="formData.email"
+                  v-model="formData.faceRemark"
                   type="textarea"
                   placeholder="输入评语"
                   clearable
@@ -189,27 +168,16 @@
           <el-row>
             <el-col :span="24">
               <el-form-item label="转正评语:" prop="technicalName">
-                <el-select
-                  v-model="formData.technicalName"
-                  placeholder="请选择审批人"
-                  clearable
-                  class="input-width"
-                >
-                  <el-option
-                    v-for="(item, index) in staffTypeOptions"
-                    :key="index"
-                    :label="item.label"
-                    :value="item.value"
-                  />
-                </el-select>
+                <UserAssociate v-model="formData.graduateSchool" placeholder="请选择审批人" class="input-width" />
               </el-form-item>
             </el-col>
           </el-row>
+          <!-- 转正评语 -->
           <el-row>
             <el-col :span="24">
-              <el-form-item label=" " prop="technicalName">
+              <el-form-item label=" " prop="offerRemark" :hide-required-asterisk="true">
                 <el-input
-                  v-model="formData.email"
+                  v-model="formData.offerRemark"
                   type="textarea"
                   placeholder="输入评语"
                   clearable
@@ -239,10 +207,12 @@
 <script>
 import { getUemUser, saveUemUser, editUemUser } from '@/api/staff-manage';
 import { formRules } from './rules';
-import { queryStaffDutyBySelect, queryDepartmentBySelect } from '@/api/select';
+import { queryDepartmentBySelect } from '@/api/select';
+import StaffDuty from '@/components/CurrentSystem/StaffDuty.vue'
+import UserAssociate from '@/components/CurrentSystem/UserAssociate'
 
 export default {
-  components: {},
+  components: { StaffDuty, UserAssociate },
   // inheritAttrs: false,
   props: {
     // 编辑信息
@@ -276,13 +246,14 @@ export default {
         technicalName: '', // 岗位职称
         email: '',
         seniority: '', // 工作年限
-        projectId: ''// 归属项目
+        projectId: '', // 归属项目,
+        faceRemark: '', // 面谈评语
+        offerRemark: '' // 转正评语
       },
       sexOptions: this.$dict.getDictOptions('SEX'),
-      typeOptions: this.$dict.getDictOptions('TYPE'),
+      typeOptions: this.$dict.getDictOptions('OFFER_TYPE'),
       maritalStatusOptions: this.$dict.getDictOptions('MARITAL_STATUS'),
       educationOptions: this.$dict.getDictOptions('EDUCATION'),
-      staffDutyOptions: [],
       deptOptions: []
     };
   },
@@ -309,7 +280,6 @@ export default {
   methods: {
     // 获取下拉信息
     async getSelectOptions() {
-      this.staffDutyOptions = await queryStaffDutyBySelect()
       this.deptOptions = await queryDepartmentBySelect()
     },
     // 关闭弹框

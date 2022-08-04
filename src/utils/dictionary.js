@@ -2,11 +2,11 @@
  * @Author: Hongzf
  * @Date: 2022-08-01 17:25:40
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-01 18:05:01
+ * @LastEditTime: 2022-08-03 18:31:57
  * @Description: 字典
  */
 import * as dicts from '@/store/constant'
-
+// 获取字典的下拉列表
 const getDictOptions = (dicName) => {
   const arr = []
   // console.log('【 dicts 】-13', dicts)
@@ -16,6 +16,12 @@ const getDictOptions = (dicName) => {
   }
   return arr
 }
+// 根据code获取中文
+const getDictNameByCode = (dicName, code) => {
+  const dicObj = dicts[dicName]
+  return dicObj[code] || '-'
+}
 export default {
-  getDictOptions
+  getDictOptions,
+  getDictNameByCode
 }

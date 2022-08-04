@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:15:04
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-02 14:22:15
+ * @LastEditTime: 2022-08-03 18:18:40
  * @Description: 员工管理-任务分配
 -->
 
@@ -38,9 +38,9 @@ import tableComponent from '@/components/TableComponent';
 import { filterConfig, tableConfig, columns, operates } from './config-data.js';
 import CreateDialog from './component/create-dialog';
 import {
-  queryUemUser,
+  queryTaskInfoPage,
   uemUserStartStop,
-  deleteUemUser
+  deleteTaskInfo
 } from '@/api/staff-task';
 import tableMix from '@/mixins/table-mixin';
 export default {
@@ -56,22 +56,21 @@ export default {
       // 查询
       filterConfig: filterConfig(this),
       filterForm: {
-        account: undefined,
-        name: undefined,
-        isValid: ''
+        taskTitle: undefined,
+        executor: undefined,
+        taskType: '',
+        status: ''
       },
       // 表格
-      records: [],
+      records: [{}],
       listLoading: false,
       tableConfig,
       columns: columns(this),
       operates: operates(this),
       // 弹框
       editData: {},
-      show: false,
       openType: '',
-      dialogVisible: false,
-      regularDialogVisible: false
+      dialogVisible: false
     };
   },
   computed: {},
@@ -83,43 +82,27 @@ export default {
     // 获取表格数据
     getTableData() {
       this.listLoading = true;
-      queryUemUser({
+      queryTaskInfoPage({
         pageNo: this.params.currentPage,
         pageSize: this.params.pageSize,
         ...this.filterForm
       }).then(res => {
-        this.records = res.data.records;
-        this.params.totalRecord = res.data.totalRecord;
+        const obj = res.data
+        this.records = obj.records;
+        this.params.totalRecord = obj.totalRecord;
         this.listLoading = false;
       });
-    },
-    // 关闭弹框
-    handleClose() {
-      this.dialogVisible = false;
     },
     // 打开弹框
     handleOpen(item = {}, type) {
       this.openType = type
-      this.editData = { uemUserId: item.uemUserId || '' };
-      // 编辑/查看
-      if (['detail', 'edit', 'add'].includes(type)) {
-        this.dialogVisible = true;
-      }
-      // 转正
-      if (type === 'regular') {
-        this.regularDialogVisible = true
-      }
+      this.editData = { taskInfoId: item.taskInfoId || '' };
+      // if (['detail', 'edit', 'add'].includes(type)) {
+      this.dialogVisible = true;
+      // }
     },
-    // 启用/禁用用户
-    changeStatus(item) {
-      const uemUserId = item.uemUserId;
-      const isValid = item.isValid;
-      uemUserStartStop({ uemUserId, isValid }).then(res => {
-        this.$message.success('操作成功');
-      });
-    },
-    // 删除用户信息
-    handleDelete(uemUserId) {
+    // 删除
+    handleDelete(taskInfoId) {
       this.$confirm(
         '您确定要删除该任务信息吗？删除后该任务信息不可恢复。',
         '删除提示',
@@ -129,7 +112,7 @@ export default {
           type: 'warning'
         }
       ).then(() => {
-        deleteUemUser({ uemUserId }).then(res => {
+        deleteTaskInfo({ taskInfoId }).then(res => {
           this.$message.success('操作成功');
           this.getTableData();
         });
@@ -151,14 +134,6 @@ export default {
   .pagination-wrap {
     margin: 10px;
     float: right;
-  }
-  // 重置密码
-  .password-dialog {
-    height: 55px;
-    text-align: center;
-    .password {
-      color: rgb(194, 22, 22);
-    }
   }
 }
 </style>
