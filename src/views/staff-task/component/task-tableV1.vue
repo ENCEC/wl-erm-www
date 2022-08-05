@@ -2,20 +2,18 @@
  * @Author: Hongzf
  * @Date: 2022-07-26 14:43:35
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-05 20:32:41
+ * @LastEditTime: 2022-08-04 14:06:54
  * @Description:
 -->
 <template>
   <div class="table-wrap">
-    <el-form ref="taskFormRef" :model="tableForm" class="tableform-wrap" size="mini" label-width="auto" :rules="tableFormRules">
+    <el-form ref="tableFormRef" :model="tableForm" class="tableform-wrap" size="mini" label-width="auto" :rules="tableFormRules">
       <!-- 表格 Start -->
       <el-table
         ref="multipleTable"
         highlight-current-row
         :data="tableForm.tableData"
-        :row-key="rowKey"
-        :reserve-selection="true"
-        height="200px"
+        height="350px"
         style="width: 100%"
         border
         size="mini"
@@ -27,7 +25,6 @@
         <el-table-column prop="entryName" label="规范条目" />
         <el-table-column v-if="type!=='detail'" prop="actionTime" label="执行时间" min-width="110">
           <template slot-scope="scope">
-            {{ scope.row.standardEntryId }}
             {{ scope.row.actionTime && scope.row.actionTime.toString()?`入职后第${scope.row.actionTime}天`:'' }}
           </template>
         </el-table-column>
@@ -35,6 +32,22 @@
         <!-- taskName -->
         <el-table-column prop="detailName" label="任务名称" />
         <el-table-column prop="actionSerialNum" label="执行顺序" />
+        <el-table-column v-if="type==='detail'" prop="ordinator" label="负责人" />
+        <el-table-column v-if="type!=='detail'" prop="ordinator" label="负责人" min-width="130">
+          <template slot-scope="scope">
+            <el-form-item
+              v-if="type!=='detail' && scope.$index >= 0"
+              :prop="`tableData[${scope.$index}].ordinator`"
+              :rules="[
+                { required: scope.row.required && !scope.row.checked, message: '请选择姓名', trigger: ['blur','change'] }
+              ]"
+            >
+              <!-- :disabled="scope.row.checked"  -->
+              <UserAssociate v-model="scope.row.ordinator" />
+              <!-- <el-input v-model="scope.row.ordinator" placeholder="" /> -->
+            </el-form-item>
+          </template>
+        </el-table-column>
         <el-table-column prop="planEndDate" label="计划完成日期" min-width="120">
           <template slot-scope="scope">
             {{ scope.row.planEndDate? $moment(parseInt(scope.row.planEndDate)).format('YYYY-MM-DD') : '' }}
@@ -67,13 +80,12 @@
   </div>
 </template>
 <script>
-import { queryNotNeedStandardFullDetailByTaskType } from '@/api/staff-task';
+import UserAssociate from '@/components/CurrentSystem/UserAssociate'
+import { queryStandardFullDetailByTaskType } from '@/api/staff-task';
 import tableMix from '@/mixins/table-mixin';
-import { tempdata } from './rules';
-
 export default {
   name: 'TaskTable',
-  // components: { UserAssociate },
+  components: { UserAssociate },
   mixins: [tableMix],
   props: {
     // 编辑信息
@@ -94,10 +106,51 @@ export default {
   },
   data() {
     return {
-      tempdata,
       // 表单数据
       tableForm: {
-        tableData: []
+        tableData: [
+        //   {
+        //   taskTitle: 'taskTitle',
+        //   ordinator: '6958664088091697152',
+        //   required: true,
+        //   checked: true,
+        //   actionPeriod: 1,
+        //   actionSerialNum: 0,
+        //   actionTime: 2,
+        //   // applyDate: null,
+        //   // approvalDate: null,
+        //   // approver: null,
+        //   // endDate: null,
+        //   // executor: null
+        //   // faceRemark: null
+        //   // faceTime: null
+        //   // leader: null
+        //   // offerRemark: null
+        //   // offerType: null
+        //   // ordinator: null
+        //   // pageNo: null
+        //   // pageSize: null
+        //   planEndDate: 1636732800000,
+        //   planStartDate: 1636732800000,
+        //   progress: null,
+        //   resultAccess: null,
+        //   standardDetailId: '11',
+        //   standardDetailName: '细则名称1',
+        //   standardEntryId: '1111',
+        //   standardEntryName: '规范条目11111',
+        //   startDate: null,
+        //   status: 0,
+        //   taskDetailId: '6960507338410762240',
+        //   taskInfoId: '6960507337878085632',
+        //   taskName: null
+        // },
+        // {
+        //   taskTitle: 'taskTitle',
+        //   ordinator: '',
+        //   required: true,
+        //   checked: true
+        // }
+        ]
       },
       // 验证规则
       tableFormRules: {
@@ -119,32 +172,33 @@ export default {
       deep: true,
       immediate: true,
       handler(newVal) {
-        // if (this.type === 'detail') {
-        //   // 详情的列表数据
-        console.log('【 勾选列表 】-161', newVal)
-        //   this.tableForm.tableData = newVal
-        // } else {
-        // 设置默认选中状态
-        // this.$nextTick(() => {
-        //   const tableRef = this.$refs.multipleTable
-        //   this.handleToggleRowSelection(tableRef)
-        // })
-        // }
+        if (this.type === 'detail') {
+          // 详情的列表数据
+          // console.log('【 详情的列表数据 】-161', newVal)
+          this.tableForm.tableData = newVal
+        } else {
+          // 设置默认选中状态
+          this.$nextTick(() => {
+            const tableRef = this.$refs.multipleTable
+            this.handleToggleRowSelection(tableRef)
+          })
+        }
       }
     }
   },
   created() {
+    // console.log('【 this.type 】-138', this.type)
     // 详情
     // if (this.type === 'detail') {
     //   // this.tableForm.tableData = this.records
     //   console.log('【 this.tableForm.tableData 】-141', this.tableForm.tableData)
     // } else {
     //   this.getTableData();
-    // if (this.type !== 'detail') {
-    //   this.handleToggleRowSelection()
-    // }
+    if (this.type !== 'detail') {
+      this.handleToggleRowSelection()
+    }
   },
-  mounted() {
+  async mounted() {
     // await this.getTableData()
     // this.$nextTick(() => {
     //   const tableRef = this.$refs.multipleTable
@@ -152,12 +206,8 @@ export default {
     // })
   },
   methods: {
-    rowKey(row) {
-      return row.standardEntryId
-    },
     // 判断复选框的勾选状态
-    handleToggleRowSelection() {
-      const tableRef = this.$refs.multipleTable
+    handleToggleRowSelection(tableRef) {
       // this.$nextTick(() => {
       console.log('【tableRef】', tableRef)
       this.tableForm.tableData.forEach((tableItem) => {
@@ -173,8 +223,8 @@ export default {
     },
     // 获取表格数据
     getTableData() {
-      queryNotNeedStandardFullDetailByTaskType({
-        pageNo: this.params.currentPage,
+      queryStandardFullDetailByTaskType({
+        currentPage: this.params.currentPage,
         pageSize: this.params.pageSize,
         taskType: this.taskType
       }).then(res => {
@@ -185,23 +235,8 @@ export default {
     },
     // 勾选数据行的 Checkbox 时触发的事件
     handleRowSelect(selection, row) {
-      // 是否取消勾选
-      const isChecked = selection.some((item) => {
-        return item.standardEntryId === row.standardEntryId
-      })
-      // 勾选
-      if (isChecked) {
-        const isExit = this.records.some((item) => {
-          return item.standardEntryId === row.standardEntryId
-        })
-        // 不存在数据则添加
-        if (!isExit) {
-          this.$emit('handleRowSelect', isChecked, row)
-        } else {
-          this.$refs.multipleTable.toggleRowSelection(row, false)// 已存在,勾选-勾选失败
-          this.$message.error('该数据已存在')
-        }
-      }
+      row.checked = !row.checked// 选中的情况下才能选择负责人
+      // console.log('【 selection, row 】-178', selection, row)
     },
     // 当选择项发生变化时会触发该事件
     handleSelectionChange(val) {
@@ -211,7 +246,7 @@ export default {
     },
     validateTableForm() {
       let isTableFormValid = false
-      this.$refs.taskFormRef.validate(valid => {
+      this.$refs.tableFormRef.validate(valid => {
         isTableFormValid = valid
       })
       return isTableFormValid

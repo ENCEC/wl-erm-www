@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-04 17:34:53
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-04 17:43:33
+ * @LastEditTime: 2022-08-05 11:00:28
  * @Description: 所属部门-下拉
 -->
 
@@ -11,15 +11,14 @@
     v-model="selectVal"
     v-bind="$attrs"
     filterable
-    placeholder="请选择部门"
     clearable
     :disabled="disabled"
     v-on="$listeners"
     @change="handleChange"
   >
     <el-option
-      v-for="(item) in optionsList"
-      :key="'deptId'+item.uemDeptId"
+      v-for="(item,index) in optionsList"
+      :key="'deptId'+index+item.uemDeptId"
       :label="item.deptName"
       :value="item.uemDeptId"
     />

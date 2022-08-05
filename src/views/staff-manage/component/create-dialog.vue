@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-01 13:52:08
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-04 13:37:04
+ * @LastEditTime: 2022-08-05 17:30:21
  * @Description:
 -->
 
@@ -378,8 +378,8 @@ export default {
     return {
       rules: formRules, // 验证规则
       formData: {
-        name: '123',
-        sex: 0,
+        name: '',
+        sex: '',
         birthday: '',
         jobStatus: '', // 在职状态（0：试用员工 1：正式员工 2：离职员工）
         idCard: '',
@@ -387,7 +387,7 @@ export default {
         address: '', // 现住址
         sourceAddress: '', // 户籍地址
         maritalStatus: '', // 婚姻状况（0：未婚 1：已婚 2：离婚）
-        // 政治面貌
+        // TODO 政治面貌
         education: '', // 学历（0：专科 1：本科 2：研究生 3：博士生）
         graduateDate: '', // 毕业时间
         graduateSchool: '', //
@@ -437,16 +437,23 @@ export default {
       queryStaffById({
         uemUserId: this.editData.uemUserId
       }).then(res => {
-        this.formData = {
-          ...this.formData,
-          ...res,
-          jobStatus: res.jobStatus || '',
-          entryDate: res.entryDate || '',
-          uemDeptId: res.uemDeptId || '',
-          staffDutyCode: res.staffDutyCode || '',
-          technicalTitleId: res.technicalTitleId || '',
-          projectId: res.projectId || ''
-        };
+        for (const key in this.formData) {
+          if (key === 'sex') {
+            this.formData[key] = res[key] || false
+          } else {
+            this.formData[key] = res[key] || ''
+          }
+        }
+        // this.formData = {
+        //   ...this.formData,
+        //   ...res,
+        //   jobStatus: res.jobStatus || '',
+        //   entryDate: res.entryDate || '',
+        //   uemDeptId: res.uemDeptId || '',
+        //   staffDutyCode: res.staffDutyCode || '',
+        //   technicalTitleId: res.technicalTitleId || '',
+        //   projectId: res.projectId || ''
+        // };
       });
     },
     // 获取下拉信息

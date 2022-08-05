@@ -2,15 +2,17 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:19:50
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-03 15:45:44
+ * @LastEditTime: 2022-08-05 18:26:30
  * @Description: 员工管理-任务分配
  */
 
 import request from '@/utils/request';
+const prefix = '/wl-erm'// process.env.WL_ERM_PREFIX
+// console.log('【 prefix 】-11', prefix)
 // 列表
 export function queryTaskInfoPage(data) {
   return request({
-    url: '/taskInfo/queryTaskInfoPage',
+    url: prefix + '/taskInfo/queryTaskInfoPage',
     method: 'post',
     data
   });
@@ -18,7 +20,7 @@ export function queryTaskInfoPage(data) {
 // 弹框-列表
 export function queryStandardFullDetailByTaskType(data) {
   return request({
-    url: '/taskInfo/queryStandardFullDetailByTaskType',
+    url: prefix + '/taskInfo/queryStandardFullDetailByTaskType',
     method: 'post',
     data
   });
@@ -27,7 +29,7 @@ export function queryStandardFullDetailByTaskType(data) {
 // 获取详情
 export function getTaskInfoDetail(data) {
   return request({
-    url: '/taskInfo/getTaskInfoDetail',
+    url: prefix + '/taskInfo/getTaskInfoDetail',
     method: 'post',
     data
   });
@@ -36,7 +38,7 @@ export function getTaskInfoDetail(data) {
 // 新增
 export function saveTaskInfo(data) {
   return request({
-    url: '/taskInfo/saveTaskInfo',
+    url: prefix + '/taskInfo/saveTaskInfo',
     method: 'post',
     data
   });
@@ -45,7 +47,7 @@ export function saveTaskInfo(data) {
 // 修改
 export function updateTaskInfo(data) {
   return request({
-    url: '/taskInfo/updateTaskInfo',
+    url: prefix + '/taskInfo/updateTaskInfo',
     method: 'post',
     data
   });
@@ -54,8 +56,26 @@ export function updateTaskInfo(data) {
 // 删除
 export function deleteTaskInfo(data) {
   return request({
-    url: '/taskInfo/deleteTaskInfo',
+    url: prefix + '/taskInfo/deleteTaskInfo',
     method: 'post',
     data
   });
 }
+// 根据任务类型查询全部必须的完整规范细则
+export function queryNeedStandardFullDetailByTaskType(data) {
+  return request({
+    url: prefix + '/taskInfo/queryNeedStandardFullDetailByTaskType',
+    method: 'post',
+    data
+  });
+}
+
+// 根据任务类型分页查询非必须的完整规范细则
+export function queryNotNeedStandardFullDetailByTaskType(data) {
+  return request({
+    url: prefix + '/taskInfo/queryNotNeedStandardFullDetailByTaskType',
+    method: 'post',
+    data
+  });
+}
+

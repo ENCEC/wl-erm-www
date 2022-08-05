@@ -2,10 +2,10 @@
  * @Author: Hongzf
  * @Date: 2022-08-01 13:52:08
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-03 16:29:02
+ * @LastEditTime: 2022-08-05 17:25:00
  * @Description:
  */
-
+// 编辑
 export const formRules = {
   name: [
     {
@@ -100,24 +100,121 @@ export const formRules = {
       message: '请选择归属项目',
       trigger: 'change'
     }
+  ]
+};
+
+const commonRules = {
+  name: [
+    {
+      required: true,
+      message: '请输入姓名',
+      trigger: 'blur'
+    }
   ],
-  offerType: [{
+  sex: [
+    {
+      required: true,
+      message: '性别不能为空',
+      trigger: 'change'
+    }
+  ],
+  entryDate: [
+    {
+      required: true,
+      message: '请选择入职时间',
+      trigger: 'change'
+    }
+  ],
+  jobStatus: [
+    {
+      required: true,
+      message: '在职状态不能为空',
+      trigger: 'change'
+    }
+  ],
+  uemDeptId: [
+    {
+      required: true,
+      message: '请选择入职部门',
+      trigger: 'change'
+    }
+  ],
+  staffDutyCode: [
+    {
+      required: true,
+      message: '请选择入职岗位',
+      trigger: 'change'
+    }
+  ]
+}
+// 转正
+export const regularFormRules = {
+  ...commonRules,
+  offerDate: [
+    {
+      required: true,
+      message: '请选择转正日期',
+      trigger: 'change'
+    }
+  ],
+  positiveType: [{
     required: true,
     message: '请选择转正类型',
     trigger: 'change'
   }],
-  faceRemark: [
+  defenseScore: [
     {
       required: true,
-      message: '请输入面谈评语',
+      message: '请输入转正答辩成绩',
       trigger: 'blur'
     }
   ],
-  offerRemark: [
+  faceUid: [
     {
       required: true,
-      message: '请输入转正评语',
+      message: '请选择面谈人',
+      trigger: 'change'
+    }
+  ],
+  offerUid: [
+    {
+      required: true,
+      message: '请选择审批人',
+      trigger: 'change'
+    }
+  ]
+}
+// 离职、辞退
+export const dissmissFormRules = {
+  ...commonRules,
+  // 离职
+  leaveDate: [
+    {
+      required: true,
+      message: '请选择离职日期',
+      trigger: 'change'
+    }
+  ],
+  leaveReason: [
+    {
+      required: true,
+      message: '请输入离职原因',
       trigger: 'blur'
+    }
+  ],
+  // 辞退
+  dismissComments: [
+    {
+      required: true,
+      message: '请输入辞退原因',
+      trigger: 'blur'
+    }
+  ],
+  dismissDate: [
+    {
+      required: true,
+      message: '请选择辞退日期',
+      trigger: 'change'
     }
   ]
 };

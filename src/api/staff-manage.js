@@ -2,11 +2,13 @@
  * @Author: Hongzf
  * @Date: 2022-08-01 19:02:14
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-03 15:28:39
+ * @LastEditTime: 2022-08-05 16:24:33
  * @Description:
  */
 
 import request from '@/utils/request';
+// const prefix = '/wl-erm'// process.env.WL_ERM_PREFIX
+
 // 列表
 export function queryStaffByPage(data) {
   return request({
@@ -23,6 +25,15 @@ export function queryStaffById(query) {
     params: query
   });
 }
+// 转正，离职，辞退---查看信息
+export function queryStaffInfo(query) {
+  return request({
+    url: '/uemUserManage/queryStaffInfo',
+    method: 'get',
+    params: query
+  });
+}
+
 // 新增
 export function saveUemUser(data) {
   return request({
@@ -40,27 +51,36 @@ export function updateStaff(data) {
   });
 }
 
-// 启用/禁用用户
-export function uemUserStartStop(data) {
+// 转正
+export function savePositiveInfo(data) {
   return request({
-    url: '/uemUserManage/uemUserStartStop',
+    url: '/uemUserManage/savePositiveInfo',
     method: 'post',
     data
   });
 }
-// 删除用户信息
-export function deleteUemUser(data) {
+// 离职
+export function saveResignInfo(data) {
   return request({
-    url: '/uemUserManage/deleteUemUser',
+    url: '/uemUserManage/saveResignInfo',
     method: 'post',
     data
   });
 }
-// 管理员重置用户密码
-export function resetUemUserPassword(data) {
+// 辞退
+export function saveDismissInfo(data) {
   return request({
-    url: '/uemUserManage/resetUemUserPassword',
+    url: '/uemUserManage/saveDismissInfo',
     method: 'post',
     data
+  });
+}
+
+// 删除
+export function deleteStaff(query) {
+  return request({
+    url: '/uemUserManage/deleteStaff',
+    method: 'get',
+    params: query
   });
 }

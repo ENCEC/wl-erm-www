@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-01 19:02:14
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-03 15:21:03
+ * @LastEditTime: 2022-08-05 16:25:33
  * @Description: 员工管理-员工管理
 -->
 
@@ -38,6 +38,14 @@
       :type="openType"
       @getTableData="getTableData"
     />
+    <!--离职 辞退 -->
+    <DismissDialog
+      v-if="dismissDialogVisible"
+      :visible.sync="dismissDialogVisible"
+      :edit-data="editData"
+      :type="openType"
+      @getTableData="getTableData"
+    />
   </div>
 </template>
 <script>
@@ -46,10 +54,10 @@ import tableComponent from '@/components/TableComponent';
 import { filterConfig, tableConfig, columns, operates } from './config-data.js';
 import CreateDialog from './component/create-dialog';
 import RegularDialog from './component/regular-dialog';
+import DismissDialog from './component/dismiss-dialog';
 import {
   queryStaffByPage,
-  uemUserStartStop,
-  deleteUemUser
+  deleteStaff
 } from '@/api/staff-manage';
 import { queryTechnicalNameBySelect, queryStaffDutyBySelect, queryDepartmentBySelect } from '@/api/select';
 import tableMix from '@/mixins/table-mixin';
@@ -59,7 +67,8 @@ export default {
     filterPanel,
     tableComponent,
     CreateDialog,
-    RegularDialog
+    RegularDialog,
+    DismissDialog
   },
   mixins: [tableMix],
   data() {
@@ -86,7 +95,8 @@ export default {
       show: false,
       openType: '',
       dialogVisible: false,
-      regularDialogVisible: false
+      regularDialogVisible: false,
+      dismissDialogVisible: false
     };
   },
   computed: {},
@@ -125,7 +135,6 @@ export default {
     // 打开弹框
     handleOpen(item = {}, type) {
       this.openType = type
-      this.editData = { uemUserId: item.uemUserId || '' };
       // 编辑/查看
       if (['detail', 'edit'].includes(type)) {
         this.dialogVisible = true;
@@ -134,14 +143,11 @@ export default {
       if (type === 'regular') {
         this.regularDialogVisible = true
       }
-    },
-    // 启用/禁用用户
-    changeStatus(item) {
-      const uemUserId = item.uemUserId;
-      const isValid = item.isValid;
-      uemUserStartStop({ uemUserId, isValid }).then(res => {
-        this.$message.success('操作成功');
-      });
+      // 离职
+      if (['quit', 'dismiss'].includes(type)) {
+        this.dismissDialogVisible = true
+      }
+      this.editData = { uemUserId: item.uemUserId || '' };
     },
     // 删除用户信息
     handleDelete(uemUserId) {
@@ -154,7 +160,7 @@ export default {
           type: 'warning'
         }
       ).then(() => {
-        deleteUemUser({ uemUserId }).then(res => {
+        deleteStaff({ uemUserId }).then(() => {
           this.$message.success('操作成功');
           this.getTableData();
         });

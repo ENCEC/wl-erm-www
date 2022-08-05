@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:15:04
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-04 19:11:27
+ * @LastEditTime: 2022-08-05 16:25:02
  * @Description: 员工管理-任务分配
 -->
 
@@ -39,7 +39,6 @@ import { filterConfig, tableConfig, columns, operates } from './config-data.js';
 import CreateDialog from './component/create-dialog';
 import {
   queryTaskInfoPage,
-  uemUserStartStop,
   deleteTaskInfo
 } from '@/api/staff-task';
 import tableMix from '@/mixins/table-mixin';
@@ -56,8 +55,8 @@ export default {
       // 查询
       filterConfig: filterConfig(this),
       filterForm: {
-        taskTitle: undefined,
-        executor: undefined,
+        taskTitle: '',
+        executor: '',
         taskType: '',
         status: ''
       },

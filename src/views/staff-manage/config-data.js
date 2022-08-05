@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-01 13:52:08
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-04 13:28:54
+ * @LastEditTime: 2022-08-05 11:08:44
  * @Description:
  */
 
@@ -183,15 +183,15 @@ export const operates = _this => {
         }
       },
       {
-        id: 'detail',
+        id: 'regular',
         label: '转正',
         type: 'text',
         show: true,
-        //   // show: (index, row) => {
+        //   // show: (row, index) => {
         //   //   return row.status !== 'draft'
         //   // },
         disabled: false,
-        method: (index, row) => {
+        method: (row, index) => {
           console.log('【 index 】-163', index)
           _this.handleOpen(row, 'regular');
         }
@@ -202,9 +202,9 @@ export const operates = _this => {
         type: 'text',
         show: true,
         disabled: false,
-        method: (index, row) => {
+        method: (row, index) => {
           console.log('【 index 】-163', index)
-          _this.handleOpen(row);
+          _this.handleOpen(row, 'quit');
         }
       },
       {
@@ -213,9 +213,9 @@ export const operates = _this => {
         type: 'text',
         show: true,
         disabled: false,
-        method: (index, row) => {
+        method: (row, index) => {
           console.log('【 index 】-163', index)
-          _this.handleOpen(row);
+          _this.handleOpen(row, 'dismiss');
         }
       },
       // {
@@ -225,7 +225,7 @@ export const operates = _this => {
       //   // icon: 'el-icon-delete',
       //   show: true,
       //   plain: false,
-      //   method: (index, row) => {
+      //   method: (row, index) => {
       //     _this.resetPassword(row.uemUserId);
       //   }
       // },
@@ -236,7 +236,7 @@ export const operates = _this => {
         type: 'text',
         show: true,
         plain: false,
-        method: (index, row) => {
+        method: (row, index) => {
           _this.handleDelete(row.uemUserId)
         }
       }

@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:15:03
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-04 09:21:44
+ * @LastEditTime: 2022-08-05 20:56:44
  * @Description:
 -->
 
@@ -64,6 +64,7 @@
                   placeholder="请选择任务类型"
                   clearable
                   class="input-width"
+                  @change="handleTaskTypeChange"
                 >
                   <el-option
                     v-for="(item) in taskTypeOptions"
@@ -79,7 +80,10 @@
             <el-col :span="24">
               <el-form-item label="员工任务:" prop="taskList">
                 <div class="table-wrap">
-                  <TaskTable ref="tableForm" :selected-list.sync="selectedData" :type="type" :records="records" :task-type="formData.taskType" @getSelectedData="getSelectedData" />
+                  <!--  :selected-list.sync="selectedData"  -->
+                  <TaskTable v-if="type!=='detail'" ref="taskTableRef" :type="type" :records="records" :task-type="formData.taskType" @getSelectedData="getSelectedData" @handleRowSelect="handleRowSelect" />
+                  <SelectedTable ref="tableForm" :selected-list.sync="selectedData" :type="type" :records="records" @getSelectedData="getSelectedData" />
+                  <!-- :task-type="formData.taskType" -->
                 </div>
               </el-form-item>
             </el-col>
@@ -135,12 +139,14 @@
 </template>
 <script>
 import TaskTable from './task-table'
+import SelectedTable from './selected-table'
+
 import UserAssociate from '@/components/CurrentSystem/UserAssociate'
-import { getTaskInfoDetail, saveTaskInfo, updateTaskInfo } from '@/api/staff-task';
+import { getTaskInfoDetail, saveTaskInfo, updateTaskInfo, queryNeedStandardFullDetailByTaskType } from '@/api/staff-task';
 import { formRules } from './rules';
 
 export default {
-  components: { UserAssociate, TaskTable },
+  components: { UserAssociate, TaskTable, SelectedTable },
   props: {
     // 编辑信息
     editData: {
@@ -159,7 +165,7 @@ export default {
       selectedData: [],
       rules: formRules, // 验证规则
       formData: {
-        taskTitle: '',
+        taskTitle: '4444',
         executor: '6957613061678637056', // 执行人
         status: '', // 在职状态（0：试用员工 1：正式员工 2：离职员工）
         taskType: '', //
@@ -187,14 +193,67 @@ export default {
   created() {},
   mounted() {},
   methods: {
-    // 表格勾选
+    // 获取必选问题
+    handleTaskTypeChange(taskType) {
+      taskType && queryNeedStandardFullDetailByTaskType({
+        taskType
+      }).then(res => {
+        this.records = res.data
+      });
+    },
+    // 判断复选框的勾选状态
+    handleRowSelectStatus(tableRef) {
+      this.$refs.taskTableRef.handleToggleRowSelection()
+      // this.$nextTick(() => {
+      // console.log('【tableRef】', tableRef)
+      // this.tableForm.tableData.forEach((tableItem) => {
+      //   this.records.forEach((selectedItem) => {
+      //     // console.log('【selectedItem】', selectedItem)
+      //     if (tableItem.standardEntryId === selectedItem.standardEntryId) {
+      //       // 相等则为选中状态
+      //       tableRef && tableRef.toggleRowSelection(tableItem, true)
+      //     }
+      //   })
+      // })
+      // // })
+    },
+    // 勾选数据行的 Checkbox 时触发的事件
+    handleRowSelect(isChecked, row) {
+      // 勾选
+      // if (isChecked) {
+      this.records.push(row)
+      // } else {
+      //   this.records.forEach((item, index) => {
+      //     if (item.standardEntryId === row.standardEntryId) {
+      //       this.records.splice(index, 1)
+      //       // this.$emit('getSelectedData', this.tableForm.tableData)
+      //     }
+      //   })
+      // }
+      // const isExit = this.records.some((item) => {
+      //   return item.standardEntryId === row.standardEntryId
+      // })
+      // this.$emit('handleRowSelect', isChecked, row)
+
+      // // 不存在数据则添加
+      // if (!isExit) {
+      //   this.$emit('handleRowSelect', isChecked, row)
+      // } else {
+      //   this.$refs.multipleTable.toggleRowSelection(row, false)
+      //   // this.handleRowSelectStatus()
+      //   this.$message.error('该数据已存在')
+      // }
+      // console.log('【 isExit 】-206', isExit)
+    },
+    // 表格1勾选
     getSelectedData(val) {
-      console.log('【getSelectedData-val 】-202', val)
-      this.formData.taskDetailInfoDtoList = val.map(item => {
-        const { standardDetailId } = item
-        // ordinator
-        return { standardDetailId, ordinator: '6957613061678637056' }
-      })
+      // console.log('【getSelectedData-val 】-202', val)
+      // this.records = val
+      // this.formData.taskDetailInfoDtoList = val.map(item => {
+      //   const { standardDetailId } = item
+      //   // ordinator
+      //   return { standardDetailId, ordinator: '6957613061678637056' }
+      // })
     },
     // 关闭弹框
     close() {
@@ -219,15 +278,21 @@ export default {
     handleConfirm() {
       const isTableFormValid = this.$refs.tableForm.validateTableForm()
       console.log('【 isTableFormValid 】-230', isTableFormValid)
-      if (!this.formData.taskDetailInfoDtoList.length) {
-        this.$message.error('请选择任务');
-        return false
-      }
+      this.formData.taskDetailInfoDtoList = this.records.map(item => {
+        console.log('【 item 】-282', item)
+        const { standardDetailId } = item
+        // ordinator
+        return { standardDetailId, ordinator: '6957613061678637056' }
+      })
+      // if (!this.formData.taskDetailInfoDtoList.length) {
+      //   this.$message.error('请选择任务');
+      //   return false
+      // }
       this.$refs['elForm'].validate(valid => {
         if (isTableFormValid && valid) {
           const funcName = this.editData.taskInfoId ? updateTaskInfo : saveTaskInfo;
           funcName(this.formData).then(res => {
-            this.$message.success(res.data);
+            this.$message.success('操作成功');
             this.$emit('getTableData', '');
             this.close();
           });
@@ -240,7 +305,7 @@ export default {
 <style lang="scss">
 .staff-dialog {
   .form-wrap {
-    height: 460px;
+    min-height: 400px;
     margin-bottom: 20px;
     .input-width {
       width: 180px;

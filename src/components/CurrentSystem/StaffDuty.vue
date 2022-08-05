@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-03 09:55:18
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-03 16:13:56
+ * @LastEditTime: 2022-08-05 10:57:53
  * @Description: 入职岗位-下拉
 -->
 
@@ -11,7 +11,6 @@
     v-model="selectVal"
     v-bind="$attrs"
     filterable
-    placeholder="请选择入职岗位"
     clearable
     :disabled="disabled"
     v-on="$listeners"
@@ -43,10 +42,6 @@ export default {
       type: Boolean,
       default: false
     }
-    // value: {
-    //   type: String, // 传入的值
-    //   require: true
-    // }
   },
   data() {
     return {
