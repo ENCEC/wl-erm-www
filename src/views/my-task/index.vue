@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-01 19:02:14
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-05 23:36:35
+ * @LastEditTime: 2022-08-06 11:21:56
  * @Description: 员工管理-员工管理
 -->
 
@@ -39,9 +39,9 @@
       @getTableData="getTableData"
     />
     <!--离职 辞退 -->
-    <DismissDialog
-      v-if="dismissDialogVisible"
-      :visible.sync="dismissDialogVisible"
+    <QuitDialog
+      v-if="quitDialogVisible"
+      :visible.sync="quitDialogVisible"
       :edit-data="editData"
       :type="openType"
       @getTableData="getTableData"
@@ -54,7 +54,7 @@ import tableComponent from '@/components/TableComponent';
 import { filterConfig, tableConfig, columns, operates } from './config-data.js';
 import CreateDialog from './component/create-dialog';
 import RegularDialog from './component/regular-dialog';
-import DismissDialog from './component/dismiss-dialog';
+import QuitDialog from './component/quit-dialog';
 import {
   queryStaffByPage,
   deleteStaff
@@ -68,7 +68,7 @@ export default {
     tableComponent,
     CreateDialog,
     RegularDialog,
-    DismissDialog
+    QuitDialog
   },
   mixins: [tableMix],
   data() {
@@ -86,6 +86,10 @@ export default {
       records: [{
         name: '转正申请',
         taskType: '转正'
+      },
+      {
+        name: '离职申请',
+        taskType: '离职'
       }],
       listLoading: false,
       tableConfig,
@@ -97,7 +101,7 @@ export default {
       openType: '',
       dialogVisible: false,
       regularDialogVisible: false,
-      dismissDialogVisible: false
+      quitDialogVisible: false
     };
   },
   computed: {},
@@ -145,8 +149,8 @@ export default {
         this.regularDialogVisible = true
       }
       // 离职
-      if (['quit', 'dismiss'].includes(type)) {
-        this.dismissDialogVisible = true
+      if (item.taskType === '离职') {
+        this.quitDialogVisible = true
       }
       this.editData = { taskInfoId: item.uemUserId || '' };
     },

@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:15:04
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-06 01:02:19
+ * @LastEditTime: 2022-08-06 11:52:36
  * @Description:
  */
 
@@ -11,12 +11,12 @@ export const filterConfig = _this => {
     inline: false,
     gutter: 3, // 栅格的间隔
     col: 6, // 栅格的格数
-    operateCol: 16,
+    operateCol: 8,
     labelWidth: '100px',
     filterList: [
       {
         type: 'input',
-        label: '标题',
+        label: ' ',
         prop: 'name',
         width: '200px',
         clearable: true,
@@ -24,32 +24,8 @@ export const filterConfig = _this => {
         col: 8
       },
       {
-        type: 'input',
-        label: '分配对象',
-        prop: 'name2',
-        width: '200px',
-        clearable: true,
-        placeholder: '请输入分配对象',
-        col: 8
-      },
-      // 入职部门
-      {
         type: 'select',
-        label: '任务类型',
-        prop: 'isValid2',
-        width: '200px',
-        clearable: true,
-        placeholder: '请选择任务类型',
-        col: 8,
-        optionLabel: 'label',
-        optionValue: 'value',
-        optionKey: 'value',
-        options: _this.$dict.getDictOptions('VALID_STATUS')
-      },
-      // 入职岗位
-      {
-        type: 'select',
-        label: '任务状态',
+        label: ' ',
         prop: 'isValid',
         width: '200px',
         clearable: true,
@@ -70,31 +46,21 @@ export const filterConfig = _this => {
     operates: [
       {
         type: 'primary',
-        buttonLabel: '新增任务',
-        btnType: 'primary',
-        //   icon: 'el-icon-search',
-        method: (item, index) => {
-          console.log('【 item, index 】-88', item, index);
-          _this.handleOpen({}, 'add');
-        }
-      },
-      {
-        type: 'primary',
         buttonLabel: '查询',
         btnType: 'primary',
         method: () => {
           _this.handleQuery();
         }
-      },
-      {
-        type: 'primary',
-        buttonLabel: '重置',
-        btnType: 'primary',
-        plain: true,
-        method: () => {
-          _this.resetQueryForm(_this.filterForm);
-        }
       }
+      // {
+      //   type: 'primary',
+      //   buttonLabel: '重置',
+      //   btnType: 'primary',
+      //   plain: true,
+      //   method: () => {
+      //     _this.resetQueryForm(_this.filterForm);
+      //   }
+      // }
     ]
   };
 };
