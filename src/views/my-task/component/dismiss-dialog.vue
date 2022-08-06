@@ -1,8 +1,8 @@
 <!--
  * @Author: Hongzf
- * @Date: 2022-08-01 18:07:40
+ * @Date: 2022-08-05 11:36:39
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-05 17:28:44
+ * @LastEditTime: 2022-08-05 17:29:05
  * @Description:
 -->
 
@@ -53,7 +53,7 @@
                 <el-date-picker
                   v-model="formData.entryDate"
                   format="yyyy-MM-dd"
-                  value-format="yyyy-MM-dd hh:mm:ss"
+                  value-format="yyyy-MM-dd"
                   class="input-width"
                   placeholder="请选择入职时间"
                   clearable
@@ -85,92 +85,74 @@
               </el-form-item>
             </el-col>
           </el-row>
-          <!-- 转正 -->
-          <el-row>
-            <el-col :span="12">
-              <el-form-item label="转正日期:" prop="offerDate">
-                <el-date-picker
-                  v-model="formData.offerDate"
-                  format="yyyy-MM-dd"
-                  value-format="yyyy-MM-dd hh:mm:ss"
-                  class="input-width"
-                  placeholder="请选择转正日期"
-                  clearable
-                />
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item label="转正类型:" prop="positiveType">
-                <el-radio-group v-model="formData.positiveType">
-                  <el-radio
-                    v-for="item in typeOptions"
-                    :key="'positiveType' + item.value"
-                    :label="item.value"
-                  >{{ item.label }}</el-radio>
-                </el-radio-group>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="12">
-              <el-form-item label="转员工答辩成绩:" prop="defenseScore" label-width="130px">
-                <el-input
-                  v-model="formData.defenseScore"
-                  placeholder="请输入转员工答辩成绩"
-                  clearable
-                />
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
+          <!-- 离职 Start -->
+          <div v-if="type==='quit'">
+            <el-row>
+              <el-col :span="24">
+                <el-form-item label="离职日期:" prop="leaveDate">
+                  <el-date-picker
+                    v-model="formData.leaveDate"
+                    format="yyyy-MM-dd"
+                    value-format="yyyy-MM-dd hh:mm:ss"
+                    class="input-width"
+                    placeholder="请选择离职日期"
+                    clearable
+                  />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="24">
+                <el-form-item label="离职原因：" prop="leaveReason" :hide-required-asterisk="false">
+                  <el-input
+                    v-model="formData.leaveReason"
+                    type="textarea"
+                    placeholder="输入离职原因"
+                    clearable
+                    style="width:500px"
+                  />
+                </el-form-item>
+              </el-col>
+            </el-row>
+          </div>
+          <!-- 离职 End -->
+          <!-- 辞退 Start -->
+          <div v-if="type==='dismiss'">
+            <el-row>
+              <el-col :span="24">
+                <el-form-item label="辞退日期:" prop="dismissDate">
+                  <el-date-picker
+                    v-model="formData.dismissDate"
+                    format="yyyy-MM-dd"
+                    value-format="yyyy-MM-dd hh:mm:ss"
+                    class="input-width"
+                    placeholder="请选择辞退日期"
+                    clearable
+                  />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="24">
+                <el-form-item label="辞退原因：" prop="dismissComments" :hide-required-asterisk="false">
+                  <el-input
+                    v-model="formData.dismissComments"
+                    type="textarea"
+                    placeholder="输入辞退原因"
+                    clearable
+                    style="width:500px"
+                  />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row>
               <!-- TODO -->
               <el-form-item label="附件:" prop="speciality">
                 <Upload />
               </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row />
-          <el-row>
-            <el-col :span="24">
-              <el-form-item label="面谈评语:" prop="faceUid">
-                <UserAssociate v-model="formData.faceUid" placeholder="请选择面谈人" class="input-width" />
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <!-- 面谈评语 -->
-          <el-row>
-            <el-col :span="24">
-              <el-form-item label=" " prop="faceRemark" :hide-required-asterisk="false">
-                <el-input
-                  v-model="formData.faceRemark"
-                  type="textarea"
-                  placeholder="输入评语"
-                  clearable
-                  style="width:500px"
-                />
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="24">
-              <el-form-item label="转正评语:" prop="offerUid">
-                <UserAssociate v-model="formData.offerUid" placeholder="请选择审批人" class="input-width" />
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <!-- 转正评语 -->
-          <el-row>
-            <el-col :span="24">
-              <el-form-item label=" " prop="offerRemark" :hide-required-asterisk="true">
-                <el-input
-                  v-model="formData.offerRemark"
-                  type="textarea"
-                  placeholder="输入评语"
-                  clearable
-                  style="width:500px"
-                />
-              </el-form-item>
-            </el-col>
-          </el-row>
+            </el-row>
+          </div>
+          <!-- 辞退 End -->
         </div>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -191,15 +173,13 @@
 </template>
 <script>
 import { queryStaffInfo, savePositiveInfo, saveResignInfo, saveDismissInfo } from '@/api/staff-manage';
-import { regularFormRules } from './rules';
+import { dissmissFormRules } from './rules';
 import StaffDuty from '@/components/CurrentSystem/StaffDuty.vue'
-import UserAssociate from '@/components/CurrentSystem/UserAssociate'
 import Department from '@/components/CurrentSystem/Department.vue'
 import Upload from '@/components/CurrentSystem/Upload.vue'
 
 export default {
-  components: { StaffDuty, UserAssociate, Department, Upload },
-  // inheritAttrs: false,
+  components: { StaffDuty, Department, Upload },
   props: {
     // 编辑信息
     editData: {
@@ -214,31 +194,29 @@ export default {
   },
   data() {
     return {
-      rules: regularFormRules, // 验证规则
+      rules: dissmissFormRules, // 验证规则
       formData: {
         name: '',
         sex: '',
         entryDate: '', // 2022-05-20 00:00:00入职时间
         jobStatus: '', // 在职状态（0：试用员工 1：正式员工 2：离职员工）
-        uemDeptId: '', // 入职部门
-        staffDutyCode: '', // 入职岗位
-        // 转正
-        offerDate: '',
-        positiveType: '',
-        defenseScore: '', //
-        faceUid: '', // 面谈人
-        faceRemark: '', // 面谈评语
-        offerUid: '', // 转正评语
-        offerRemark: '', // 转正评语
-        speciality: '' // 在校专业
-      },
-      typeOptions: this.$dict.getDictOptions('OFFER_TYPE')
+        uemDeptId: '4', // 入职部门
+        staffDutyCode: '2', // 入职岗位
+        // 离职
+        leaveDate: '', // 2022-05-20 00:00:00辞退时间
+        leaveReason: '',
+        // 辞退
+        dismissDate: '', // 2022-05-20 00:00:00辞退时间
+        dismissComments: '',
+        speciality: ''
+      }
     };
   },
   computed: {
     // 弹框标题
     dialogTitle() {
-      this.editData.uemUserId && this.getDetailInfo();
+      console.log('【 this.editData 】-246', this.type, this.editData);
+      // this.editData.uemUserId && this.getDetailInfo();
       const titleInfo = {
         'regular': '转正',
         'quit': '离职',
@@ -251,15 +229,11 @@ export default {
       return this.$dict.getDictOptions('JOB_STATUS').filter(item => item.value.toString() === '0' || item.value.toString() === '1')
     }
   },
-  watch: {
-
-  },
+  watch: {},
   created() {
-    // this.getDetailInfo()
+    this.getDetailInfo()
   },
   mounted() {
-    // console.log('【 this.$dict 】-431', this.$store.getters.language, this.$dict)
-    // this.$refs['elForm'].clearValidate();
   },
   methods: {
     // 关闭弹框
@@ -271,7 +245,8 @@ export default {
     getDetailInfo() {
       queryStaffInfo({
         uemUserId: this.editData.uemUserId
-      }).then(res => {
+      }).then(result => {
+        const res = result.data
         for (const key in this.formData) {
           if (key === 'sex') {
             this.formData[key] = res[key] || false
@@ -279,16 +254,21 @@ export default {
             this.formData[key] = res[key] || ''
           }
         }
-        console.log('【 this.formData  】-290', this.formData)
       });
     },
     // 提交表单信息
     handleConfirm() {
       this.$refs['elForm'].validate(valid => {
         if (valid) {
-          const uemUserIds = [this.editData.uemUserId, this.formData.faceUid, this.formData.offerUid]
-          savePositiveInfo({ ...this.formData, uemUserIds }).then(res => {
-            this.$message.success('操作成功');
+          const funcInfo = {
+            'regular': savePositiveInfo,
+            'quit': saveResignInfo,
+            'dismiss': saveDismissInfo
+          }
+          const funcName = funcInfo[this.type] // this.editData.uemUserId ?  : savePositiveInfo;
+          funcName(this.formData
+          ).then(res => {
+            this.$message.success(res.data);
             this.$emit('getTableData', '');
             this.close();
           });

@@ -1,13 +1,13 @@
 <!--
  * @Author: Hongzf
- * @Date: 2022-08-02 15:36:16
+ * @Date: 2022-08-01 19:02:14
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-04 14:15:41
- * @Description: 员工管理-我的任务
+ * @LastEditTime: 2022-08-05 23:36:35
+ * @Description: 员工管理-员工管理
 -->
 
 <template>
-  <div class="app-container staff-task">
+  <div class="app-container user-manage">
     <!-- 查询组件 -->
     <filter-panel :filter-config="filterConfig" :value="filterForm" />
     <!-- 表格 Start -->
@@ -30,6 +30,22 @@
       :type="openType"
       @getTableData="getTableData"
     />
+    <!-- 转正 -->
+    <RegularDialog
+      v-if="regularDialogVisible"
+      :visible.sync="regularDialogVisible"
+      :edit-data="editData"
+      :type="openType"
+      @getTableData="getTableData"
+    />
+    <!--离职 辞退 -->
+    <DismissDialog
+      v-if="dismissDialogVisible"
+      :visible.sync="dismissDialogVisible"
+      :edit-data="editData"
+      :type="openType"
+      @getTableData="getTableData"
+    />
   </div>
 </template>
 <script>
@@ -37,18 +53,22 @@ import filterPanel from '@/components/FilterPanel';
 import tableComponent from '@/components/TableComponent';
 import { filterConfig, tableConfig, columns, operates } from './config-data.js';
 import CreateDialog from './component/create-dialog';
+import RegularDialog from './component/regular-dialog';
+import DismissDialog from './component/dismiss-dialog';
 import {
-  queryUemUser,
-  uemUserStartStop,
-  deleteUemUser
-} from '@/api/user-manage';
+  queryStaffByPage,
+  deleteStaff
+} from '@/api/staff-manage';
+import { queryTechnicalNameBySelect, queryStaffDutyBySelect, queryDepartmentBySelect } from '@/api/select';
 import tableMix from '@/mixins/table-mixin';
 export default {
-  name: 'StaffTask',
+  name: 'StaffManage',
   components: {
     filterPanel,
     tableComponent,
-    CreateDialog
+    CreateDialog,
+    RegularDialog,
+    DismissDialog
   },
   mixins: [tableMix],
   data() {
@@ -56,12 +76,17 @@ export default {
       // 查询
       filterConfig: filterConfig(this),
       filterForm: {
-        account: undefined,
-        name: undefined,
-        isValid: ''
+        name: '',
+        deptCode: '', // 入职部门
+        staffDutyCode: '', // 入职岗位
+        technicalName: '', // 岗位职称
+        jobStatus: ''
       },
       // 表格
-      records: [],
+      records: [{
+        name: '转正申请',
+        taskType: '转正'
+      }],
       listLoading: false,
       tableConfig,
       columns: columns(this),
@@ -71,25 +96,36 @@ export default {
       show: false,
       openType: '',
       dialogVisible: false,
-      regularDialogVisible: false
+      regularDialogVisible: false,
+      dismissDialogVisible: false
     };
   },
   computed: {},
   created() {
     this.getTableData();
+    this.getSelectOptions()
   },
   mounted() {},
   methods: {
+    // 获取下拉信息
+    async getSelectOptions() {
+      // 部门
+      this.filterConfig.filterList[1].options = await queryDepartmentBySelect()
+      // 入职岗位
+      this.filterConfig.filterList[2].options = await queryStaffDutyBySelect()
+      // 岗位职称
+      this.filterConfig.filterList[3].options = await queryTechnicalNameBySelect()
+    },
     // 获取表格数据
     getTableData() {
       // this.listLoading = true;
-      queryUemUser({
+      queryStaffByPage({
         pageNo: this.params.currentPage,
         pageSize: this.params.pageSize,
         ...this.filterForm
       }).then(res => {
-        this.records = res.data.records;
-        this.params.totalRecord = res.data.totalRecord;
+        this.records = res.records;
+        this.params.totalRecord = res.totalRecord;
         this.listLoading = false;
       });
     },
@@ -100,28 +136,24 @@ export default {
     // 打开弹框
     handleOpen(item = {}, type) {
       this.openType = type
-      this.editData = { taskInfoId: item.uemUserId || '' };
       // 编辑/查看
-      if (['detail', 'edit', 'add'].includes(type)) {
+      if (item.taskType === '试用') {
         this.dialogVisible = true;
       }
       // 转正
-      if (type === 'regular') {
+      if (item.taskType === '转正') {
         this.regularDialogVisible = true
       }
-    },
-    // 启用/禁用用户
-    changeStatus(item) {
-      const uemUserId = item.uemUserId;
-      const isValid = item.isValid;
-      uemUserStartStop({ uemUserId, isValid }).then(res => {
-        this.$message.success('操作成功');
-      });
+      // 离职
+      if (['quit', 'dismiss'].includes(type)) {
+        this.dismissDialogVisible = true
+      }
+      this.editData = { taskInfoId: item.uemUserId || '' };
     },
     // 删除用户信息
     handleDelete(uemUserId) {
       this.$confirm(
-        '您确定要删除该任务信息吗？删除后该任务信息不可恢复。',
+        '您确定要删除该员工信息吗？删除后该员工信息不可恢复。',
         '删除提示',
         {
           confirmButtonText: '确定',
@@ -129,7 +161,7 @@ export default {
           type: 'warning'
         }
       ).then(() => {
-        deleteUemUser({ uemUserId }).then(res => {
+        deleteStaff({ uemUserId }).then(() => {
           this.$message.success('操作成功');
           this.getTableData();
         });
@@ -139,7 +171,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.staff-task {
+.user-manage {
   // 操作栏
   .operate-wrap {
     span {

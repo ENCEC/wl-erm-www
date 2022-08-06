@@ -165,7 +165,7 @@ export const regularFormRules = {
   defenseScore: [
     {
       required: true,
-      message: '请输入转正答辩成绩',
+      message: '请输入转员工答辩成绩',
       trigger: 'blur'
     }
   ],

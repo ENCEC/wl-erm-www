@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:15:04
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-02 16:09:29
+ * @LastEditTime: 2022-08-06 01:02:19
  * @Description:
  */
 
@@ -116,10 +116,6 @@ export const columns = _this => {
     {
       prop: 'name',
       label: '标题',
-      formatter: (row, column) => {
-        return row.sex ? '男' : '女';
-        // TODO
-      },
       render: (h, ctx) => {
         // console.log('【 h, ctx 】-121', h, ctx)
         return h(
@@ -144,7 +140,7 @@ export const columns = _this => {
       }
     },
     {
-      prop: 'mobile',
+      prop: 'taskType',
       label: '任务类型'
     },
     {

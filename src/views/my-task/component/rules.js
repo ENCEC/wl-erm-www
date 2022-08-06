@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:15:04
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-02 10:20:52
+ * @LastEditTime: 2022-08-06 11:09:31
  * @Description:
  */
 
@@ -66,13 +66,6 @@ export const formRules = {
       trigger: 'blur'
     }
   ],
-  entryDate: [
-    {
-      required: true,
-      message: '请选择入职时间',
-      trigger: 'change'
-    }
-  ],
   staffDutyCode: [
     {
       required: true,
@@ -85,6 +78,28 @@ export const formRules = {
       required: true,
       message: '请选择归属项目',
       trigger: 'change'
+    }
+  ],
+  // 最终审批
+  approvalTime: [
+    {
+      required: true,
+      message: '请选择审批时间',
+      trigger: 'change'
+    }
+  ],
+  approvalResult: [
+    {
+      required: true,
+      message: '请选择审批结果',
+      trigger: 'change'
+    }
+  ],
+  positiveComments: [
+    {
+      required: true,
+      message: '请输入转正评语',
+      trigger: 'blur'
     }
   ]
 };

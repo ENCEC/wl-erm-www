@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:15:04
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-05 09:36:53
+ * @LastEditTime: 2022-08-06 10:48:19
  * @Description:
  */
 
@@ -114,7 +114,7 @@ export const columns = _this => {
       label: '标题'
     },
     {
-      prop: 'executor',
+      prop: 'executorName',
       label: '执行人'
 
     },
@@ -143,28 +143,18 @@ export const columns = _this => {
       }
     },
     {
-      prop: 'dispatchers',
+      prop: 'dispatchersName',
       label: '分配人'
     },
-    // TODO
     {
-      prop: 'publishDate',
+      prop: 'createTime',
       label: '创建时间',
       formatter: (row, column) => {
-        const val = row.publishDate
+        const val = row.createTime
         const date = val ? _this.$moment(parseInt(val)).format('YYYY-MM-DD') : '';
         return date
       }
     }
-    // {
-    //   prop: 'isValid',
-    //   label: '员工状态',
-    //   width: '100',
-    //   component: 'switch',
-    //   method: (row, status) => {
-    //     _this.changeStatus(row);
-    //   }
-    // }
   ];
 };
 
