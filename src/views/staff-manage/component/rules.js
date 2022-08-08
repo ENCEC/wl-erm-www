@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-01 13:52:08
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-05 17:25:00
+ * @LastEditTime: 2022-08-08 10:30:59
  * @Description:
  */
 // 编辑
@@ -169,14 +169,14 @@ export const regularFormRules = {
       trigger: 'blur'
     }
   ],
-  faceUid: [
+  interviewUid: [
     {
       required: true,
       message: '请选择面谈人',
       trigger: 'change'
     }
   ],
-  offerUid: [
+  positiveUid: [
     {
       required: true,
       message: '请选择审批人',

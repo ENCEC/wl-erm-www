@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-07-26 14:43:35
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-05 20:32:41
+ * @LastEditTime: 2022-08-08 09:51:15
  * @Description:
 -->
 <template>
@@ -22,38 +22,30 @@
         @select="handleRowSelect"
         @selection-change="handleSelectionChange"
       >
-        <el-table-column v-if="type==='detail'" type="index" label="序号" width="50" />
-        <el-table-column v-if="type!=='detail'" type="selection" width="40" />
+        <!--  v-if="type!=='detail'"  -->
+        <el-table-column type="selection" width="40" />
         <el-table-column prop="entryName" label="规范条目" />
-        <el-table-column v-if="type!=='detail'" prop="actionTime" label="执行时间" min-width="110">
+        <!--  v-if="type!=='detail'" -->
+        <el-table-column prop="actionTime" label="执行时间" width="110">
           <template slot-scope="scope">
-            {{ scope.row.standardEntryId }}
+            <!-- {{ scope.row.standardEntryId }} -->
             {{ scope.row.actionTime && scope.row.actionTime.toString()?`入职后第${scope.row.actionTime}天`:'' }}
           </template>
         </el-table-column>
-        <el-table-column v-if="type!=='detail'" prop="actionPeriod" label="执行周期(工时)" min-width="130" />
-        <!-- taskName -->
-        <el-table-column prop="detailName" label="任务名称" />
+        <!-- v-if="type!=='detail'"  -->
+        <el-table-column prop="actionPeriod" label="执行周期(工时)" width="105" />
+        <!-- TODO:字段 -->
+        <el-table-column prop="detailName" label="任务名称" min-width="120" />
         <el-table-column prop="actionSerialNum" label="执行顺序" />
         <el-table-column prop="planEndDate" label="计划完成日期" min-width="120">
           <template slot-scope="scope">
             {{ scope.row.planEndDate? $moment(parseInt(scope.row.planEndDate)).format('YYYY-MM-DD') : '' }}
           </template>
         </el-table-column>
-        <el-table-column v-if="type==='detail'" prop="endDate" label="实际完成日期" min-width="120">
-          <template slot-scope="scope">
-            {{ scope.row.endDate? $moment(parseInt(scope.row.endDate)).format('YYYY-MM-DD') : '' }}
-          </template>
-        </el-table-column>
-        <el-table-column v-if="type==='detail'" prop="progress" label="完成进度(%)" min-width="100" />
-        <!-- TODO -->
-        <el-table-column v-if="type==='detail'" prop="resultAccess" label="完成结果" />
-        <el-table-column v-if="type==='detail'" prop="status" label="完成情况" />
       </el-table>
       <!-- 表格 End -->
       <!-- 分页 -->
       <el-pagination
-        v-if="type !== 'detail'"
         class="pagination-wrap"
         :current-page.sync="params.currentPage"
         :page-sizes="[10, 20, 30, 40]"
@@ -69,7 +61,7 @@
 <script>
 import { queryNotNeedStandardFullDetailByTaskType } from '@/api/staff-task';
 import tableMix from '@/mixins/table-mixin';
-import { tempdata } from './rules';
+// import { tempdata } from './rules';
 
 export default {
   name: 'TaskTable',
@@ -81,11 +73,6 @@ export default {
       type: Array,
       default: () => []
     },
-    // 弹窗类型
-    type: {
-      type: String,
-      default: ''
-    },
     // 任务类型
     taskType: {
       type: String,
@@ -94,44 +81,38 @@ export default {
   },
   data() {
     return {
-      tempdata,
+      // tempdata,
       // 表单数据
       tableForm: {
         tableData: []
       },
       // 验证规则
-      tableFormRules: {
-        // ordinator: [
-        //   { required: true, message: '请选择姓名', trigger: 'change' }
-        // ]
-      }
+      tableFormRules: {}
     };
   },
   computed: {},
   watch: {
     taskType(newVal) {
       // 新增、编辑获取列表数据
-      if (this.type !== 'detail') {
-        newVal && this.getTableData()
-      }
-    },
-    records: {
-      deep: true,
-      immediate: true,
-      handler(newVal) {
-        // if (this.type === 'detail') {
-        //   // 详情的列表数据
-        console.log('【 勾选列表 】-161', newVal)
-        //   this.tableForm.tableData = newVal
-        // } else {
-        // 设置默认选中状态
-        // this.$nextTick(() => {
-        //   const tableRef = this.$refs.multipleTable
-        //   this.handleToggleRowSelection(tableRef)
-        // })
-        // }
-      }
+      newVal && this.getTableData()
     }
+    // records: {
+    //   deep: true,
+    //   immediate: true,
+    //   handler(newVal) {
+    //     // if (this.type === 'detail') {
+    //     //   // 详情的列表数据
+    //     // console.log('【 勾选列表 】-161', newVal)
+    //     //   this.tableForm.tableData = newVal
+    //     // } else {
+    //     // 设置默认选中状态
+    //     // this.$nextTick(() => {
+    //     //   const tableRef = this.$refs.multipleTable
+    //     //   this.handleToggleRowSelection(tableRef)
+    //     // })
+    //     // }
+    //   }
+    // }
   },
   created() {
     // 详情
@@ -185,11 +166,11 @@ export default {
     },
     // 勾选数据行的 Checkbox 时触发的事件
     handleRowSelect(selection, row) {
-      // 是否取消勾选
+      // 是否是勾选操作
       const isChecked = selection.some((item) => {
         return item.standardEntryId === row.standardEntryId
       })
-      // 勾选
+      // 勾选操作
       if (isChecked) {
         const isExit = this.records.some((item) => {
           return item.standardEntryId === row.standardEntryId
@@ -198,6 +179,7 @@ export default {
         if (!isExit) {
           this.$emit('handleRowSelect', isChecked, row)
         } else {
+          // 存在的话则勾选不成功
           this.$refs.multipleTable.toggleRowSelection(row, false)// 已存在,勾选-勾选失败
           this.$message.error('该数据已存在')
         }
@@ -207,14 +189,7 @@ export default {
     handleSelectionChange(val) {
       this.multipleSelection = val;
       this.$emit('getSelectedData', val)
-      this.$emit('update:selectedList', val)
-    },
-    validateTableForm() {
-      let isTableFormValid = false
-      this.$refs.taskFormRef.validate(valid => {
-        isTableFormValid = valid
-      })
-      return isTableFormValid
+      // this.$emit('update:selectedList', val)
     }
   }
 };

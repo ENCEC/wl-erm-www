@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 09:22:23
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-05 20:57:22
+ * @LastEditTime: 2022-08-08 09:38:05
  * @Description:
 -->
 
@@ -21,15 +21,16 @@
       >
         <el-table-column type="index" label="序号" width="50" />
         <el-table-column prop="entryName" label="规范条目" />
-        <el-table-column v-if="type!=='detail'" prop="actionTime" label="执行时间" min-width="110">
+        <el-table-column v-if="type!=='detail'" prop="actionTime" label="执行时间" width="110">
           <template slot-scope="scope">
             {{ scope.row.actionTime && scope.row.actionTime.toString()?`入职后第${scope.row.actionTime}天`:'' }}
           </template>
         </el-table-column>
-        <el-table-column v-if="type!=='detail'" prop="actionPeriod" label="执行周期(工时)" min-width="130" />
+        <el-table-column v-if="type!=='detail'" prop="actionPeriod" label="执行周期(工时)" width="110" />
         <!-- taskName -->
         <el-table-column prop="detailName" label="任务名称" />
         <el-table-column prop="actionSerialNum" label="执行顺序" />
+        <!-- TODO:为什么是多个？ -->
         <el-table-column v-if="type==='detail'" prop="ordinatorId" label="负责人" />
         <el-table-column v-if="type!=='detail'" prop="ordinatorId" label="负责人" min-width="130">
           <template slot-scope="scope">
@@ -40,7 +41,6 @@
                 { required: scope.row.required && !scope.row.checked, message: '请选择', trigger: ['blur','change'] }
               ]"
             >
-              <!-- :disabled="scope.row.checked"  -->
               <UserAssociate v-model="scope.row.ordinatorId" />
             </el-form-item>
           </template>
@@ -129,6 +129,7 @@ export default {
   mounted() {
   },
   methods: {
+    // 删除
     handleDelete(id) {
       this.tableForm.tableData.forEach((item, index) => {
         if (item.standardEntryId === id) {
@@ -137,6 +138,7 @@ export default {
         }
       })
     },
+    // 验证表格
     validateTableForm() {
       let isTableFormValid = false
       this.$refs.tableFormRef.validate(valid => {

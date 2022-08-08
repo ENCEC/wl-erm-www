@@ -1,8 +1,8 @@
 <!--
  * @Author: Hongzf
- * @Date: 2022-08-01 13:52:08
+ * @Date: 2022-08-05 21:05:06
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-05 17:30:21
+ * @LastEditTime: 2022-08-08 10:42:35
  * @Description:
 -->
 
@@ -137,17 +137,17 @@
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <!-- TODO -->
-              <el-form-item label="政治面貌:" prop="projectId2">
+              <!-- TODO 下拉值-->
+              <el-form-item label="政治面貌:" prop="politicalStatus">
                 <el-select
-                  v-model="formData.projectId2"
+                  v-model="formData.politicalStatus"
                   placeholder="请选择政治面貌"
                   clearable
                   class="input-width"
                 >
                   <el-option
                     v-for="(item,index) in projectTypeOptions"
-                    :key="'projectId2'+index+item.projectId"
+                    :key="'politicalStatus'+index+item.projectId"
                     :label="item.projectName"
                     :value="item.projectId"
                   />
@@ -220,19 +220,7 @@
             </el-col>
             <el-col :span="12">
               <el-form-item label="入职部门:" prop="uemDeptId">
-                <el-select
-                  v-model="formData.uemDeptId"
-                  placeholder="请选择入职部门"
-                  clearable
-                  class="input-width"
-                >
-                  <el-option
-                    v-for="(item) in deptOptions"
-                    :key="'uemDeptId'+item.uemDeptId"
-                    :label="item.deptName"
-                    :value="item.uemDeptId"
-                  />
-                </el-select>
+                <Department v-model="formData.uemDeptId" clearable placeholder="请选择入职部门" class="input-width" />
               </el-form-item>
             </el-col>
           </el-row>
@@ -356,11 +344,12 @@
 </template>
 <script>
 import { queryStaffById, updateStaff } from '@/api/staff-manage';
-import { queryTechnicalNameBySelect, queryProjectNameBySelect, queryDepartmentBySelect } from '@/api/select';
+import { queryTechnicalNameBySelect, queryProjectNameBySelect } from '@/api/select';
 import { formRules } from './rules';
+import Department from '@/components/CurrentSystem/Department.vue'
 import StaffDuty from '@/components/CurrentSystem/StaffDuty.vue'
 export default {
-  components: { StaffDuty },
+  components: { Department, StaffDuty },
   // inheritAttrs: false,
   props: {
     // 编辑信息
@@ -378,6 +367,7 @@ export default {
     return {
       rules: formRules, // 验证规则
       formData: {
+        uemUserId: '',
         name: '',
         sex: '',
         birthday: '',
@@ -387,7 +377,7 @@ export default {
         address: '', // 现住址
         sourceAddress: '', // 户籍地址
         maritalStatus: '', // 婚姻状况（0：未婚 1：已婚 2：离婚）
-        // TODO 政治面貌
+        politicalStatus: '', //  政治面貌
         education: '', // 学历（0：专科 1：本科 2：研究生 3：博士生）
         graduateDate: '', // 毕业时间
         graduateSchool: '', //
@@ -400,12 +390,11 @@ export default {
         seniority: '', // 工作年限
         projectId: ''// 归属项目
       },
-      sexOptions: this.$dict.getDictOptions('SEX'),
+      // sexOptions: this.$dict.getDictOptions('SEX'),
       maritalStatusOptions: this.$dict.getDictOptions('MARITAL_STATUS'),
       educationOptions: this.$dict.getDictOptions('EDUCATION'),
       technicalOptions: [], // 岗位职称
-      projectTypeOptions: [],
-      deptOptions: []
+      projectTypeOptions: []
     };
   },
   computed: {
@@ -423,9 +412,7 @@ export default {
   created() {
     this.getSelectOptions()
   },
-  mounted() {
-    // this.$refs['elForm'].clearValidate();
-  },
+  mounted() {},
   methods: {
     // 关闭弹框
     close() {
@@ -460,7 +447,6 @@ export default {
     async getSelectOptions() {
       this.technicalOptions = await queryTechnicalNameBySelect()
       this.projectTypeOptions = await queryProjectNameBySelect()
-      this.deptOptions = await queryDepartmentBySelect()
     },
     // 提交表单信息
     handleConfirm() {

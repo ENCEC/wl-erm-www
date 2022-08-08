@@ -1,13 +1,13 @@
 <!--
  * @Author: Hongzf
- * @Date: 2022-08-05 11:36:39
+ * @Date: 2022-08-05 21:05:06
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-05 17:29:05
+ * @LastEditTime: 2022-08-08 10:50:58
  * @Description:
 -->
 
 <template>
-  <div class="regular-dialog">
+  <div class="dismiss-dialog">
     <el-dialog
       :title="'员工'+dialogTitle"
       v-bind="$attrs"
@@ -218,7 +218,6 @@ export default {
       console.log('【 this.editData 】-246', this.type, this.editData);
       // this.editData.uemUserId && this.getDetailInfo();
       const titleInfo = {
-        'regular': '转正',
         'quit': '离职',
         'dismiss': '辞退'
       }
@@ -261,7 +260,6 @@ export default {
       this.$refs['elForm'].validate(valid => {
         if (valid) {
           const funcInfo = {
-            'regular': savePositiveInfo,
             'quit': saveResignInfo,
             'dismiss': saveDismissInfo
           }
@@ -279,7 +277,7 @@ export default {
 };
 </script>
 <style lang="scss">
-.regular-dialog {
+.dismiss-dialog {
   .form-wrap {
     // height: 350px;
     margin-bottom: 20px;

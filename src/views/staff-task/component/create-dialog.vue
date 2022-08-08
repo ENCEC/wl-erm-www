@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:15:03
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-05 20:56:44
+ * @LastEditTime: 2022-08-08 09:55:02
  * @Description:
 -->
 
@@ -39,6 +39,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="12">
+              <!-- TODO:字段 -->
               <!-- 在职状态（0：试用员工 1：正式员工 2：离职员工） -->
               <el-form-item label="在职状态:" prop="status">
                 <el-radio-group v-model="formData.status">
@@ -81,8 +82,20 @@
               <el-form-item label="员工任务:" prop="taskList">
                 <div class="table-wrap">
                   <!--  :selected-list.sync="selectedData"  -->
-                  <TaskTable v-if="type!=='detail'" ref="taskTableRef" :type="type" :records="records" :task-type="formData.taskType" @getSelectedData="getSelectedData" @handleRowSelect="handleRowSelect" />
-                  <SelectedTable ref="tableForm" :selected-list.sync="selectedData" :type="type" :records="records" @getSelectedData="getSelectedData" />
+                  <TaskTable
+                    v-if="type!=='detail'"
+                    ref="taskTableRef"
+                    :records="selectedRecords"
+                    :task-type="formData.taskType"
+                    @getSelectedData="getSelectedData"
+                    @handleRowSelect="handleRowSelect"
+                  />
+                  <SelectedTable
+                    ref="tableForm"
+                    :records="selectedRecords"
+                    :type="type"
+                    @getSelectedData="getSelectedData"
+                  />
                   <!-- :task-type="formData.taskType" -->
                 </div>
               </el-form-item>
@@ -140,7 +153,6 @@
 <script>
 import TaskTable from './task-table'
 import SelectedTable from './selected-table'
-
 import UserAssociate from '@/components/CurrentSystem/UserAssociate'
 import { getTaskInfoDetail, saveTaskInfo, updateTaskInfo, queryNeedStandardFullDetailByTaskType } from '@/api/staff-task';
 import { formRules } from './rules';
@@ -161,16 +173,18 @@ export default {
   },
   data() {
     return {
-      records: [],
+      selectedRecords: [],
       selectedData: [],
       rules: formRules, // 验证规则
       formData: {
-        taskTitle: '4444',
-        executor: '6957613061678637056', // 执行人
+        taskInfoId: '',
+        taskTitle: '',
+        executor: '', // 执行人6957613061678637056
         status: '', // 在职状态（0：试用员工 1：正式员工 2：离职员工）
         taskType: '', //
         taskDetailInfoDtoList: []// 列表勾选值
       },
+      // 任务类型下拉
       taskTypeOptions: this.$dict.getDictOptions('TASK_TYPE')
     };
   },
@@ -184,7 +198,7 @@ export default {
           : '编辑任务信息'
         : '新增任务';
     },
-    // 在职状态 （0：试用员工 1：正式员工 2：离职员工）
+    // 在职状态下拉 （0：试用员工 1：正式员工 2：离职员工）
     jobStatusOptions() {
       return this.$dict.getDictOptions('JOB_STATUS').filter(item => item.value.toString() === '0' || item.value.toString() === '1')
     }
@@ -193,59 +207,19 @@ export default {
   created() {},
   mounted() {},
   methods: {
-    // 获取必选问题
+    // 任务类型变化-获取必选问题
     handleTaskTypeChange(taskType) {
       taskType && queryNeedStandardFullDetailByTaskType({
         taskType
       }).then(res => {
-        this.records = res.data
+        this.selectedRecords = res.data
       });
-    },
-    // 判断复选框的勾选状态
-    handleRowSelectStatus(tableRef) {
-      this.$refs.taskTableRef.handleToggleRowSelection()
-      // this.$nextTick(() => {
-      // console.log('【tableRef】', tableRef)
-      // this.tableForm.tableData.forEach((tableItem) => {
-      //   this.records.forEach((selectedItem) => {
-      //     // console.log('【selectedItem】', selectedItem)
-      //     if (tableItem.standardEntryId === selectedItem.standardEntryId) {
-      //       // 相等则为选中状态
-      //       tableRef && tableRef.toggleRowSelection(tableItem, true)
-      //     }
-      //   })
-      // })
-      // // })
     },
     // 勾选数据行的 Checkbox 时触发的事件
     handleRowSelect(isChecked, row) {
-      // 勾选
-      // if (isChecked) {
-      this.records.push(row)
-      // } else {
-      //   this.records.forEach((item, index) => {
-      //     if (item.standardEntryId === row.standardEntryId) {
-      //       this.records.splice(index, 1)
-      //       // this.$emit('getSelectedData', this.tableForm.tableData)
-      //     }
-      //   })
-      // }
-      // const isExit = this.records.some((item) => {
-      //   return item.standardEntryId === row.standardEntryId
-      // })
-      // this.$emit('handleRowSelect', isChecked, row)
-
-      // // 不存在数据则添加
-      // if (!isExit) {
-      //   this.$emit('handleRowSelect', isChecked, row)
-      // } else {
-      //   this.$refs.multipleTable.toggleRowSelection(row, false)
-      //   // this.handleRowSelectStatus()
-      //   this.$message.error('该数据已存在')
-      // }
-      // console.log('【 isExit 】-206', isExit)
+      this.selectedRecords.push(row)
     },
-    // 表格1勾选
+    // TODO 全选
     getSelectedData(val) {
       // console.log('【getSelectedData-val 】-202', val)
       // this.records = val
@@ -265,29 +239,38 @@ export default {
       getTaskInfoDetail({ taskInfoId: this.editData.taskInfoId }).then(res => {
         console.log('【 res 】-211', res)
         const result = res.data
-        this.formData = {
-          ...this.formData,
-          ...result,
-          status: result.status.toString()
-        };
-        this.records = result.taskDetailInfoDtoList
-        console.log('【 this.records 】-224', this.records)
+        // TODO:优化
+        // this.formData = {
+        //   ...this.formData,
+        //   ...result,
+        //   status: result.status.toString()
+        // };
+        for (const key in this.formData) {
+          if (key === 'status') {
+            this.formData[key] = result[key].toString() || ''
+          } else {
+            this.formData[key] = result[key] || ''
+          }
+        }
+        this.selectedRecords = result.taskDetailInfoDtoList
+        console.log('【 this.records 】-224', this.selectedRecords)
       });
     },
     // 提交表单信息
     handleConfirm() {
       const isTableFormValid = this.$refs.tableForm.validateTableForm()
       console.log('【 isTableFormValid 】-230', isTableFormValid)
-      this.formData.taskDetailInfoDtoList = this.records.map(item => {
+      this.formData.taskDetailInfoDtoList = this.selectedRecords.map(item => {
         console.log('【 item 】-282', item)
         const { standardDetailId } = item
-        // ordinator
+        // TODO
         return { standardDetailId, ordinator: '6957613061678637056' }
       })
-      // if (!this.formData.taskDetailInfoDtoList.length) {
-      //   this.$message.error('请选择任务');
-      //   return false
-      // }
+      this.formData.executor = '6957613061678637056'
+      if (!this.formData.taskDetailInfoDtoList.length) {
+        this.$message.error('请选择任务');
+        return false
+      }
       this.$refs['elForm'].validate(valid => {
         if (isTableFormValid && valid) {
           const funcName = this.editData.taskInfoId ? updateTaskInfo : saveTaskInfo;

@@ -1,9 +1,9 @@
 <!--
  * @Author: Hongzf
- * @Date: 2022-08-01 18:07:40
+ * @Date: 2022-08-05 21:05:06
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-05 17:28:44
- * @Description:
+ * @LastEditTime: 2022-08-08 10:39:27
+ * @Description: 员工转正
 -->
 
 <template>
@@ -38,7 +38,6 @@
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <!-- 性别（0男，1女） -->
               <el-form-item label="性别:" prop="sex">
                 <el-radio-group v-model="formData.sex">
                   <el-radio :label="false">男</el-radio>
@@ -103,7 +102,7 @@
               <el-form-item label="转正类型:" prop="positiveType">
                 <el-radio-group v-model="formData.positiveType">
                   <el-radio
-                    v-for="item in typeOptions"
+                    v-for="item in positiveTypeOptions"
                     :key="'positiveType' + item.value"
                     :label="item.value"
                   >{{ item.label }}</el-radio>
@@ -131,17 +130,17 @@
           <el-row />
           <el-row>
             <el-col :span="24">
-              <el-form-item label="面谈评语:" prop="faceUid">
-                <UserAssociate v-model="formData.faceUid" placeholder="请选择面谈人" class="input-width" />
+              <el-form-item label="面谈评语:" prop="interviewUid">
+                <UserAssociate v-model="formData.interviewUid" placeholder="请选择面谈人" class="input-width" />
               </el-form-item>
             </el-col>
           </el-row>
           <!-- 面谈评语 -->
           <el-row>
             <el-col :span="24">
-              <el-form-item label=" " prop="faceRemark" :hide-required-asterisk="false">
+              <el-form-item label=" " prop="interviewComments" :hide-required-asterisk="false">
                 <el-input
-                  v-model="formData.faceRemark"
+                  v-model="formData.interviewComments"
                   type="textarea"
                   placeholder="输入评语"
                   clearable
@@ -152,17 +151,17 @@
           </el-row>
           <el-row>
             <el-col :span="24">
-              <el-form-item label="转正评语:" prop="offerUid">
-                <UserAssociate v-model="formData.offerUid" placeholder="请选择审批人" class="input-width" />
+              <el-form-item label="转正评语:" prop="positiveUid">
+                <UserAssociate v-model="formData.positiveUid" placeholder="请选择审批人" class="input-width" />
               </el-form-item>
             </el-col>
           </el-row>
           <!-- 转正评语 -->
           <el-row>
             <el-col :span="24">
-              <el-form-item label=" " prop="offerRemark" :hide-required-asterisk="true">
+              <el-form-item label=" " prop="positiveComments" :hide-required-asterisk="true">
                 <el-input
-                  v-model="formData.offerRemark"
+                  v-model="formData.positiveComments"
                   type="textarea"
                   placeholder="输入评语"
                   clearable
@@ -222,17 +221,16 @@ export default {
         jobStatus: '', // 在职状态（0：试用员工 1：正式员工 2：离职员工）
         uemDeptId: '', // 入职部门
         staffDutyCode: '', // 入职岗位
-        // 转正
-        offerDate: '',
-        positiveType: '',
-        defenseScore: '', //
-        faceUid: '', // 面谈人
-        faceRemark: '', // 面谈评语
-        offerUid: '', // 转正评语
-        offerRemark: '', // 转正评语
+        offerDate: '', // 转正时间
+        positiveType: '', // 转正类型
+        defenseScore: '', // 转员工答辩成绩
+        interviewUid: '', // 面谈人
+        interviewComments: '', // 面谈评语
+        positiveUid: '', // 审批人
+        positiveComments: '', // 转正评语
         speciality: '' // 在校专业
       },
-      typeOptions: this.$dict.getDictOptions('OFFER_TYPE')
+      positiveTypeOptions: this.$dict.getDictOptions('OFFER_TYPE')
     };
   },
   computed: {
@@ -257,21 +255,19 @@ export default {
   created() {
     // this.getDetailInfo()
   },
-  mounted() {
-    // console.log('【 this.$dict 】-431', this.$store.getters.language, this.$dict)
-    // this.$refs['elForm'].clearValidate();
-  },
+  mounted() {},
   methods: {
     // 关闭弹框
     close() {
       this.$emit('update:visible', false);
       this.$refs['elForm'].resetFields();
     },
-    // 获取用户信息
+    // 获取详情信息
     getDetailInfo() {
       queryStaffInfo({
         uemUserId: this.editData.uemUserId
       }).then(res => {
+        // 表单赋值
         for (const key in this.formData) {
           if (key === 'sex') {
             this.formData[key] = res[key] || false
@@ -279,14 +275,14 @@ export default {
             this.formData[key] = res[key] || ''
           }
         }
-        console.log('【 this.formData  】-290', this.formData)
+        // console.log('【 this.formData  】-290', this.formData)
       });
     },
     // 提交表单信息
     handleConfirm() {
       this.$refs['elForm'].validate(valid => {
         if (valid) {
-          const uemUserIds = [this.editData.uemUserId, this.formData.faceUid, this.formData.offerUid]
+          const uemUserIds = [this.editData.uemUserId, this.formData.interviewUid, this.formData.positiveUid]
           savePositiveInfo({ ...this.formData, uemUserIds }).then(res => {
             this.$message.success('操作成功');
             this.$emit('getTableData', '');
