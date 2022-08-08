@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-01 13:52:08
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-08 10:30:59
+ * @LastEditTime: 2022-08-08 11:12:51
  * @Description:
  */
 // 编辑
@@ -132,14 +132,14 @@ const commonRules = {
       trigger: 'change'
     }
   ],
-  uemDeptId: [
+  deptName: [
     {
       required: true,
       message: '请选择入职部门',
       trigger: 'change'
     }
   ],
-  staffDutyCode: [
+  staffDuty: [
     {
       required: true,
       message: '请选择入职岗位',

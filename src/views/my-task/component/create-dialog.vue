@@ -1,13 +1,13 @@
 <!--
  * @Author: Hongzf
- * @Date: 2022-08-02 10:15:03
+ * @Date: 2022-08-05 17:38:09
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-05 23:32:35
- * @Description:
+ * @LastEditTime: 2022-08-08 17:55:55
+ * @Description: 我的任务-试用任务信息-弹框
 -->
 
 <template>
-  <div class="staff-dialog">
+  <div class="task-dialog">
     <el-dialog
       :title="dialogTitle"
       v-bind="$attrs"
@@ -23,15 +23,20 @@
         :model="formData"
         :rules="rules"
         size="mini"
-        label-width="100px"
+        label-width="1px"
         :inline="true"
       >
         <div class="form-wrap">
           <el-row>
             <el-col :span="24">
-              <el-form-item label="员工任务:" prop="taskList">
+              <el-form-item label=" ">
                 <div class="table-wrap">
-                  <TaskTable ref="tableForm" :selected-list.sync="selectedData" :type="type" :records="records" :task-type="formData.taskType" @getSelectedData="getSelectedData" />
+                  <TaskTable
+                    ref="tableForm"
+                    :task-info-id="editData.taskInfoId"
+                    :type="type"
+                    @getTableFormData="getTableFormData"
+                  />
                 </div>
               </el-form-item>
             </el-col>
@@ -44,7 +49,7 @@
           type="primary"
           size="mini"
           @click="handleConfirm"
-        >提交</el-button>
+        >保存</el-button>
         <el-button
           type="primary"
           :plain="true"
@@ -57,17 +62,15 @@
 </template>
 <script>
 import TaskTable from './task-table'
-import { getTaskInfoDetail, saveTaskInfo, updateTaskInfo } from '@/api/staff-task';
-import { formRules } from './rules';
 
 export default {
   components: { TaskTable },
   props: {
     // 编辑信息
-    // editData: {
-    //   type: Object,
-    //   default: () => { return { taskInfoId: '111' } }
-    // },
+    editData: {
+      type: Object,
+      default: () => {}
+    },
     // 弹窗类型
     type: {
       type: String,
@@ -76,95 +79,48 @@ export default {
   },
   data() {
     return {
-      editData: { taskInfoId: '111' },
-      records: [],
-      selectedData: [],
-      rules: formRules, // 验证规则
-      formData: {
-        taskDetailInfoDtoList: []// 列表勾选值
-      }
+      rules: {}, // 验证规则
+      formData: {}
     };
   },
   computed: {
     // 弹框标题
     dialogTitle() {
-      this.editData.taskInfoId && this.getDetailInfo();
-      return '试用任务信息'
-      // this.editData.taskInfoId
-      //   ? this.type === 'detail'
-      //     ? '任务详细信息'
-      //     : '编辑任务信息'
-      //   : '新增任务';
-    },
-    // 在职状态 （0：试用员工 1：正式员工 2：离职员工）
-    jobStatusOptions() {
-      return this.$dict.getDictOptions('JOB_STATUS').filter(item => item.value.toString() === '0' || item.value.toString() === '1')
+      return this.editData.taskTitle || '试用任务信息'
     }
   },
   watch: {},
   created() {},
   mounted() {},
   methods: {
-    // 表格勾选
-    getSelectedData(val) {
-      console.log('【getSelectedData-val 】-202', val)
-      this.formData.taskDetailInfoDtoList = val.map(item => {
-        const { standardDetailId } = item
-        // ordinator
-        return { standardDetailId, ordinator: '6957613061678637056' }
-      })
+    // 获取填写的数据
+    getTableFormData(val, isClose) {
+      isClose && this.close();
     },
     // 关闭弹框
     close() {
+      this.$emit('getTableData', '');
       this.$emit('update:visible', false);
       this.$refs['elForm'].resetFields();
     },
-    // 获取详细信息
-    getDetailInfo() {
-      getTaskInfoDetail({ taskInfoId: this.editData.taskInfoId }).then(res => {
-        console.log('【 res 】-211', res)
-        const result = res.data
-        this.formData = {
-          ...this.formData,
-          ...result,
-          status: result.status.toString()
-        };
-        this.records = result.taskDetailInfoDtoList
-        console.log('【 this.records 】-224', this.records)
-      });
-    },
     // 提交表单信息
     handleConfirm() {
-      const isTableFormValid = this.$refs.tableForm.validateTableForm()
-      console.log('【 isTableFormValid 】-230', isTableFormValid)
-      if (!this.formData.taskDetailInfoDtoList.length) {
-        this.$message.error('请选择任务');
-        return false
-      }
-      this.$refs['elForm'].validate(valid => {
-        if (isTableFormValid && valid) {
-          const funcName = this.editData.taskInfoId ? updateTaskInfo : saveTaskInfo;
-          funcName(this.formData).then(res => {
-            this.$message.success(res.data);
-            this.$emit('getTableData', '');
-            this.close();
-          });
-        }
-      });
+      this.$refs.tableForm.saveCurPageData(true)
+      // this.$refs['elForm'].validate(valid => {});
     }
   }
 };
 </script>
 <style lang="scss">
-.staff-dialog {
+.task-dialog {
   .form-wrap {
-    height: 400px;
+    height: 350px;
     margin-bottom: 20px;
     .input-width {
       width: 180px;
     }
     .table-wrap{
-      width:750px;
+      width:900px;
     }
   }
   // 底部按钮

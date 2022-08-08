@@ -110,8 +110,7 @@ export default {
       loginForm: {
         username: 'test13',
         password: '654321',
-        // TODO
-        clientId: 'share-auth-xzt',
+        clientId: process.env.VUE_APP_CLIENT_ID,
         checkMoveId: ' ',
         xWidth: 0
       },
@@ -170,6 +169,7 @@ export default {
     // 登录
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
+        console.log('【 clientId 】-174', this.loginForm.clientId)
         if (valid) {
           this.loading = true
           this.$store.dispatch('user/login',
@@ -177,6 +177,7 @@ export default {
               ...this.loginForm,
               account: this.loginForm.username,
               password: aesEncrypt(this.loginForm.password)
+              // clientId: process.env.CLIENT_ID
             }
           )
             .then((res) => {

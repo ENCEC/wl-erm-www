@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:15:04
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-06 11:52:36
+ * @LastEditTime: 2022-08-08 14:18:55
  * @Description:
  */
 
@@ -17,7 +17,7 @@ export const filterConfig = _this => {
       {
         type: 'input',
         label: ' ',
-        prop: 'name',
+        prop: 'taskTitle',
         width: '200px',
         clearable: true,
         placeholder: '请输入标题',
@@ -26,7 +26,7 @@ export const filterConfig = _this => {
       {
         type: 'select',
         label: ' ',
-        prop: 'isValid',
+        prop: 'status',
         width: '200px',
         clearable: true,
         placeholder: '请选择任务状态',
@@ -36,10 +36,10 @@ export const filterConfig = _this => {
         optionKey: 'value',
         options: [
           { value: '', label: '全部' },
-          ..._this.$dict.getDictOptions('TASK_STATUS')
+          ..._this.$dict.getDictOptions('MY_TASK_STATUS')
         ],
         changeSelect: optionVal => {
-          _this.filterForm.isValid = optionVal;
+          _this.filterForm.status = optionVal;
         }
       }
     ],
@@ -80,16 +80,13 @@ export const tableConfig = {
 export const columns = _this => {
   return [
     {
-      prop: 'name',
+      prop: 'taskTitle',
       label: '标题',
       render: (h, ctx) => {
         // console.log('【 h, ctx 】-121', h, ctx)
         return h(
           'el-button',
           {
-            // domProps: {
-            //   innerText: ctx.row.name
-            // },
             props: {
               type: 'text',
               size: 'small'
@@ -101,7 +98,7 @@ export const columns = _this => {
               }
             }
           },
-          ctx.row.name
+          ctx.row.taskTitle// 文本值
         );
       }
     },
@@ -110,23 +107,33 @@ export const columns = _this => {
       label: '任务类型'
     },
     {
-      prop: 'email',
-      label: '发布日期'
+      prop: 'publishDate',
+      label: '发布日期',
+      formatter: (row, column) => {
+        const val = row.publishDate
+        const date = val ? _this.$moment(parseInt(val)).format('YYYY-MM-DD') : '';
+        return date
+      }
     },
     {
-      prop: 'email',
-      label: '计划完成日期'
+      prop: 'planEndDate',
+      label: '计划完成日期',
+      width: '120px'
     },
     {
-      prop: 'email',
-      label: '任务创建人'
+      prop: 'creatorName',
+      label: '任务创建人',
+      width: '120px'
     },
     {
-      prop: 'email',
-      label: '任务状态'
+      prop: 'status',
+      label: '任务状态',
+      formatter: (row, column) => {
+        return _this.$dict.getDictNameByCode('MY_TASK_STATUS', row.status)
+      }
     },
     {
-      prop: 'email',
+      prop: 'endDate',
       label: '完成时间'
     }
   ];
@@ -136,41 +143,8 @@ export const operates = _this => {
   return {
     list: [
       { show: false }
-      // {
-      //   id: 'edit',
-      //   label: '编辑',
-      //   type: 'text',
-      //   show: true,
-      //   disabled: false,
-      //   method: (index, row) => {
-      //     console.log('【 index 】-163', index);
-      //     _this.handleOpen(row, 'edit');
-      //   }
-      // },
-      // {
-      //   id: 'detail',
-      //   label: '查看',
-      //   type: 'text',
-      //   show: true,
-      //   disabled: false,
-      //   method: (index, row) => {
-      //     console.log('【 index 】-163', index);
-      //     _this.handleOpen(row, 'detail');
-      //   }
-      // },
-      // {
-      //   id: 'delete',
-      //   label: '删除',
-      //   // icon: 'el-icon-delete',
-      //   type: 'text',
-      //   show: true,
-      //   plain: false,
-      //   method: (index, row) => {
-      //     _this.handleDelete(row.uemUserId);
-      //   }
-      // }
     ],
     fixed: false,
     width: 200
-  }; // 列操作按钮
+  };
 };

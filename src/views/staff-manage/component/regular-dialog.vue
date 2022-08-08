@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 21:05:06
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-08 10:39:27
+ * @LastEditTime: 2022-08-08 14:33:27
  * @Description: 员工转正
 -->
 
@@ -74,13 +74,25 @@
           </el-row>
           <el-row>
             <el-col :span="12">
-              <el-form-item label="入职部门:" prop="uemDeptId">
-                <Department v-model="formData.uemDeptId" clearable placeholder="请选择入职部门" class="input-width" disabled />
+              <el-form-item label="入职部门:" prop="deptName">
+                <el-input
+                  v-model="formData.deptName"
+                  placeholder="请输入入职部门"
+                  clearable
+                  disabled
+                />
+                <!-- <Department v-model="formData.uemDeptId" clearable placeholder="请选择入职部门" class="input-width" disabled /> -->
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item label="入职岗位:" prop="staffDutyCode">
-                <StaffDuty v-model="formData.staffDutyCode" placeholder="请选择入职岗位" class="input-width" disabled />
+              <el-form-item label="入职岗位:" prop="staffDuty">
+                <el-input
+                  v-model="formData.staffDuty"
+                  placeholder="请输入入职岗位"
+                  clearable
+                  disabled
+                />
+                <!-- <StaffDuty v-model="formData.staffDutyCode" placeholder="请选择入职岗位" class="input-width" disabled /> -->
               </el-form-item>
             </el-col>
           </el-row>
@@ -189,15 +201,15 @@
   </div>
 </template>
 <script>
-import { queryStaffInfo, savePositiveInfo, saveResignInfo, saveDismissInfo } from '@/api/staff-manage';
+import { queryStaffInfo, savePositiveInfo } from '@/api/staff-manage';
 import { regularFormRules } from './rules';
-import StaffDuty from '@/components/CurrentSystem/StaffDuty.vue'
+// import StaffDuty from '@/components/CurrentSystem/StaffDuty.vue'
 import UserAssociate from '@/components/CurrentSystem/UserAssociate'
-import Department from '@/components/CurrentSystem/Department.vue'
+// import Department from '@/components/CurrentSystem/Department.vue'
 import Upload from '@/components/CurrentSystem/Upload.vue'
 
 export default {
-  components: { StaffDuty, UserAssociate, Department, Upload },
+  components: { UserAssociate, Upload },
   // inheritAttrs: false,
   props: {
     // 编辑信息
@@ -219,7 +231,9 @@ export default {
         sex: '',
         entryDate: '', // 2022-05-20 00:00:00入职时间
         jobStatus: '', // 在职状态（0：试用员工 1：正式员工 2：离职员工）
+        deptName: '', // 部门名称
         uemDeptId: '', // 入职部门
+        staffDuty: '', // 岗位名称
         staffDutyCode: '', // 入职岗位
         offerDate: '', // 转正时间
         positiveType: '', // 转正类型
@@ -266,7 +280,8 @@ export default {
     getDetailInfo() {
       queryStaffInfo({
         uemUserId: this.editData.uemUserId
-      }).then(res => {
+      }).then(result => {
+        const res = result.data
         // 表单赋值
         for (const key in this.formData) {
           if (key === 'sex') {

@@ -2,14 +2,14 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:15:03
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-06 11:48:03
+ * @LastEditTime: 2022-08-08 14:41:03
  * @Description:
 -->
 
 <template>
   <div class="staff-dialog">
     <el-dialog
-      :title="dialogTitle+'离职申请'"
+      :title="dialogTitle"
       v-bind="$attrs"
       width="800px"
       center
@@ -352,7 +352,7 @@ export default {
       //     ? '任务详细信息'
       //     : '编辑任务信息'
       //   : '新增任务';
-      return '姓名'
+      return '姓名' + '离职申请'
     }
   },
   watch: {},

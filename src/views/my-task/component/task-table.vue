@@ -1,49 +1,40 @@
 <!--
  * @Author: Hongzf
- * @Date: 2022-07-26 14:43:35
+ * @Date: 2022-08-05 17:38:09
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-04 15:00:29
- * @Description:
+ * @LastEditTime: 2022-08-08 18:31:44
+ * @Description: 我的任务-试用任务信息-弹框-表格
 -->
+
 <template>
   <div class="table-wrap">
     <el-form ref="tableFormRef" :model="tableForm" class="tableform-wrap" size="mini" label-width="auto" :rules="tableFormRules">
       <!-- 表格 Start -->
       <el-table
-        ref="multipleTable"
         highlight-current-row
         :data="tableForm.tableData"
-        height="350px"
-        style="width: 100%"
+        height="320px"
         border
         size="mini"
-        @select="handleRowSelect"
-        @selection-change="handleSelectionChange"
       >
         <el-table-column type="index" label="序号" width="50" />
-        <el-table-column prop="entryName" label="规范条目" />
-        <el-table-column prop="actionTime" label="执行时间" min-width="110">
+        <el-table-column prop="standardEntryName" label="规范条目" />
+        <el-table-column prop="actionTime" label="执行时间" width="110">
           <template slot-scope="scope">
             {{ scope.row.actionTime && scope.row.actionTime.toString()?`入职后第${scope.row.actionTime}天`:'' }}
           </template>
         </el-table-column>
-        <el-table-column prop="actionPeriod" label="执行周期(工时)" min-width="130" />
-        <el-table-column prop="detailName" label="任务名称" />
-        <el-table-column prop="actionSerialNum" label="执行顺序" />
-        <el-table-column prop="planEndDate" label="计划完成日期" min-width="120">
-          <template slot-scope="scope">
-            {{ scope.row.planEndDate? $moment(parseInt(scope.row.planEndDate)).format('YYYY-MM-DD') : '' }}
-          </template>
-        </el-table-column>
-        <!-- 员工 -->
-        <el-table-column v-if="userType===USER_TYPE.staff" prop="progress" label="完成进度(%)" min-width="130">
+        <el-table-column prop="actionPeriod" label="执行周期(工时)" width="110" />
+        <el-table-column prop="standardDetailName" label="任务名称" min-width="110" />
+        <el-table-column prop="actionSerialNum" label="执行顺序" width="70" />
+        <el-table-column prop="planEndDate" label="计划完成日期" width="110" />
+        <!-- 员工-完成进度 -->
+        <el-table-column v-if="userType===USER_TYPE.STAFF" prop="progress" label="完成进度(%)" min-width="130">
           <template slot-scope="scope">
             <el-form-item
               v-if="scope.$index >= 0"
               :prop="`tableData[${scope.$index}].progress`"
-              :rules="[
-                { required:true, message: '请选择', trigger: ['blur','change'] }
-              ]"
+              :rules="tableFormRules.progress"
             >
               <el-select
                 v-model="scope.row.progress"
@@ -59,22 +50,26 @@
                 />
               </el-select>
             </el-form-item>
+            <!-- TODO:显示条件判断确认 -->
+            <span v-if="(scope.row.progress === 100) && (scope.row.status == COMPLETION_EN.COMPLETED)">
+              {{ scope.row.progress }}
+            </span>
           </template>
         </el-table-column>
         <!-- 统筹人 -->
-        <el-table-column v-if="userType===USER_TYPE.ordinator" prop="progress" label="完成进度(%)" min-width="100" />
-        <el-table-column v-if="userType!==USER_TYPE.charge" prop="status" label="完成情况" />
-        <el-table-column v-if="userType!==USER_TYPE.charge" prop="resultAccess" label="完成结果" />
-        <!-- 负责人 -->
-        <!-- TODO -->
-        <el-table-column v-if="userType===USER_TYPE.charge" prop="resultAccess" label="完成结果" min-width="130">
+        <el-table-column v-if="userType===USER_TYPE.ORDINATOR" prop="progress" label="完成进度(%)" min-width="100" />
+        <el-table-column v-if="userType!==USER_TYPE.CHARGE" prop="resultAccess" label="完成结果">
+          <template slot-scope="scope">
+            {{ $dict.getDictNameByCode('COMPLETION', scope.row.status) }}
+          </template>
+        </el-table-column>
+        <!-- 负责人-完成结果 -->
+        <el-table-column v-if="userType===USER_TYPE.CHARGE" prop="resultAccess" label="完成结果" min-width="130">
           <template slot-scope="scope">
             <el-form-item
-              v-if="scope.$index >= 0"
+              v-if="(scope.$index >= 0) && (!scope.row.endDate)"
               :prop="`tableData[${scope.$index}].resultAccess`"
-              :rules="[
-                { required:true, message: '请选择', trigger: ['blur','change'] }
-              ]"
+              :rules="tableFormRules.resultAccess"
             >
               <el-select
                 v-model="scope.row.resultAccess"
@@ -84,22 +79,26 @@
               >
                 <el-option
                   v-for="(item) in resultOptions"
-                  :key="item.value"
+                  :key="item.label"
                   :label="item.label"
-                  :value="item.value"
+                  :value="item.label"
                 />
               </el-select>
             </el-form-item>
+            <!-- TODO:显示条件判断确认 -->
+            <span v-if="scope.row.endDate && (scope.row.status == COMPLETION_EN.COMPLETED)">
+              {{ $dict.getDictNameByCode('COMPLETION', scope.row.status) }}
+            </span>
           </template>
         </el-table-column>
-        <el-table-column v-if="userType===USER_TYPE.charge" prop="status" label="完成情况" min-width="130">
+        <!-- 负责人-完成情况 -->
+        <el-table-column v-if="userType!==USER_TYPE.CHARGE" prop="status" label="完成情况" />
+        <el-table-column v-if="userType===USER_TYPE.CHARGE" prop="status" label="完成情况" min-width="130">
           <template slot-scope="scope">
             <el-form-item
-              v-if="scope.$index >= 0"
+              v-if="(scope.$index >= 0) && (!scope.row.endDate)"
               :prop="`tableData[${scope.$index}].status`"
-              :rules="[
-                { required:true, message: '请选择', trigger: ['blur','change'] }
-              ]"
+              :rules="tableFormRules.status"
             >
               <el-select
                 v-model="scope.row.status"
@@ -111,23 +110,21 @@
                   v-for="(item) in statusOptions"
                   :key="item.value"
                   :label="item.label"
-                  :value="item.value"
+                  :value="Number(item.value)"
                 />
               </el-select>
             </el-form-item>
+            <!-- TODO:显示条件判断确认 -->
+            <span v-if="scope.row.endDate && (scope.row.status == COMPLETION_EN.COMPLETED)">
+              {{ scope.row.status }}
+            </span>
           </template>
         </el-table-column>
-        <!-- TODO -->
-        <el-table-column prop="endDate" label="完成时间" min-width="120">
-          <template slot-scope="scope">
-            {{ scope.row.endDate? $moment(parseInt(scope.row.endDate)).format('YYYY-MM-DD hh:mm:ss') : '' }}
-          </template>
-        </el-table-column>
+        <el-table-column prop="endDate" label="完成时间" min-width="120" />
       </el-table>
       <!-- 表格 End -->
       <!-- 分页 -->
       <el-pagination
-        v-if="type !== 'detail'"
         class="pagination-wrap"
         :current-page.sync="params.currentPage"
         :page-sizes="[10, 20, 30, 40]"
@@ -141,95 +138,51 @@
   </div>
 </template>
 <script>
-import { queryStandardFullDetailByTaskType } from '@/api/staff-task';
+import { queryTaskDetailInfo, updateTaskDetailProgress, updateTaskDetailStatus } from '@/api/my-task';
 import tableMix from '@/mixins/table-mixin';
+import { USER_TYPE, COMPLETION_EN } from '@/store/constant'
+
 export default {
-  name: 'TaskTable',
+  name: 'MyTaskTable',
   mixins: [tableMix],
   props: {
     // 编辑信息
-    records: {
-      type: Array,
-      default: () => []
-    },
-    // 弹窗类型
-    type: {
+    taskInfoId: {
       type: String,
       default: ''
     },
-    // 任务类型
-    taskType: {
+    // 弹窗类型
+    type: {
       type: String,
       default: ''
     }
   },
   data() {
     return {
-      USER_TYPE: {
-        staff: 1,
-        ordinator: 2,
-        charge: 3
-      },
-      userType: 3,
+      USER_TYPE,
+      COMPLETION_EN,
+      userType: 3, // TODO
+      oldPage: '', // 页面切换前的页数
       // 表单数据
       tableForm: {
-        tableData: [
-          {}
-        //   {
-        //   taskTitle: 'taskTitle',
-        //   ordinator: '6958664088091697152',
-        //   required: true,
-        //   checked: true,
-        //   actionPeriod: 1,
-        //   actionSerialNum: 0,
-        //   actionTime: 2,
-        //   // applyDate: null,
-        //   // approvalDate: null,
-        //   // approver: null,
-        //   // endDate: null,
-        //   // executor: null
-        //   // faceRemark: null
-        //   // faceTime: null
-        //   // leader: null
-        //   // offerRemark: null
-        //   // offerType: null
-        //   // ordinator: null
-        //   // pageNo: null
-        //   // pageSize: null
-        //   planEndDate: 1636732800000,
-        //   planStartDate: 1636732800000,
-        //   progress: null,
-        //   resultAccess: null,
-        //   standardDetailId: '11',
-        //   standardDetailName: '细则名称1',
-        //   standardEntryId: '1111',
-        //   standardEntryName: '规范条目11111',
-        //   startDate: null,
-        //   status: 0,
-        //   taskDetailId: '6960507338410762240',
-        //   taskInfoId: '6960507337878085632',
-        //   taskName: null
-        // },
-        // {
-        //   taskTitle: 'taskTitle',
-        //   ordinator: '',
-        //   required: true,
-        //   checked: true
-        // }
-        ]
+        tableData: []
       },
       // 验证规则
       tableFormRules: {
-        // ordinator: [
-        //   { required: true, message: '请选择姓名', trigger: 'change' }
-        // ]
+        progress: [{ required: true, message: '请选择完成进度', trigger: 'change' }],
+        resultAccess: [
+          { required: true, message: '请选择完成结果', trigger: 'change' }
+        ],
+        status: [
+          { required: true, message: '请选择完成情况', trigger: 'change' }
+        ]
       },
-      resultOptions: this.$dict.getDictOptions('COMPLETE_RESULT'),
-      statusOptions: this.$dict.getDictOptions('COMPLETION')
+      resultOptions: this.$dict.getDictOptions('COMPLETE_RESULT'), // 完成结果
+      statusOptions: this.$dict.getDictOptions('COMPLETION').filter(item => item.value !== 0) // 完成情况
     };
   },
   computed: {
-    // 在职状态 （0：试用员工 1：正式员工 2：离职员工）
+    // 完成进度-下拉
     progressOptions() {
       const arr = []
       for (let i = 0; i <= 100; i = i + 10) {
@@ -242,94 +195,101 @@ export default {
     }
   },
   watch: {
-    taskType(newVal) {
-      // 新增、编辑获取列表数据
-      if (this.type !== 'detail') {
-        // newVal && this.getTableData()
-      }
-    },
-    records: {
+    // 监听页数变化
+    'params.currentPage': {
       deep: true,
-      immediate: true,
-      handler(newVal) {
-        if (this.type === 'detail') {
-          // 详情的列表数据
-          // console.log('【 详情的列表数据 】-161', newVal)
-          this.tableForm.tableData = newVal
-        } else {
-          // 设置默认选中状态
-          this.$nextTick(() => {
-            const tableRef = this.$refs.multipleTable
-            this.handleToggleRowSelection(tableRef)
-          })
-        }
+      handler(newVal, oldVal) {
+        this.oldPage = oldVal
+        // console.log('【 newVal, oldVal 】-193', newVal, oldVal)
       }
     }
   },
   created() {
-    // console.log('【 this.type 】-138', this.type)
-    // 详情
-    // if (this.type === 'detail') {
-    //   // this.tableForm.tableData = this.records
-    //   console.log('【 this.tableForm.tableData 】-141', this.tableForm.tableData)
-    // } else {
-    //   this.getTableData();
-    if (this.type !== 'detail') {
-      this.handleToggleRowSelection()
-    }
+    this.getTableData();
   },
-  async mounted() {
-    // await this.getTableData()
-    // this.$nextTick(() => {
-    //   const tableRef = this.$refs.multipleTable
-    //   this.handleToggleRowSelection(tableRef)
-    // })
-  },
+  mounted() {},
   methods: {
-    // 判断复选框的勾选状态
-    handleToggleRowSelection(tableRef) {
-      // this.$nextTick(() => {
-      console.log('【tableRef】', tableRef)
-      this.tableForm.tableData.forEach((tableItem) => {
-        this.records.forEach((selectedItem) => {
-          // console.log('【selectedItem】', selectedItem)
-          if (tableItem.standardEntryId === selectedItem.standardEntryId) {
-            // 相等则为选中状态
-            tableRef && tableRef.toggleRowSelection(tableItem, true)
+    // 分页触发
+    handleCurrentChange(curPage) {
+      this.params.currentPage = this.oldPage
+      if (this.userType !== USER_TYPE.ORDINATOR) {
+        this.$confirm(
+          '是否保存当前页的数据？',
+          '提示',
+          {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
           }
-        })
-      })
-      // })
+        ).then(async() => {
+          await this.saveCurPageData(false)// 保存当前页数据
+          this.params.currentPage = curPage// 切换到下一页
+          // console.log('【 保存成功，切换到下一页 】-227')
+          this.getTableData();
+          // console.log('【 保存 1】-196', this.params.currentPage, curPage)
+        }).catch(() => {
+          this.params.currentPage = curPage
+          this.getTableData();
+          // console.log('【 不保存 1】-196', this.params.currentPage, curPage)
+        });
+      } else {
+        this.params.currentPage = curPage
+        this.getTableData();
+      }
     },
     // 获取表格数据
     getTableData() {
-      queryStandardFullDetailByTaskType({
-        currentPage: this.params.currentPage,
+      queryTaskDetailInfo({
+        pageNo: this.params.currentPage,
         pageSize: this.params.pageSize,
-        taskType: this.taskType
+        taskInfoId: this.taskInfoId // 6961151640916795392
       }).then(res => {
         const _res = res.data
         this.tableForm.tableData = _res.records;
         this.params.totalRecord = _res.totalRecord;
       });
     },
-    // 勾选数据行的 Checkbox 时触发的事件
-    handleRowSelect(selection, row) {
-      row.checked = !row.checked// 选中的情况下才能选择负责人
-      // console.log('【 selection, row 】-178', selection, row)
-    },
-    // 当选择项发生变化时会触发该事件
-    handleSelectionChange(val) {
-      this.multipleSelection = val;
-      this.$emit('getSelectedData', val)
-      this.$emit('update:selectedList', val)
-    },
-    validateTableForm() {
-      let isTableFormValid = false
-      this.$refs.tableFormRef.validate(valid => {
-        isTableFormValid = valid
+    // 保存当前页数据
+    saveCurPageData(isClose) {
+      // console.log('【 是否关闭弹框 】-255', isClose)
+      return new Promise((resolve, reject) => {
+        // 验证表单
+        let isTableFormValid = false
+        this.$refs.tableFormRef.validate(valid => {
+          isTableFormValid = valid
+        })
+        // 验证通过
+        if (isTableFormValid) {
+        // 发送数据
+          const tableFormData = this.tableForm.tableData.map(item => {
+            return {
+              taskDetailId: item.taskDetailId, // this.taskInfoId // TODO
+              progress: item.progress,
+              status: item.status,
+              resultAccess: item.resultAccess
+            }
+          })
+          let funcName = ''
+          // 员工-更新任务进度
+          if (this.userType === USER_TYPE.STAFF) {
+            funcName = updateTaskDetailProgress
+          }
+          // 负责人-更新任务完成状态
+          if (this.userType === USER_TYPE.CHARGE) {
+            funcName = updateTaskDetailStatus
+          }
+          funcName(tableFormData).then(res => {
+            this.$message.success(res.data);
+            this.$emit('getTableFormData', tableFormData, isClose)
+            resolve()
+            console.log('【保存成功 reject 】-287')
+          });
+        } else {
+          reject()
+          console.log('【保存失败 reject 】-287')
+        }
+        return isTableFormValid
       })
-      return isTableFormValid
     }
   }
 };
@@ -339,13 +299,6 @@ export default {
   .btn-wrap {
     display: flex;
     justify-content: flex-end;
-  }
-  // 操作栏
-  .operate-wrap {
-    span {
-      display: inline-block;
-      cursor: pointer;
-    }
   }
   // 分页
   .pagination-wrap {

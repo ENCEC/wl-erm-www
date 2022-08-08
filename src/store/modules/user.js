@@ -58,7 +58,8 @@ const actions = {
       getInfo(state.token).then(response => {
         // const { data } = response
         // TODO:接口调整
-        const data = { roles: ['admin'],
+        const data = {
+          roles: ['admin'],
           introduction: 'I am a super administrator',
           avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
           name: 'Super Admin'

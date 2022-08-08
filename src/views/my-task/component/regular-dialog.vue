@@ -2,14 +2,14 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:15:03
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-06 11:16:57
+ * @LastEditTime: 2022-08-08 15:53:00
  * @Description:
 -->
 
 <template>
   <div class="staff-dialog">
     <el-dialog
-      :title="dialogTitle+'转正申请'"
+      :title="dialogTitle"
       v-bind="$attrs"
       width="900px"
       center
@@ -155,15 +155,13 @@
                 <el-form-item label="面谈结果:" prop="positiveType">
                   <el-radio-group v-model="formData.positiveType" :disabled="status === STATUS_TYPE.final">
                     <el-radio
-                      v-for="item in positiveTypeOptions"
+                      v-for="item in inclinedAgreeOptions"
                       :key="'positiveType' + item.value"
                       :label="item.value"
                     >{{ item.label }}</el-radio>
                   </el-radio-group>
                 </el-form-item>
               </el-col>
-              <!-- </el-row>
-            <el-row> -->
               <el-col :span="12">
                 <el-form-item label="转员工答辩成绩:" prop="defenseScore" label-width="130px">
                   <el-input
@@ -216,8 +214,8 @@
                 <el-form-item label="审批结果:" prop="approvalResult">
                   <el-radio-group v-model="formData.approvalResult">
                     <el-radio
-                      v-for="item in positiveTypeOptions"
-                      :key="'positiveType' + item.value"
+                      v-for="item in agreeOptions"
+                      :key="'approvalResult' + item.value"
                       :label="item.value"
                     >{{ item.label }}</el-radio>
                   </el-radio-group>
@@ -347,7 +345,7 @@ export default {
       STATUS_TYPE: {
         check: 1, // 审批中
         on: 2, // 进行中
-        completed: 3,
+        completed: 3, // 已完成
         final: 4
       },
       status: 4,
@@ -363,19 +361,16 @@ export default {
         approvalTime: ''
       },
       taskTypeOptions: this.$dict.getDictOptions('TASK_TYPE'),
-      positiveTypeOptions: this.$dict.getDictOptions('OFFER_TYPE')
+      positiveTypeOptions: this.$dict.getDictOptions('OFFER_TYPE'),
+      inclinedAgreeOptions: this.$dict.getDictOptions('INCLINED_AGREE_TYPE'),
+      agreeOptions: this.$dict.getDictOptions('AGREE_TYPE')
     };
   },
   computed: {
     // 弹框标题
     dialogTitle() {
       // this.editData.taskInfoId && this.getDetailInfo();
-      // return this.editData.taskInfoId
-      //   ? this.type === 'detail'
-      //     ? '任务详细信息'
-      //     : '编辑任务信息'
-      //   : '新增任务';
-      return '姓名'
+      return '姓名' + '转正申请'
     }
   },
   watch: {},

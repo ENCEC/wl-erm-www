@@ -2,39 +2,29 @@
  * @Author: Hongzf
  * @Date: 2022-07-22 16:25:46
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-04 15:01:47
+ * @LastEditTime: 2022-08-08 17:39:22
  * @Description: 字典
  */
-// 完成情况
-export const COMPLETE_RESULT = {
-  '0': '优秀',
-  '1': '良好',
-  '3': '一般'
+// TODO 用户类型
+export const USER_TYPE = {
+  STAFF: 1,
+  ORDINATOR: 2, // 统筹人
+  CHARGE: 3// 负责人
 }
-// 完成结果
-export const COMPLETION = {
-  '0': '已完成',
-  '1': '退回重做'
-}
+
 // 禁用启用
 export const VALID_STATUS = {
   '': '所有',
   'false': '禁用',
   'true': '启用'
 }
-// 任务状态
+// 任务分配-任务状态
 export const TASK_STATUS = {
   '0': '待完成',
   '1': '执行中',
   '2': '已完成'
 }
-// 任务类型
-export const TASK_TYPE = {
-  'TASK_TRAIL': '试用任务',
-  'TASK_STUDY': '学习任务',
-  'TASK_TRAIN': '培训任务',
-  'TASK_OTHER': '其他任务'
-}
+
 // 性别
 export const SEX = {
   '0': '男',
@@ -57,13 +47,54 @@ export const MARITAL_STATUS = {
   '1': '已婚',
   '2': '离婚'
 }
-
 // 学历（0：专科 1：本科 2：研究生 3：博士生）
 export const EDUCATION = {
   '0': '专科',
   '1': '本科',
   '2': '研究生',
   '3': '博士生'
+}
+// 任务类型
+export const TASK_TYPE = {
+  'TASK_TRAIL': '试用任务',
+  'TASK_STUDY': '学习任务',
+  'TASK_TRAIN': '培训任务',
+  'TASK_OTHER': '其他任务'
+}
+// 我的任务-任务状态
+export const MY_TASK_STATUS = {
+  '0': '审批中',
+  '1': '进行中',
+  '2': '已完成'
+}
+// 完成结果
+export const COMPLETE_RESULT = {
+  '0': '优秀',
+  '1': '良好',
+  '2': '一般'
+}
+// 我的任务-完成情况
+export const COMPLETION = {
+  '0': '待完成',
+  // '1': '执行中',
+  '2': '已完成',
+  '3': '退回重做'
+}
+// 我的任务-完成情况
+export const COMPLETION_EN = {
+  COMPLETED: '已完成',
+  TODO: '待完成',
+  REDO: '退回重做'
+}
+// TODO 拟同意类型
+export const INCLINED_AGREE_TYPE = {
+  '0': '拟不同意',
+  '1': '拟同意'
+}
+// TODO 拟同意类型
+export const AGREE_TYPE = {
+  '0': '不同意',
+  '1': '同意'
 }
 // 任务状态
 // export const TASK_STATUS = {
