@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-07-26 14:43:35
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-08 09:51:15
+ * @LastEditTime: 2022-08-09 12:34:09
  * @Description:
 -->
 <template>
@@ -39,7 +39,7 @@
         <el-table-column prop="actionSerialNum" label="执行顺序" />
         <el-table-column prop="planEndDate" label="计划完成日期" min-width="120">
           <template slot-scope="scope">
-            {{ scope.row.planEndDate? $moment(parseInt(scope.row.planEndDate)).format('YYYY-MM-DD') : '' }}
+            {{ scope.row.planEndDate? $moment(scope.row.planEndDate).format('YYYY-MM-DD') : '' }}
           </template>
         </el-table-column>
       </el-table>

@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 09:22:23
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-09 11:16:27
+ * @LastEditTime: 2022-08-09 15:42:12
  * @Description:
 -->
 
@@ -30,8 +30,7 @@
         <!-- taskName -->
         <el-table-column prop="detailName" label="任务名称" />
         <el-table-column prop="actionSerialNum" label="执行顺序" />
-        <!-- TODO:为什么是多个？ -->
-        <el-table-column v-if="type==='detail'" prop="ordinator" label="负责人" />
+        <el-table-column v-if="type==='detail'" prop="leaderName" label="负责人" />
         <el-table-column v-if="type!=='detail'" prop="ordinator" label="负责人" min-width="130">
           <template slot-scope="scope">
             <el-form-item
@@ -46,11 +45,7 @@
             </el-form-item>
           </template>
         </el-table-column>
-        <el-table-column prop="planEndDate" label="计划完成日期" min-width="120">
-          <!-- <template slot-scope="scope">
-            {{ scope.row.planEndDate? $moment(parseInt(scope.row.planEndDate)).format('YYYY-MM-DD') : '' }}
-          </template> -->
-        </el-table-column>
+        <el-table-column prop="planEndDate" label="计划完成日期" min-width="120" />
         <el-table-column v-if="type==='detail'" prop="endDate" label="实际完成日期" min-width="120">
           <!-- <template slot-scope="scope">
             {{ scope.row.endDate? $moment(parseInt(scope.row.endDate)).format('YYYY-MM-DD') : '' }}
@@ -58,7 +53,11 @@
         </el-table-column>
         <el-table-column v-if="type==='detail'" prop="progress" label="完成进度(%)" min-width="100" />
         <el-table-column v-if="type==='detail'" prop="resultAccess" label="完成结果" />
-        <el-table-column v-if="type==='detail'" prop="status" label="完成情况" />
+        <el-table-column v-if="type==='detail'" prop="status" label="完成情况">
+          <template slot-scope="scope">
+            {{ $dict.getDictNameByCode('COMPLETION', scope.row.status) }}
+          </template>
+        </el-table-column>
         <el-table-column
           v-if="type!=='detail'"
           fixed="right"

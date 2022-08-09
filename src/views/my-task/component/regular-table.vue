@@ -19,7 +19,7 @@
       <el-table-column prop="actionSerialNum" label="执行顺序" />
       <el-table-column prop="planEndDate" label="计划完成日期" min-width="120">
         <template slot-scope="scope">
-          {{ scope.row.planEndDate? $moment(parseInt(scope.row.planEndDate)).format('YYYY-MM-DD') : '' }}
+          {{ scope.row.planEndDate? $moment(scope.row.planEndDate).format('YYYY-MM-DD') : '' }}
         </template>
       </el-table-column>
     </el-table>

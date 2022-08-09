@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:15:03
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-09 11:20:02
+ * @LastEditTime: 2022-08-09 15:38:25
  * @Description:
 -->
 
@@ -39,7 +39,6 @@
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <!-- TODO:字段 -->
               <!-- 在职状态（0：试用员工 1：正式员工 2：离职员工） -->
               <el-form-item label="在职状态:" prop="status">
                 <el-radio-group v-model="formData.status">
@@ -256,7 +255,7 @@ export default {
       console.log('【 isTableFormValid 】-230', isTableFormValid)
       this.formData.taskDetailInfoDtoList = this.selectedRecords.map(item => {
         const { standardDetailId, ordinator } = item
-        return { standardDetailId, ordinator }// : '6957613061678637056'
+        return { standardDetailId, leader: ordinator.toString() }// : '6957613061678637056'
       })
       // this.formData.executor = '6957613061678637056'
       if (!this.formData.taskDetailInfoDtoList.length) {

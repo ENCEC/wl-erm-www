@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 17:38:09
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-08 18:31:44
+ * @LastEditTime: 2022-08-09 14:45:01
  * @Description: 我的任务-试用任务信息-弹框-表格
 -->
 
@@ -92,7 +92,11 @@
           </template>
         </el-table-column>
         <!-- 负责人-完成情况 -->
-        <el-table-column v-if="userType!==USER_TYPE.CHARGE" prop="status" label="完成情况" />
+        <el-table-column v-if="userType!==USER_TYPE.CHARGE" prop="status" label="完成情况">
+          <template slot-scope="scope">
+            {{ $dict.getDictNameByCode('COMPLETION', scope.row.status) }}
+          </template>
+        </el-table-column>
         <el-table-column v-if="userType===USER_TYPE.CHARGE" prop="status" label="完成情况" min-width="130">
           <template slot-scope="scope">
             <el-form-item
@@ -116,7 +120,7 @@
             </el-form-item>
             <!-- TODO:显示条件判断确认 -->
             <span v-if="scope.row.endDate && (scope.row.status == COMPLETION_EN.COMPLETED)">
-              {{ scope.row.status }}
+              {{ $dict.getDictNameByCode('COMPLETION', scope.row.status) }}
             </span>
           </template>
         </el-table-column>

@@ -2,11 +2,17 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:15:04
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-09 09:54:16
+ * @LastEditTime: 2022-08-09 14:27:06
  * @Description:
  */
 
 export const filterConfig = _this => {
+  const associateColumns = [
+    {
+      title: '姓名',
+      field: 'name'
+    }
+  ]
   return {
     inline: false,
     gutter: 3, // 栅格的间隔
@@ -24,13 +30,20 @@ export const filterConfig = _this => {
         col: 8
       },
       {
-        type: 'input',
+        type: 'associate',
         label: '分配对象',
         prop: 'executor',
         width: '200px',
+        col: 8,
+        valueProp: 'uemUserId',
+        labelProp: 'name',
+        columns: associateColumns,
+        multiple: false,
         clearable: true,
-        placeholder: '请输入分配对象',
-        col: 8
+        queryMethod: _this.queryMethod,
+        changeSelect: () => {
+          //   this.listQuery.status=optionVal
+        }
       },
       {
         type: 'select',
@@ -144,12 +157,12 @@ export const columns = _this => {
     },
     {
       prop: 'createTime',
-      label: '创建时间'
-      // formatter: (row, column) => {
-      //   const val = row.createTime
-      //   const date = val ? _this.$moment(parseInt(val)).format('YYYY-MM-DD') : '';
-      //   return date
-      // }
+      label: '创建时间',
+      formatter: (row, column) => {
+        const val = row.createTime
+        const date = val ? _this.$moment(val).format('YYYY-MM-DD') : '';
+        return date
+      }
     }
   ];
 };

@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:15:04
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-05 16:25:02
+ * @LastEditTime: 2022-08-09 13:39:36
  * @Description: 员工管理-任务分配
 -->
 
@@ -41,6 +41,9 @@ import {
   queryTaskInfoPage,
   deleteTaskInfo
 } from '@/api/staff-task';
+import {
+  queryUser
+} from '@/api/select';
 import tableMix from '@/mixins/table-mixin';
 export default {
   name: 'StaffTask',
@@ -78,6 +81,28 @@ export default {
   },
   mounted() {},
   methods: {
+    queryMethod({
+      keyword,
+      pageSize,
+      currentPage
+
+    }) {
+      return new Promise((resolve) => {
+        queryUser({
+          name: keyword,
+          pageSize,
+          pageNo: currentPage
+        }).then((res) => {
+          const records = res.records
+          resolve({
+            records,
+            total: res.totalRecord
+          });
+        });
+      }).catch((err) => {
+        console.log(err);
+      });
+    },
     // 获取表格数据
     getTableData() {
       // this.listLoading = true;
