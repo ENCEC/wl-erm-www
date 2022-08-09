@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-03 10:20:28
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-03 16:13:44
+ * @LastEditTime: 2022-08-09 13:40:03
  * @Description:联想控件-用户
 -->
 
@@ -70,31 +70,8 @@ export default {
         //   title: '教师性别',
         //   field: 'sex'
         // }
-      ],
-      queryMethod({
-        keyword,
-        pageSize,
-        currentPage
+      ]
 
-      }) {
-        console.log('【  pageSize,currentPage 】-108', pageSize, currentPage)
-        return new Promise((resolve) => {
-          queryUser({
-            name: keyword,
-            pageSize,
-            pageNo: currentPage
-          }).then((res) => {
-            // console.log('【 res 】-111', res)
-            const records = res.records
-            resolve({
-              records,
-              total: res.totalRecord
-            });
-          });
-        }).catch((err) => {
-          console.log(err);
-        });
-      }
     };
   },
   watch: {
@@ -107,6 +84,30 @@ export default {
   },
   mounted() {},
   methods: {
+    queryMethod({
+      keyword,
+      pageSize,
+      currentPage
+
+    }) {
+      console.log('【  pageSize,currentPage 】-108', pageSize, currentPage)
+      return new Promise((resolve) => {
+        queryUser({
+          name: keyword,
+          pageSize,
+          pageNo: currentPage
+        }).then((res) => {
+          // console.log('【 res 】-111', res)
+          const records = res.records
+          resolve({
+            records,
+            total: res.totalRecord
+          });
+        });
+      }).catch((err) => {
+        console.log(err);
+      });
+    },
     // 获取下拉信息
     async getSelectOptions() {
       // this.optionsList = await queryStaffDutyBySelect();

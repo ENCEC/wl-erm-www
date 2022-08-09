@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:15:04
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-08 14:18:55
+ * @LastEditTime: 2022-08-09 12:33:44
  * @Description:
  */
 
@@ -111,7 +111,7 @@ export const columns = _this => {
       label: '发布日期',
       formatter: (row, column) => {
         const val = row.publishDate
-        const date = val ? _this.$moment(parseInt(val)).format('YYYY-MM-DD') : '';
+        const date = val ? _this.$moment(val).format('YYYY-MM-DD') : '';
         return date
       }
     },
