@@ -25,18 +25,14 @@ export default {
       dialogVisible: false,
       form: {
         leaveReason: ''
-
       }
     };
   },
   methods: {
-    handleClose() {
-
-    }
+    handleClose() {}
   }
-}
+};
 </script>
 
 <style>
-
 </style>

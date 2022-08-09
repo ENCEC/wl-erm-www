@@ -296,21 +296,28 @@
         </div>
       </div>
     </el-form>
+    <!-- <RegularDialog ref="dialogRegular" /> -->
+    <regular-dialog ref="dialogRegular" />
+    <dismiss-dialog ref="dialogDismiss" />
   </div>
 </template>
 
 <script>
+import { queryStaffById, updateStaff } from '@/api/staff-manage';
 import store from '@/store';
 import RegularDialog from './component/regular-dialog';
 import DismissDialog from './component/dismiss-dialog';
+import { mapGetters } from 'vuex';
 export default {
   name: 'StaffInfo',
   component: {
     RegularDialog,
     DismissDialog
   },
+
   data() {
     return {
+      form1: {},
       form: {
         account: '',
         name: '',
@@ -391,11 +398,35 @@ export default {
       }
     };
   },
+  computed: {
+    ...mapGetters(['userId'])
+  },
   mounted() {
-    console.log(store.getters.user);
-    debugger;
+    this.getStaffInfo();
   },
   methods: {
+    handleRegular() {
+      console.log(this.$refs.dialogRegular);
+      debugger
+      this.$refs.dialogRegular.open()
+    },
+    handleDismiss() {
+      this.$refs.dialogDismiss.open()
+    },
+    getStaffInfo() {
+      queryStaffById({
+        uemUserId: this.userId
+      }).then((res) => {
+        debugger;
+        for (const key in this.form) {
+          if (key === 'sex') {
+            this.form[key] = res[key] || false;
+          } else {
+            this.form[key] = res[key] || '';
+          }
+        }
+      });
+    },
     handleSave() {
       // this.$refs.staffInfoForm.validate((valid) => {
       //   if (valid) {

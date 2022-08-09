@@ -294,7 +294,6 @@ export default {
       if (Array.isArray(this.$refs.associate)) {
         const arr = this.$refs.associate
         arr.forEach((item) => {
-          debugger
           item.focus()
         })
       }

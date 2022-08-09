@@ -700,7 +700,6 @@ export default {
       this.getList();
     },
     handleModifyStatus(row) {
-      debugger
       const params = Object.assign({}, row);
       updateStatus(params)
         .then(() => {
