@@ -61,7 +61,7 @@ export default {
         status: ''
       },
       // 表格
-      records: [{}],
+      records: [],
       listLoading: false,
       tableConfig,
       columns: columns(this),

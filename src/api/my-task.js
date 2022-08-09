@@ -2,12 +2,12 @@
  * @Author: Hongzf
  * @Date: 2022-08-08 10:55:42
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-08 17:00:13
+ * @LastEditTime: 2022-08-09 10:21:45
  * @Description: 员工管理-我的任务
  */
 
 import request from '@/utils/request';
-const prefix = '/wl-erm'// process.env.WL_ERM_PREFIX
+const prefix = process.env.VUE_APP_WL_ERM_PREFIX
 // 列表-员工
 export function queryStaffTaskInfo(data) {
   return request({

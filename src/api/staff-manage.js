@@ -2,17 +2,17 @@
  * @Author: Hongzf
  * @Date: 2022-08-01 19:02:14
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-05 16:24:33
+ * @LastEditTime: 2022-08-09 11:08:27
  * @Description:
  */
 
 import request from '@/utils/request';
-// const prefix = '/wl-erm'// process.env.WL_ERM_PREFIX
+const prefix = process.env.VUE_APP_SHARE_AUTH_PREFIX
 
 // 列表
 export function queryStaffByPage(data) {
   return request({
-    url: '/uemUserManage/queryStaffByPage',
+    url: prefix + '/uemUserManage/queryStaffByPage',
     method: 'post',
     data
   });
@@ -20,7 +20,7 @@ export function queryStaffByPage(data) {
 // 根据id获取详情信息
 export function queryStaffById(query) {
   return request({
-    url: '/uemUserManage/queryStaffById',
+    url: prefix + '/uemUserManage/queryStaffById',
     method: 'get',
     params: query
   });
@@ -28,7 +28,7 @@ export function queryStaffById(query) {
 // 转正，离职，辞退---查看信息
 export function queryStaffInfo(query) {
   return request({
-    url: '/uemUserManage/queryStaffInfo',
+    url: prefix + '/uemUserManage/queryStaffInfo',
     method: 'get',
     params: query
   });
@@ -37,7 +37,7 @@ export function queryStaffInfo(query) {
 // 新增
 export function saveUemUser(data) {
   return request({
-    url: '/uemUserManage/saveUemUser',
+    url: prefix + '/uemUserManage/saveUemUser',
     method: 'post',
     data
   });
@@ -45,7 +45,7 @@ export function saveUemUser(data) {
 // 修改用户信息
 export function updateStaff(data) {
   return request({
-    url: '/uemUserManage/updateStaff',
+    url: prefix + '/uemUserManage/updateStaff',
     method: 'post',
     data
   });
@@ -54,7 +54,7 @@ export function updateStaff(data) {
 // 转正
 export function savePositiveInfo(data) {
   return request({
-    url: '/uemUserManage/savePositiveInfo',
+    url: prefix + '/uemUserManage/savePositiveInfo',
     method: 'post',
     data
   });
@@ -62,7 +62,7 @@ export function savePositiveInfo(data) {
 // 离职
 export function saveResignInfo(data) {
   return request({
-    url: '/uemUserManage/saveResignInfo',
+    url: prefix + '/uemUserManage/saveResignInfo',
     method: 'post',
     data
   });
@@ -70,7 +70,7 @@ export function saveResignInfo(data) {
 // 辞退
 export function saveDismissInfo(data) {
   return request({
-    url: '/uemUserManage/saveDismissInfo',
+    url: prefix + '/uemUserManage/saveDismissInfo',
     method: 'post',
     data
   });
@@ -79,7 +79,7 @@ export function saveDismissInfo(data) {
 // 删除
 export function deleteStaff(query) {
   return request({
-    url: '/uemUserManage/deleteStaff',
+    url: prefix + '/uemUserManage/deleteStaff',
     method: 'get',
     params: query
   });

@@ -2,13 +2,13 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:19:50
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-05 18:26:30
+ * @LastEditTime: 2022-08-09 10:21:53
  * @Description: 员工管理-任务分配
  */
 
 import request from '@/utils/request';
-const prefix = '/wl-erm'// process.env.WL_ERM_PREFIX
-// console.log('【 prefix 】-11', prefix)
+const prefix = process.env.VUE_APP_WL_ERM_PREFIX
+// console.log('【 prefix==== 】-11', prefix)
 // 列表
 export function queryTaskInfoPage(data) {
   return request({

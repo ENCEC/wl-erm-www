@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:15:03
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-08 15:53:00
+ * @LastEditTime: 2022-08-09 11:00:06
  * @Description:
 -->
 
@@ -61,7 +61,7 @@
                 </el-radio-group>
               </el-form-item>
             </el-col>
-            <!-- 进行中 -->
+            <!-- 进行中 TODO:字段-->
             <el-col v-if="status === STATUS_TYPE.on || status === STATUS_TYPE.final" :span="12">
               <el-form-item label="附件:" prop="positiveType">
                 <a>个人简历</a>
@@ -97,7 +97,7 @@
               >
                 <el-input
                   v-model="formData.createTime"
-                  placeholder="请输入创建时间"
+                  placeholder="请输入审核人"
                   clearable
                   class="input-width"
                 />
@@ -180,9 +180,9 @@
             </el-row>
             <el-row>
               <el-col :span="24">
-                <el-form-item label="面谈评语：" prop="faceRemark" :hide-required-asterisk="false">
+                <el-form-item label="面谈评语：" prop="interviewComments" :hide-required-asterisk="false">
                   <el-input
-                    v-model="formData.faceRemark"
+                    v-model="formData.interviewComments"
                     type="textarea"
                     placeholder="输入评语"
                     clearable
@@ -352,6 +352,10 @@ export default {
       records: [],
       rules: formRules, // 验证规则
       formData: {
+        // 申请人
+        // 申请日期
+        // 申请进度
+        positiveType: '', // 转正类型
         taskTitle: '4444',
         executor: '6957613061678637056', // 执行人
         status: '', // 在职状态（0：试用员工 1：正式员工 2：离职员工）

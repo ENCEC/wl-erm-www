@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:15:03
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-08 09:55:02
+ * @LastEditTime: 2022-08-09 11:20:02
  * @Description:
 -->
 
@@ -239,12 +239,6 @@ export default {
       getTaskInfoDetail({ taskInfoId: this.editData.taskInfoId }).then(res => {
         console.log('【 res 】-211', res)
         const result = res.data
-        // TODO:优化
-        // this.formData = {
-        //   ...this.formData,
-        //   ...result,
-        //   status: result.status.toString()
-        // };
         for (const key in this.formData) {
           if (key === 'status') {
             this.formData[key] = result[key].toString() || ''
@@ -261,12 +255,10 @@ export default {
       const isTableFormValid = this.$refs.tableForm.validateTableForm()
       console.log('【 isTableFormValid 】-230', isTableFormValid)
       this.formData.taskDetailInfoDtoList = this.selectedRecords.map(item => {
-        console.log('【 item 】-282', item)
-        const { standardDetailId } = item
-        // TODO
-        return { standardDetailId, ordinator: '6957613061678637056' }
+        const { standardDetailId, ordinator } = item
+        return { standardDetailId, ordinator }// : '6957613061678637056'
       })
-      this.formData.executor = '6957613061678637056'
+      // this.formData.executor = '6957613061678637056'
       if (!this.formData.taskDetailInfoDtoList.length) {
         this.$message.error('请选择任务');
         return false
