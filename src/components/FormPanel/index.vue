@@ -126,6 +126,8 @@
             />
           </el-select>
           <!-- :display-init="item.labelProp" -->
+          <!-- @blur="item.changeSelect ? item.blur(row, selectedRows) : ''"
+            @focus="item.changeSelect ? item.focus(row, selectedRows) : ''" -->
           <el-associate
             v-if="item.type === 'associate'"
             ref="associate"
@@ -139,8 +141,6 @@
             :query-method="item.queryMethod"
             :style="{ width: item.width ? item.width : '100%' }"
             @change="item.changeSelect ? item.changeSelect(row, selectedRows) : ''"
-            @blur="item.changeSelect ? item.blur(row, selectedRows) : ''"
-            @focus="item.changeSelect ? item.focus(row, selectedRows) : ''"
           />
           <!-- cascader -->
           <el-cascader

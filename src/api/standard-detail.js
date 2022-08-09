@@ -1,9 +1,10 @@
 import request from '@/utils/request'
+const prefix = process.env.VUE_APP_WL_ERM_PREFIX// process.env.WL_ERM_PREFIX
 
 // 查询细则
 export function queryStandardDetail(data) {
   return request({
-    url: '/standardDetail/queryStandardDetail',
+    url: prefix + '/standardDetail/queryStandardDetail',
     method: 'post',
     data
   })
@@ -12,7 +13,7 @@ export function queryStandardDetail(data) {
 // 添加细则
 export function addStandardDetail(data) {
   return request({
-    url: '/standardDetail/addStandardDetail',
+    url: prefix + '/standardDetail/addStandardDetail',
     method: 'post',
     data
   })
@@ -21,7 +22,7 @@ export function addStandardDetail(data) {
 // 禁用\启用细则
 export function standardDetailStartStop(data) {
   return request({
-    url: '/standardDetail/standardDetailStartStop',
+    url: prefix + '/standardDetail/standardDetailStartStop',
     method: 'post',
     data
   })
@@ -30,7 +31,7 @@ export function standardDetailStartStop(data) {
 // 更新细则
 export function updateStandardDetail(data) {
   return request({
-    url: '/standardDetail/updateStandardDetail',
+    url: prefix + '/standardDetail/updateStandardDetail',
     method: 'post',
     data
   })
@@ -39,7 +40,7 @@ export function updateStandardDetail(data) {
 // 删除细则
 export function deleteStandardDetail(standardDetailId) {
   return request({
-    url: '/standardDetail/deleteStandardDetail',
+    url: prefix + '/standardDetail/deleteStandardDetail',
     method: 'get',
     params: {
       standardDetailId
@@ -50,7 +51,7 @@ export function deleteStandardDetail(standardDetailId) {
 // 规范条目
 export function selectEntryNameSpecies() {
   return request({
-    url: '/standardDetail/selectEntryNameSpecies',
+    url: prefix + '/standardDetail/selectEntryNameSpecies',
     method: 'get'
 
   })
@@ -59,7 +60,7 @@ export function selectEntryNameSpecies() {
 // 条目类型
 export function selectItemTypeSpecies() {
   return request({
-    url: '/standardDetail/selectItemTypeSpecies',
+    url: prefix + '/standardDetail/selectItemTypeSpecies',
     method: 'get'
 
   })
