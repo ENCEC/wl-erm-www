@@ -1,6 +1,12 @@
 <template>
   <div class="app-container">
-    <el-form ref="staffInfoForm" :model="form" label-position="right" label-width="100px" :rules="rules">
+    <el-form
+      ref="staffInfoForm"
+      :model="form"
+      label-position="right"
+      label-width="100px"
+      :rules="rules"
+    >
       <div class="staff-info-wrap">
         <div class="staff-info-module">
           <div class="staff-info-module-title">基本信息</div>
@@ -277,8 +283,16 @@
         </div>
         <div class="operate-button">
           <el-button type="primary" @click="handleSave">保存</el-button>
-          <el-button class="regular-btn" type="primary" @click="handleRegular">转正申请</el-button>
-          <el-button class="dismiss-btn" type="primary" @click="handleDismiss">离职申请</el-button>
+          <el-button
+            class="regular-btn"
+            type="primary"
+            @click="handleRegular"
+          >转正申请</el-button>
+          <el-button
+            class="dismiss-btn"
+            type="primary"
+            @click="handleDismiss"
+          >离职申请</el-button>
         </div>
       </div>
     </el-form>
@@ -286,8 +300,15 @@
 </template>
 
 <script>
+import store from '@/store';
+import RegularDialog from './component/regular-dialog';
+import DismissDialog from './component/dismiss-dialog';
 export default {
   name: 'StaffInfo',
+  component: {
+    RegularDialog,
+    DismissDialog
+  },
   data() {
     return {
       form: {
@@ -327,25 +348,52 @@ export default {
       rules: {
         name: [{ required: true, message: '请输入名字', trigger: 'change' }],
         sex: [{ required: true, message: '请选择性别', trigger: 'change' }],
-        birthday: [{ required: true, message: '请选择出生日期', trigger: 'change' }],
-        jobStatus: [{ required: true, message: '请选择在职状态', trigger: 'change' }],
+        birthday: [
+          { required: true, message: '请选择出生日期', trigger: 'change' }
+        ],
+        jobStatus: [
+          { required: true, message: '请选择在职状态', trigger: 'change' }
+        ],
         idCard: [{ validator: this.validateIdCard, trigger: 'blur' }],
         mobile: [{ validator: this.validateMobile, trigger: 'blur' }],
-        address: [{ required: true, message: '请输入现住址', trigger: 'change' }],
+        address: [
+          { required: true, message: '请输入现住址', trigger: 'change' }
+        ],
         // sourceAddress: [{ required: true, message: "请输入户籍地址", trigger: change }],
         email: [{ validator: this.validateEmail, trigger: 'blur' }],
-        seniority: [{ required: true, message: '请输入工作年限', trigger: 'change' }],
-        education: [{ required: true, message: '请选择学历', trigger: 'change' }],
-        graduateDate: [{ required: true, message: '请选择毕业时间', trigger: 'change' }],
-        graduateSchool: [{ required: true, message: '请输入毕业学校', trigger: 'change' }],
-        speciality: [{ required: true, message: '请输入在校专业', trigger: 'change' }],
-        entryDate: [{ required: true, message: '请选择入职时间', trigger: 'change' }],
-        technicalTitleId: [{ required: true, message: '请选择岗位职称', trigger: 'change' }],
-        staffDutyCode: [{ required: true, message: '请选择入职岗位', trigger: 'change' }],
-        projectId: [{ required: true, message: '请选择归属项目', trigger: 'change' }]
+        seniority: [
+          { required: true, message: '请输入工作年限', trigger: 'change' }
+        ],
+        education: [
+          { required: true, message: '请选择学历', trigger: 'change' }
+        ],
+        graduateDate: [
+          { required: true, message: '请选择毕业时间', trigger: 'change' }
+        ],
+        graduateSchool: [
+          { required: true, message: '请输入毕业学校', trigger: 'change' }
+        ],
+        speciality: [
+          { required: true, message: '请输入在校专业', trigger: 'change' }
+        ],
+        entryDate: [
+          { required: true, message: '请选择入职时间', trigger: 'change' }
+        ],
+        technicalTitleId: [
+          { required: true, message: '请选择岗位职称', trigger: 'change' }
+        ],
+        staffDutyCode: [
+          { required: true, message: '请选择入职岗位', trigger: 'change' }
+        ],
+        projectId: [
+          { required: true, message: '请选择归属项目', trigger: 'change' }
+        ]
       }
-
-    }
+    };
+  },
+  mounted() {
+    console.log(store.getters.user);
+    debugger;
   },
   methods: {
     handleSave() {
@@ -355,44 +403,45 @@ export default {
       // })
     },
     validateEmail(rule, value, callback) {
-      debugger
-      var res = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/
-      const result = res.test(value)
+      debugger;
+      var res = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
+      const result = res.test(value);
       console.log(result);
       if (!result) {
-        callback(new Error('请输入正确的邮箱地址'))
+        callback(new Error('请输入正确的邮箱地址'));
       }
     },
     validateIdCard(rule, value, callback) {
-      var res = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/
-      const result = res.test(value)
+      var res = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
+      const result = res.test(value);
       console.log(result);
       if (!result) {
-        callback(new Error('请输入正确的身份证号码'))
+        callback(new Error('请输入正确的身份证号码'));
       }
     },
     validateMobile(rule, value, callback) {
-      var res = /^[1][3,4,5,6.7,8,9][0-9]{9}$/
-      const result = res.test(value)
+      var res = /^[1][3,4,5,6.7,8,9][0-9]{9}$/;
+      const result = res.test(value);
       console.log(result);
       if (!result) {
-        callback(new Error('请输入正确的手机号码'))
+        callback(new Error('请输入正确的手机号码'));
       }
     }
-
   }
 };
 </script>
 
 <style lang="scss" scoped>
-.staff-info-wrap{
-  .operate-button{
+.staff-info-wrap {
+  .operate-button {
     text-align: center;
-    .regular-btn{
-      background-color: #70B603;
+    .regular-btn {
+      background-color: #70b603;
+      border-color: #797979;
     }
-    .dismiss-btn{
-      background-color: #F59A23;
+    .dismiss-btn {
+      background-color: #f59a23;
+      border-color: #797979;
     }
   }
 }

@@ -56,6 +56,7 @@ const actions = {
     console.log('【 getInfo 】-57===')
     return new Promise((resolve, reject) => {
       getInfo(state.token).then(response => {
+        debugger
         // const { data } = response
         // TODO:接口调整
         const data = {
