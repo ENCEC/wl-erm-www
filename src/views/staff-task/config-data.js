@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:15:04
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-06 10:48:19
+ * @LastEditTime: 2022-08-09 09:54:16
  * @Description:
  */
 
@@ -134,13 +134,9 @@ export const columns = _this => {
     },
     // TODO
     {
-      prop: 'planEndDate',
+      prop: 'endDate',
       label: '完成时间',
-      formatter: (row, column) => {
-        const val = row.planEndDate
-        const date = val ? _this.$moment(parseInt(val)).format('YYYY-MM-DD') : '';
-        return date
-      }
+      width: '100px'
     },
     {
       prop: 'dispatchersName',
@@ -148,12 +144,12 @@ export const columns = _this => {
     },
     {
       prop: 'createTime',
-      label: '创建时间',
-      formatter: (row, column) => {
-        const val = row.createTime
-        const date = val ? _this.$moment(parseInt(val)).format('YYYY-MM-DD') : '';
-        return date
-      }
+      label: '创建时间'
+      // formatter: (row, column) => {
+      //   const val = row.createTime
+      //   const date = val ? _this.$moment(parseInt(val)).format('YYYY-MM-DD') : '';
+      //   return date
+      // }
     }
   ];
 };

@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 17:38:09
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-08 16:16:54
+ * @LastEditTime: 2022-08-09 11:23:07
  * @Description: 我的任务
 -->
 
@@ -94,14 +94,16 @@ export default {
       operates: operates(this),
       listLoading: false,
       tableConfig,
-      tableData: [{
-        name: '转正申请',
-        taskType: '转正'
-      },
-      {
-        name: '离职申请',
-        taskType: '离职'
-      }],
+      tableData: [
+        // {
+        //   taskTitle: '转正申请',
+        //   taskType: '转正'
+        // },
+        // {
+        //   taskTitle: '离职申请',
+        //   taskType: '离职'
+        // }
+      ],
       // 弹框
       editData: {},
       openType: '',
@@ -148,7 +150,8 @@ export default {
         POSITIVE: '员工转正',
         QUIT: '员工离职'
       }
-      this.dialogVisible = true;
+      // this.dialogVisible = true;
+      // this.regularDialogVisible = true
 
       // 编辑/查看
       if (item.taskType === TASK_TYPE.TEST) {
