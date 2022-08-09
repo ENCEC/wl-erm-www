@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-form ref="staffInfoForm" :model="form" label-position="right" label-width="100px" :rules="rules">
-      <div class="staff-info wrap">
+      <div class="staff-info-wrap">
         <div class="staff-info-module">
           <div class="staff-info-module-title">基本信息</div>
           <el-divider />
@@ -277,6 +277,8 @@
         </div>
         <div class="operate-button">
           <el-button type="primary" @click="handleSave">保存</el-button>
+          <el-button class="regular-btn" type="primary" @click="handleRegular">转正申请</el-button>
+          <el-button class="dismiss-btn" type="primary" @click="handleDismiss">离职申请</el-button>
         </div>
       </div>
     </el-form>
@@ -382,5 +384,16 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss" scoped>
+.staff-info-wrap{
+  .operate-button{
+    text-align: center;
+    .regular-btn{
+      background-color: #70B603;
+    }
+    .dismiss-btn{
+      background-color: #F59A23;
+    }
+  }
+}
 </style>

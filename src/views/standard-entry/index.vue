@@ -59,8 +59,8 @@ import filterPanel from '@/components/FilterPanel';
 import formPanel from '@/components/FormPanel';
 // 条目状态
 const statusTypeOptions = [
-  { key: 0, display_name: '启用' },
-  { key: 1, display_name: '禁用' },
+  { key: 1, display_name: '启用' },
+  { key: 0, display_name: '禁用' },
   { key: '', display_name: '所有' }
 ];
 // 条目类型
@@ -214,6 +214,7 @@ export default {
             prop: 'actionTime',
             width: 'calc(100% - 80px)',
             prependText: '入职后第',
+            min: 1,
             suffixText: '天',
             label: '执行时间',
             placeholder: '请输入执行时间'
@@ -224,6 +225,7 @@ export default {
             width: 'calc(100% - 32px)',
             prependText: '',
             suffixText: '工时',
+            min: 1,
             label: '执行周期',
             placeholder: '请输入执行周期'
           },
@@ -259,19 +261,19 @@ export default {
             columns: ordinatorColumns,
             multiple: true,
             clearable: true,
-            queryMethod: this.ordinatorQueryMethod,
-            changeSelect: () => {
-              debugger;
-              //   this.listQuery.status=optionVal
-            },
-            blur: () => {
-              debugger;
-              //   this.listQuery.status=optionVal
-            },
-            focus: () => {
-              debugger;
-              //   this.listQuery.status=optionVal
-            }
+            queryMethod: this.ordinatorQueryMethod
+            // changeSelect: () => {
+            //   debugger;
+            //   //   this.listQuery.status=optionVal
+            // },
+            // // blur: () => {
+            // //   debugger;
+            // //   //   this.listQuery.status=optionVal
+            // // },
+            // // focus: () => {
+            // //   debugger;
+            // //   //   this.listQuery.status=optionVal
+            // // }
           },
           {
             type: 'textarea',
@@ -771,7 +773,7 @@ export default {
                 title: '成功',
                 message: '创建成功',
                 type: 'success',
-                duration: 0
+                duration: 2000
               });
               this.dialogFormVisible = false;
               this.dialogButtonLoading = false;

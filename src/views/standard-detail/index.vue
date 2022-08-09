@@ -115,6 +115,7 @@ export default {
           {
             type: 'number',
             prop: 'actionSerialNum',
+            min: 1,
             col: 12,
             label: '执行序号',
             placeholder: '请输入执行序号'
@@ -481,7 +482,7 @@ export default {
                 title: '成功',
                 message: '创建成功',
                 type: 'success',
-                duration: 0
+                duration: 2000
               });
               this.dialogFormVisible = false;
               this.dialogButtonLoading = false;

@@ -122,6 +122,12 @@ export const asyncRoutes = [
         meta: { title: '员工管理' }
       },
       {
+        path: 'staff-query',
+        component: () => import('@/views/staff-query/index'),
+        name: 'StaffQuery',
+        meta: { title: '员工查询' }
+      },
+      {
         path: 'staff-info',
         component: () => import('@/views/staff-info/index'),
         name: 'StaffInfo',

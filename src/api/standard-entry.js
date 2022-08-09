@@ -1,9 +1,10 @@
 import request from '@/utils/request'
+const prefix = process.env.VUE_APP_WL_ERM_PREFIX// process.env.WL_ERM_PREFIX
 
 // 查询职称
 export function queryByTechnicalTitleName(data) {
   return request({
-    url: '/standardEntry/sysTechnicalTitle/queryByTechnicalTitleName',
+    url: prefix + '/standardEntry/sysTechnicalTitle/queryByTechnicalTitleName',
     method: 'post',
     data
   })
@@ -12,7 +13,7 @@ export function queryByTechnicalTitleName(data) {
 // 查询用户
 export function queryUemUser(data) {
   return request({
-    url: '/standardEntry/uemUserManage/queryUemUser',
+    url: prefix + '/standardEntry/uemUserManage/queryUemUser',
     method: 'post',
     data
   })
@@ -21,7 +22,7 @@ export function queryUemUser(data) {
 // 查询岗位
 export function querySysPost(data) {
   return request({
-    url: '/standardEntry/sysPost/querySysPost',
+    url: prefix + '/standardEntry/sysPost/querySysPost',
     method: 'post',
     data
   })
@@ -30,7 +31,7 @@ export function querySysPost(data) {
 // 新增条目
 export function saveStandardEntry(data) {
   return request({
-    url: '/standardEntry/saveStandardEntry',
+    url: prefix + '/standardEntry/saveStandardEntry',
     method: 'post',
     data
   })
@@ -39,7 +40,7 @@ export function saveStandardEntry(data) {
 // 查询条目
 export function queryStandardEntry(data) {
   return request({
-    url: '/standardEntry/queryStandardEntry',
+    url: prefix + '/standardEntry/queryStandardEntry',
     method: 'post',
     data
   })
@@ -48,7 +49,7 @@ export function queryStandardEntry(data) {
 // 查询角色
 export function queryRoleByPage(data) {
   return request({
-    url: '/standardEntry/sysRole/queryRoleByPage',
+    url: prefix + '/standardEntry/sysRole/queryRoleByPage',
     method: 'post',
     data
   })
@@ -57,7 +58,7 @@ export function queryRoleByPage(data) {
 // 查询条目类型
 export function querySysDictType(data) {
   return request({
-    url: '/standardEntry/sysDictType/querySysDictType',
+    url: prefix + '/standardEntry/sysDictType/querySysDictType',
     method: 'post',
     data
   })
@@ -66,7 +67,7 @@ export function querySysDictType(data) {
 // 编辑条目
 export function updateStandardEntry(data) {
   return request({
-    url: '/standardEntry/updateStandardEntry',
+    url: prefix + '/standardEntry/updateStandardEntry',
     method: 'post',
     data
   })
@@ -75,7 +76,7 @@ export function updateStandardEntry(data) {
 // 删除条目
 export function deleteStandardEntry(standardEntryId) {
   return request({
-    url: '/standardEntry/deleteStandardEntry',
+    url: prefix + '/standardEntry/deleteStandardEntry',
     method: 'get',
     params: {
       standardEntryId
@@ -86,7 +87,7 @@ export function deleteStandardEntry(standardEntryId) {
 // 启用/禁用条目
 export function updateStatus({ standardEntryId, status }) {
   return request({
-    url: '/standardEntry/updateStatus',
+    url: prefix + '/standardEntry/updateStatus',
     method: 'get',
     params: {
       standardEntryId, status
