@@ -149,19 +149,6 @@ export const asyncRoutes = [
       }
     ]
   },
-  // 规范细则管理
-  {
-    path: '/standard-detail',
-    component: Layout,
-    meta: { title: 'standard-detail', icon: 'user' },
-    children: [
-      {
-        path: 'standard-detail',
-        component: () => import('@/views/standard-detail/index'),
-        name: 'StandardDetail',
-        meta: { title: '规范细则管理' }
-      }]
-  },
   { path: '*', redirect: '/404', hidden: true }
 ]
 

@@ -242,6 +242,7 @@ $--color-white: #FFFFFF;
 
 // 下拉框
 .el-select {
+    width: 100%;
     .el-input {
         .el-input__inner {
             width: 100%;
@@ -265,6 +266,10 @@ $--color-white: #FFFFFF;
             background-color: #E9F4FF;
         }
     }
+}
+
+.el-date-editor{
+    width: 100% !important;
 }
 
 // 日期选择器
@@ -399,6 +404,10 @@ $--color-white: #FFFFFF;
 
 // 弹窗
 .el-dialog {
+    .dialog-footer {
+        margin-top: 20px;
+        text-align: center;
+    }
 
 padding: 30px;
     border: 1px solid #DDDDDD;
