@@ -5,11 +5,23 @@
     width="800px"
     @close="handleClose"
   >
-    <el-form :model="form" label-position="right" label-width="100px">
+    <el-form
+      ref="regularForm"
+      :model="form"
+      label-position="right"
+      :rules="rules"
+      label-width="100px"
+    >
       <el-row :gutter="100">
         <el-col :span="12">
           <el-form-item label="申请日期" prop="ApplyDate">
-            <el-input v-model="form.ApplyDate" size="medium" />
+            <el-date-picker
+              v-model="form.ApplyDate"
+              type="date"
+              value-format="yyyy-MM-dd"
+              format="yyyy-MM-dd"
+              placeholder="选择日期"
+            />
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -23,10 +35,10 @@
             </el-radio-group>
           </el-form-item>
         </el-col>
-        <el-col :span="12">
+        <el-col :span="24">
           <el-form-item label="转正程序:">
             <el-table :data="tableData" style="width: 100%">
-              <el-table-column prop="count" label="序号" width="50" />
+              <el-table-column prop="count" label="序号" />
               <el-table-column prop="entryName" label="规范条目" />
               <el-table-column prop="detailName" label="程序名称" />
               <el-table-column prop="actionSerialNum" label="执行顺序" />
@@ -35,8 +47,11 @@
         </el-col>
         <el-col :span="12">
           <el-form-item label="附件:">
-            <el-button type="primary">申请表下载</el-button>
-            <el-button type="primary">上传</el-button>
+            <el-button
+              type="primary"
+              @click="handleDownload"
+            >申请表下载</el-button>
+            <upload-file accept="" />
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -48,22 +63,31 @@
               label-prop="name"
               clearable
               :query-method="approverQueryMethod"
-              @change="handleApproverChange"
             />
           </el-form-item>
         </el-col>
       </el-row>
     </el-form>
-    <span slot="footer" class="dialog-footer">
-      <el-button @click="handleSumbit">提 交</el-button>
+    <div slot="footer" class="dialog-footer">
+      <el-button
+        v-loading="buttonLoading"
+        type="primary"
+        @click="handleSumbit"
+      >提 交</el-button>
       <el-button @click="dialogVisible = false">取 消</el-button>
-    </span>
+    </div>
   </el-dialog>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import { queryStandardDetail } from '@/api/standard-detail.js';
-import { saveOffer, queryUemUser } from '@/api/staff-query.js';
+import {
+  saveOffer,
+  queryUemUser,
+  downloadExternalFile
+} from '@/api/staff-query.js';
+import UploadFile from './upload-file';
 // import { saveOffer, downloadExternalFile, uploadExternalFile, queryOfferInfo, queryLeaveInfo, queryDismissInfo, preservationUemUser, saveLeave, queryUemUser, getUemUser } from '@/api/staff-query.js';
 const positiveTypeOptions = [
   { label: '正常转正', value: '正常转正' },
@@ -88,29 +112,47 @@ const approverColumns = [
   }
 ];
 export default {
+  name: 'RegularDialog',
+  components: {
+    UploadFile
+  },
   data() {
     return {
+      buttonLoading: false,
       dialogVisible: false,
       positiveTypeOptions,
       approverColumns,
       tableData: [],
       form: {
-        uemUserName: 'qqqq',
-        ApplyDate: '2022-5-20',
-        OfferType: '正常转正',
-        Approver: '6958961099819442176',
-        standardDetailId: '6960887517290696704',
-        standardEntryId: '6960875859204194304'
+        uemUserName: '',
+        ApplyDate: '',
+        OfferType: '',
+        Approver: '',
+        // standardDetailId: '6960887517290696704',
+        standardEntryId: ''
+      },
+      rules: {
+        ApplyDate: [
+          { required: true, message: '请选择申请日期', trigger: 'blur' }
+        ],
+        OfferType: [
+          { required: true, message: '请选择转正类型', trigger: 'blur' }
+        ],
+        Approver: [
+          { required: true, message: '请选择审批人', trigger: 'blur' }
+        ]
       }
     };
   },
+  computed: {
+    ...mapGetters(['name'])
+  },
   mounted() {
-    this.getTableData()
+    this.getTableData();
   },
   methods: {
     open() {
-      debugger
-      this.dialogVisible = true
+      this.dialogVisible = true;
     },
     getTableData() {
       const params = {
@@ -119,18 +161,64 @@ export default {
         entryName: '员工转正'
       };
       queryStandardDetail(params).then((response) => {
-        this.tableData = response.data.records;
+        this.tableData = response.data.records || [];
+        if (this.tableData.length > 0) {
+          this.form.standardEntryId = this.tableData[0].standardEntryId;
+        }
         this.tableData.forEach((item, index) => {
-          item.count =
-            index + 1
+          item.count = index + 1;
         });
       });
     },
-    handleSumbit() {
-      saveOffer()
+    handleDownload() {
+      const params = {
+        systemId: 'YYDM200013',
+        fileKey: '4893fd6e-1101-44a5-a766-d5337b415249.txt'
+      };
+      downloadExternalFile(params).then((res) => {
+        debugger
+        console.log(res);
+      }).catch((err) => {
+        debugger
+        console.log(err);
+      })
     },
-    handleClose() {},
-    approverQueryMethod(keyword, pageSize, currentPage) {
+    handleSumbit() {
+      this.$refs.regularForm.validate((valid) => {
+        if (valid) {
+          this.buttonLoading = true;
+          const params = Object.assign({}, this.form, {
+            uemUserName: this.name
+          });
+          saveOffer(params)
+            .then(() => {
+              this.$message.success('申请成功');
+              this.dialogVisible = false;
+              this.buttonLoading = false;
+            })
+            .catch(() => {
+              this.$message.error('申请失败');
+              this.buttonLoading = false;
+            });
+        }
+      });
+    },
+    handleClose() {
+      this.$nextTick(() => {
+        this.resetForm();
+        this.$refs.regularForm.clearValidate();
+      });
+    },
+    resetForm() {
+      this.form = {
+        uemUserName: '',
+        ApplyDate: '',
+        OfferType: '',
+        Approver: '',
+        standardEntryId: ''
+      };
+    },
+    approverQueryMethod({ keyword, pageSize, currentPage }) {
       return new Promise((resolve) => {
         queryUemUser({
           name: keyword,

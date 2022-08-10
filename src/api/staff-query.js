@@ -1,6 +1,7 @@
 
 import request from '@/utils/request';
-const prefix = process.env.VUE_APP_SHARE_AUTH_PREFIX
+const prefix = process.env.VUE_APP_WL_ERM_PREFIX
+const shareAuthPrefix = process.env.VUE_APP_SHARE_AUTH_PREFIX
 
 // 转正申请
 export function saveOffer(data) {
@@ -77,7 +78,7 @@ export function saveLeave(data) {
 // 查询员工
 export function queryUemUser(data) {
   return request({
-    url: prefix + '/uemUserManage/queryUemUser',
+    url: shareAuthPrefix + '/uemUserManage/queryUemUser',
     method: 'post',
     data
   });

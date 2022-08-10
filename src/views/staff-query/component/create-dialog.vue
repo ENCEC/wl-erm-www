@@ -20,7 +20,7 @@
     >
       <el-form
         ref="elForm"
-        :model="formData"
+        :model="form"
         :rules="rules"
         size="mini"
         label-width="100px"
@@ -32,7 +32,7 @@
             <el-col :span="12">
               <el-form-item label="姓名:" prop="name">
                 <el-input
-                  v-model="formData.name"
+                  v-model="form.name"
                   placeholder="请输入姓名"
                   clearable
                 />
@@ -41,7 +41,7 @@
             <el-col :span="12">
               <!-- 性别（0男，1女） -->
               <el-form-item label="性别:" prop="sex">
-                <el-radio-group v-model="formData.sex">
+                <el-radio-group v-model="form.sex">
                   <!-- <el-radio
                     v-for="item in sexOptions"
                     :key="'sex' + item.value"
@@ -57,7 +57,7 @@
             <el-col :span="12">
               <el-form-item label="出生日期:" prop="birthday">
                 <el-date-picker
-                  v-model="formData.birthday"
+                  v-model="form.birthday"
                   format="yyyy-MM-dd"
                   class="input-width"
                   placeholder="请选择出生日期"
@@ -68,7 +68,7 @@
             <el-col :span="12">
               <!-- 在职状态（0：试用员工 1：正式员工 2：离职员工） -->
               <el-form-item label="在职状态:" prop="jobStatus">
-                <el-radio-group v-model="formData.jobStatus">
+                <el-radio-group v-model="form.jobStatus">
                   <el-radio
                     v-for="item in jobStatusOptions"
                     :key="'jobStatus' + item.value"
@@ -82,7 +82,7 @@
             <el-col :span="12">
               <el-form-item label="身份证号码:" prop="idCard">
                 <el-input
-                  v-model="formData.idCard"
+                  v-model="form.idCard"
                   placeholder="请输入身份证号码"
                   clearable
                 />
@@ -91,7 +91,7 @@
             <el-col :span="12">
               <el-form-item label="联系电话:" prop="mobile">
                 <el-input
-                  v-model="formData.mobile"
+                  v-model="form.mobile"
                   placeholder="请输入联系电话"
                   clearable
                 />
@@ -102,7 +102,7 @@
             <el-col :span="12">
               <el-form-item label="现住址:" prop="address">
                 <el-input
-                  v-model="formData.address"
+                  v-model="form.address"
                   placeholder="请输入现住址"
                   clearable
                 />
@@ -111,7 +111,7 @@
             <el-col :span="12">
               <el-form-item label="户籍地址:" prop="sourceAddress">
                 <el-input
-                  v-model="formData.sourceAddress"
+                  v-model="form.sourceAddress"
                   placeholder="请输入户籍地址"
                   clearable
                 />
@@ -122,7 +122,7 @@
             <el-col :span="12">
               <el-form-item label="婚姻状况:" prop="maritalStatus">
                 <el-select
-                  v-model="formData.maritalStatus"
+                  v-model="form.maritalStatus"
                   placeholder="请选择婚姻状况"
                   clearable
                   class="input-width"
@@ -140,7 +140,7 @@
               <!-- TODO 下拉值-->
               <el-form-item label="政治面貌:" prop="politicalStatus">
                 <el-select
-                  v-model="formData.politicalStatus"
+                  v-model="form.politicalStatus"
                   placeholder="请选择政治面貌"
                   clearable
                   class="input-width"
@@ -159,7 +159,7 @@
             <el-col :span="12">
               <el-form-item label="学历:" prop="education">
                 <el-select
-                  v-model="formData.education"
+                  v-model="form.education"
                   placeholder="请选择学历"
                   clearable
                   class="input-width"
@@ -176,7 +176,7 @@
             <el-col :span="12">
               <el-form-item label="毕业时间:" prop="graduateDate">
                 <el-date-picker
-                  v-model="formData.graduateDate"
+                  v-model="form.graduateDate"
                   format="yyyy-MM-dd"
                   class="input-width"
                   placeholder="请选择毕业时间"
@@ -189,7 +189,7 @@
             <el-col :span="12">
               <el-form-item label="毕业学校:" prop="graduateSchool">
                 <el-input
-                  v-model="formData.graduateSchool"
+                  v-model="form.graduateSchool"
                   placeholder="请输入毕业学校"
                   clearable
                 />
@@ -198,7 +198,7 @@
             <el-col :span="12">
               <el-form-item label="在校专业:" prop="speciality">
                 <el-input
-                  v-model="formData.speciality"
+                  v-model="form.speciality"
                   placeholder="请输入在校专业"
                   clearable
                 />
@@ -210,7 +210,7 @@
               <el-form-item label="入职时间:" prop="entryDate">
                 <!-- value-format="yyyy-MM-dd" -->
                 <el-date-picker
-                  v-model="formData.entryDate"
+                  v-model="form.entryDate"
                   format="yyyy-MM-dd"
                   class="input-width"
                   placeholder="请选择入职时间"
@@ -220,20 +220,20 @@
             </el-col>
             <el-col :span="12">
               <el-form-item label="入职部门:" prop="uemDeptId">
-                <Department v-model="formData.uemDeptId" clearable placeholder="请选择入职部门" class="input-width" />
+                <Department v-model="form.uemDeptId" clearable placeholder="请选择入职部门" class="input-width" />
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :span="12">
               <el-form-item label="入职岗位:" prop="staffDutyCode">
-                <StaffDuty v-model="formData.staffDutyCode" class="input-width" />
+                <StaffDuty v-model="form.staffDutyCode" class="input-width" />
               </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item label="岗位职称:" prop="technicalTitleId">
                 <el-select
-                  v-model="formData.technicalTitleId"
+                  v-model="form.technicalTitleId"
                   placeholder="请选择岗位职称"
                   clearable
                   class="input-width"
@@ -252,7 +252,7 @@
             <el-col :span="12">
               <el-form-item label="电子邮箱:" prop="email">
                 <el-input
-                  v-model="formData.email"
+                  v-model="form.email"
                   placeholder="请输入电子邮箱"
                   clearable
                 />
@@ -261,7 +261,7 @@
             <el-col :span="12">
               <el-form-item label="工作年限:" prop="seniority">
                 <el-input
-                  v-model="formData.seniority"
+                  v-model="form.seniority"
                   placeholder="请输入工作年限"
                   clearable
                 />
@@ -273,7 +273,7 @@
               <!-- TODO 联想控件 -->
               <el-form-item label="归属项目:" prop="projectId">
                 <el-select
-                  v-model="formData.projectId"
+                  v-model="form.projectId"
                   placeholder="请选择归属项目"
                   clearable
                   class="input-width"
@@ -300,7 +300,7 @@
                 label="创建时间:"
               >
                 <el-input
-                  v-model="formData.createTime"
+                  v-model="form.createTime"
                   placeholder="请输入创建时间"
                   clearable
                   class="input-width"
@@ -314,7 +314,7 @@
                 label="创建人:"
               >
                 <el-input
-                  v-model="formData.creatorName"
+                  v-model="form.creatorName"
                   placeholder="请输入创建人"
                   clearable
                   class="input-width"
@@ -344,6 +344,7 @@
 </template>
 <script>
 import { queryStaffById, updateStaff } from '@/api/staff-manage';
+// import { queryOfferInfo } from '@/api/staff-query';
 import { queryTechnicalNameBySelect, queryProjectNameBySelect } from '@/api/select';
 import { formRules } from './rules';
 import Department from '@/components/CurrentSystem/Department.vue'
@@ -366,7 +367,7 @@ export default {
   data() {
     return {
       rules: formRules, // 验证规则
-      formData: {
+      form: {
         uemUserId: '',
         name: '',
         sex: '',
@@ -424,15 +425,15 @@ export default {
       queryStaffById({
         uemUserId: this.editData.uemUserId
       }).then(res => {
-        for (const key in this.formData) {
+        for (const key in this.form) {
           if (key === 'sex') {
-            this.formData[key] = res[key] || false
+            this.form[key] = res[key] || false
           } else {
-            this.formData[key] = res[key] || ''
+            this.form[key] = res[key] || ''
           }
         }
-        // this.formData = {
-        //   ...this.formData,
+        // this.form = {
+        //   ...this.form,
         //   ...res,
         //   jobStatus: res.jobStatus || '',
         //   entryDate: res.entryDate || '',
@@ -452,7 +453,7 @@ export default {
     handleConfirm() {
       this.$refs['elForm'].validate(valid => {
         if (valid) {
-          updateStaff({ uemUserId: this.editData.uemUserId, ...this.formData }).then(res => {
+          updateStaff({ uemUserId: this.editData.uemUserId, ...this.form }).then(res => {
             this.$message.success(res.data);
             this.$emit('getTableData', '');
             this.close();

@@ -26,11 +26,8 @@
                 <!-- 性别（0男，1女） -->
                 <el-form-item label="性别:" prop="sex">
                   <el-radio-group v-model="form.sex">
-                    <el-radio
-                      v-for="item in sexOptions"
-                      :key="'sex' + item.value"
-                      :label="item.value"
-                    >{{ item.label }}</el-radio>
+                    <el-radio :label="false">男</el-radio>
+                    <el-radio :label="true">女</el-radio>
                   </el-radio-group>
                 </el-form-item>
               </el-col>
@@ -120,18 +117,18 @@
               </el-col>
               <el-col :span="12">
                 <!-- TODO -->
-                <el-form-item label="政治面貌:" prop="projectId2">
+                <el-form-item label="政治面貌:" prop="politicalStatus">
                   <el-select
-                    v-model="form.projectId2"
+                    v-model="form.politicalStatus"
                     placeholder="请选择政治面貌"
                     clearable
                     class="input-width"
                   >
                     <el-option
                       v-for="(item, index) in politicsOptions"
-                      :key="'projectId2' + index + item.projectId"
-                      :label="item.projectName"
-                      :value="item.projectId"
+                      :key="'politicalStatus' + index"
+                      :label="item.lable"
+                      :value="item.value"
                     />
                   </el-select>
                 </el-form-item>
@@ -238,8 +235,8 @@
                   class="input-width"
                 >
                   <el-option
-                    v-for="item in technicalOptions"
-                    :key="'technicalTitleId' + item.technicalTitleId"
+                    v-for="(item, index) in technicalOptions"
+                    :key="'technicalTitleId' + item.technicalTitleId + index"
                     :label="item.technicalName"
                     :value="item.technicalTitleId"
                   />
@@ -250,12 +247,25 @@
           <el-row :gutter="100">
             <el-col :span="12">
               <el-form-item label="入职岗位:" prop="staffDutyCode">
-                <StaffDuty v-model="form.staffDutyCode" class="input-width" />
+                <!-- <StaffDuty v-model="form.staffDutyCode" class="input-width" /> -->
+                <el-select
+                  v-model="form.staffDutyCode"
+                  placeholder="请选择入职岗位"
+                  clearable
+                  class="input-width"
+                >
+                  <el-option
+                    v-for="(item, index) in staffDutyOptions"
+                    :key="'staffDutyCode' + item.staffDutyCode + index"
+                    :label="item.staffDuty"
+                    :value="item.staffDutyCode"
+                  />
+                </el-select>
               </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item label="个人简历:">
-                <el-button type="text">上传</el-button>
+                <upload-file accept=".pdf" />
               </el-form-item>
             </el-col>
           </el-row>
@@ -303,21 +313,27 @@
 </template>
 
 <script>
-import { queryStaffById, updateStaff } from '@/api/staff-manage';
-import store from '@/store';
+import { queryStaffById } from '@/api/staff-manage';
+// import { preservationUemUser } from '@/api/staff-query.js';
+import {
+  queryTechnicalNameBySelect,
+  queryProjectNameBySelect,
+  queryStaffDutyBySelect
+} from '@/api/select';
 import RegularDialog from './component/regular-dialog';
 import DismissDialog from './component/dismiss-dialog';
+import UploadFile from './component/upload-file';
 import { mapGetters } from 'vuex';
 export default {
   name: 'StaffInfo',
-  component: {
+  components: {
     RegularDialog,
-    DismissDialog
+    DismissDialog,
+    UploadFile
   },
 
   data() {
     return {
-      form1: {},
       form: {
         account: '',
         name: '',
@@ -329,7 +345,7 @@ export default {
         address: '', // 现住址
         sourceAddress: '', // 户籍地址
         maritalStatus: '', // 婚姻状况（0：未婚 1：已婚 2：离婚）
-        // 政治面貌
+        politicalStatus: '', // 政治面貌
         education: '', // 学历（0：专科 1：本科 2：研究生 3：博士生）
         graduateDate: '', // 毕业时间
         graduateSchool: '', //
@@ -342,7 +358,7 @@ export default {
         seniority: '', // 工作年限
         projectId: '' // 归属项目
       },
-      sexOptions: this.$dict.getDictOptions('SEX'), // 性别
+      // sexOptions: this.$dict.getDictOptions('SEX'), // 性别
       maritalStatusOptions: this.$dict.getDictOptions('MARITAL_STATUS'), // 婚姻状况
       educationOptions: this.$dict.getDictOptions('EDUCATION'), // 学历
       jobStatusOptions: this.$dict.getDictOptions('JOB_STATUS'), // 在职状态
@@ -361,13 +377,22 @@ export default {
         jobStatus: [
           { required: true, message: '请选择在职状态', trigger: 'change' }
         ],
-        idCard: [{ validator: this.validateIdCard, trigger: 'blur' }],
-        mobile: [{ validator: this.validateMobile, trigger: 'blur' }],
+        idCard: [
+          { validator: this.validateIdCard, trigger: 'blur' },
+          { required: true, message: '请输入身份证号码', trigger: 'blur' }
+        ],
+        mobile: [
+          { validator: this.validateMobile, trigger: 'blur' },
+          { required: true, message: '请输入手机号码', trigger: 'blur' }
+        ],
         address: [
           { required: true, message: '请输入现住址', trigger: 'change' }
         ],
         // sourceAddress: [{ required: true, message: "请输入户籍地址", trigger: change }],
-        email: [{ validator: this.validateEmail, trigger: 'blur' }],
+        email: [
+          { validator: this.validateEmail, trigger: 'blur' },
+          { required: true, message: '请输入邮箱地址', trigger: 'blur' }
+        ],
         seniority: [
           { required: true, message: '请输入工作年限', trigger: 'change' }
         ],
@@ -403,21 +428,25 @@ export default {
   },
   mounted() {
     this.getStaffInfo();
+    this.getSelectOptions();
   },
   methods: {
+    // 获取下拉信息
+    async getSelectOptions() {
+      this.technicalOptions = await queryTechnicalNameBySelect();
+      this.projectTypeOptions = await queryProjectNameBySelect();
+      this.staffDutyOptions = await queryStaffDutyBySelect();
+    },
     handleRegular() {
-      console.log(this.$refs.dialogRegular);
-      debugger
-      this.$refs.dialogRegular.open()
+      this.$refs.dialogRegular.open();
     },
     handleDismiss() {
-      this.$refs.dialogDismiss.open()
+      this.$refs.dialogDismiss.open();
     },
     getStaffInfo() {
       queryStaffById({
         uemUserId: this.userId
       }).then((res) => {
-        debugger;
         for (const key in this.form) {
           if (key === 'sex') {
             this.form[key] = res[key] || false;
@@ -428,32 +457,49 @@ export default {
       });
     },
     handleSave() {
-      // this.$refs.staffInfoForm.validate((valid) => {
-      //   if (valid) {
-      //   }
+      this.$refs['staffInfoForm'].validate((valid) => {
+        debugger;
+        if (valid) {
+          debugger;
+          alert('submit!');
+        } else {
+          debugger;
+          console.log('error submit!!');
+          return false;
+        }
+      });
+      // preservationUemUser(this.form).then((res)=>{
+      //   this.$message.success('保存成功')
+      // }).catch((err)=>{
+      //   this.$message.error('保存失败')
       // })
     },
     validateEmail(rule, value, callback) {
-      debugger;
+      if (!value) {
+        callback(new Error('请输入邮箱地址'));
+      }
       var res = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
       const result = res.test(value);
-      console.log(result);
       if (!result) {
         callback(new Error('请输入正确的邮箱地址'));
       }
     },
     validateIdCard(rule, value, callback) {
+      if (!value) {
+        callback(new Error('请输入身份证号码'));
+      }
       var res = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
       const result = res.test(value);
-      console.log(result);
       if (!result) {
         callback(new Error('请输入正确的身份证号码'));
       }
     },
     validateMobile(rule, value, callback) {
+      if (!value) {
+        callback(new Error('请输入手机号码'));
+      }
       var res = /^[1][3,4,5,6.7,8,9][0-9]{9}$/;
       const result = res.test(value);
-      console.log(result);
       if (!result) {
         callback(new Error('请输入正确的手机号码'));
       }
