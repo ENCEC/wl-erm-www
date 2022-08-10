@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 17:38:09
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-09 14:45:01
+ * @LastEditTime: 2022-08-10 17:03:28
  * @Description: 我的任务-试用任务信息-弹框-表格
 -->
 
@@ -155,17 +155,16 @@ export default {
       type: String,
       default: ''
     },
-    // 弹窗类型
-    type: {
+    // 用户类型
+    userType: {
       type: String,
-      default: ''
+      default: '1'
     }
   },
   data() {
     return {
       USER_TYPE,
       COMPLETION_EN,
-      userType: 3, // TODO
       oldPage: '', // 页面切换前的页数
       // 表单数据
       tableForm: {
@@ -210,6 +209,7 @@ export default {
   },
   created() {
     this.getTableData();
+    console.log('【 table-userType 】-81', this.userType)
   },
   mounted() {},
   methods: {
@@ -275,6 +275,7 @@ export default {
           })
           let funcName = ''
           // 员工-更新任务进度
+          // console.log('【 funcName-this.userType 】-279', this.userType)
           if (this.userType === USER_TYPE.STAFF) {
             funcName = updateTaskDetailProgress
           }

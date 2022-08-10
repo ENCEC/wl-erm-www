@@ -1,8 +1,8 @@
 <!--
  * @Author: Hongzf
- * @Date: 2022-08-02 10:15:03
+ * @Date: 2022-08-08 18:45:59
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-08 14:41:03
+ * @LastEditTime: 2022-08-10 18:43:58
  * @Description:
 -->
 
@@ -30,25 +30,25 @@
           <el-row>
             <!-- 进行中 -->
             <el-col v-if="status === STATUS_TYPE.on || status === STATUS_TYPE.final" :span="12">
-              <el-form-item label="申请人:" prop="defenseScore">
+              <el-form-item label="申请人:" prop="dispatchersName">
                 <el-input
-                  v-model="formData.defenseScore"
+                  v-model="formData.dispatchersName"
+                  :disabled="status === STATUS_TYPE.on || status === STATUS_TYPE.final"
                   placeholder="请输入申请人"
                   clearable
-                  :disabled="status === STATUS_TYPE.on || status === STATUS_TYPE.final"
                 />
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item label="申请日期:" prop="taskTitle">
+              <el-form-item label="申请日期:" prop="applyDate">
                 <el-date-picker
-                  v-model="formData.taskTitle"
+                  v-model="formData.applyDate"
+                  :disabled="status === STATUS_TYPE.on || status === STATUS_TYPE.final"
                   format="yyyy-MM-dd"
                   value-format="yyyy-MM-dd hh:mm:ss"
                   class="input-width"
                   placeholder="请选择申请日期"
                   clearable
-                  :disabled="status === STATUS_TYPE.on || status === STATUS_TYPE.final"
                 />
               </el-form-item>
             </el-col>
@@ -73,11 +73,13 @@
           </el-row>
           <el-row>
             <el-col :span="24">
-              <el-form-item label="离职原因:">
+              <el-form-item label="离职原因:" :prop="leaveReason">
                 <el-input
-                  v-model="formData.positiveComments"
+                  v-model="formData. leaveReason"
+                  :disabled="status === STATUS_TYPE.on || status === STATUS_TYPE.final"
+                  :rows="4"
                   type="textarea"
-                  placeholder="输入评语"
+                  placeholder="请输入离职原因"
                   clearable
                   style="width:500px"
                 />
@@ -233,12 +235,10 @@
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item
-                  label="审批人:"
-                >
+                <el-form-item label="审批人:" prop="approver">
                   <el-input
-                    v-model="formData.creatorName"
-                    placeholder="请输入创建人"
+                    v-model="formData.approver"
+                    placeholder="请输入审批人"
                     clearable
                     class="input-width"
                   />
@@ -301,8 +301,9 @@
 </template>
 <script>
 import UserAssociate from '@/components/CurrentSystem/UserAssociate'
-import { getTaskInfoDetail, saveTaskInfo, updateTaskInfo } from '@/api/staff-task';
-import { formRules } from './rules';
+import { saveTaskInfo, updateTaskInfo } from '@/api/staff-task';
+import { quitFormRules } from './rules';
+import { queryLeaveInfo, savePositiveInfo } from '@/api/my-task';
 
 export default {
   components: { UserAssociate },
@@ -327,11 +328,34 @@ export default {
         completed: 3,
         final: 4
       },
-      status: 4,
-      records: [],
-      rules: formRules, // 验证规则
+      status: 2,
+      rules: quitFormRules, // 验证规则
       formData: {
-        taskTitle: '4444',
+        taskInfoId: '',
+        // taskDetailId: '',
+        dispatchersName: '', // 申请人
+        applyDate: '', // 申请日期
+        leaveReason: '', // 离职原因
+        // offerType: '', // 转正类型
+        // // 申请进度
+        // // 审核人
+        // approver: '', // TODO 审批人
+        // approverName: '', // TODO 审批人姓名
+        // approvalRemark: '', // TODO 审批结果
+        // interviewerId: '', // TODO  面谈id
+        // interviewerName: '', // TODO  面谈姓名
+        // //
+        // faceTime: '', // 面谈时间
+        // faceRemark: '', // 面谈评语
+        // resultAccess: '', // 面谈结果
+        // faceScore: '', // 转员工答辩成绩
+        // // 最终审批
+        // approvalDate: '', // 审批时间
+        // offerRemark: '', // 转正评语：
+        // //
+        // status: '', // 在职状态（0：试用员工 1：正式员工 2：离职员工）
+        // taskType: '' // // ====
+        // taskTitle: '4444',
         executor: '6957613061678637056', // 执行人
         status: '', // 在职状态（0：试用员工 1：正式员工 2：离职员工）
         taskType: '', //
@@ -346,13 +370,14 @@ export default {
   computed: {
     // 弹框标题
     dialogTitle() {
-      // this.editData.taskInfoId && this.getDetailInfo();
+      this.editData.taskInfoId && this.getDetailInfo();
+      console.log('【 this.editData.taskInfoId 】-373', this.editData.taskInfoId)
       // return this.editData.taskInfoId
       //   ? this.type === 'detail'
       //     ? '任务详细信息'
       //     : '编辑任务信息'
       //   : '新增任务';
-      return '姓名' + '离职申请'
+      return this.formData.dispatchersName + '离职申请'
     }
   },
   watch: {},
@@ -366,16 +391,12 @@ export default {
     },
     // 获取详细信息
     getDetailInfo() {
-      getTaskInfoDetail({ taskInfoId: this.editData.taskInfoId }).then(res => {
+      queryLeaveInfo({ taskInfoId: this.editData.taskInfoId }).then(res => {
         console.log('【 res 】-211', res)
-        const result = res.data
-        this.formData = {
-          ...this.formData,
-          ...result,
-          status: result.status.toString()
-        };
-        this.records = result.taskDetailInfoDtoList
-        console.log('【 this.records 】-224', this.records)
+        const _res = res.data
+        for (const key in this.formData) {
+          this.formData[key] = _res[key] || ''
+        }
       });
     },
     // 提交表单信息

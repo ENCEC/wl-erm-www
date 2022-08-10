@@ -2,14 +2,14 @@
  * @Author: Hongzf
  * @Date: 2022-08-03 12:39:32
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-05 18:54:47
+ * @LastEditTime: 2022-08-09 18:50:11
  * @Description:
  */
 
 export const tempdata = [
   {
     taskTitle: 'taskTitle',
-    ordinator: '6958664088091697152',
+    leader: '6958664088091697152',
     required: true,
     checked: true,
     actionPeriod: 1,
@@ -31,7 +31,7 @@ export const tempdata = [
   },
   {
     taskTitle: 'taskTitle',
-    ordinator: '',
+    leader: '',
     required: true,
     checked: true,
     standardEntryName: '规范条目222'

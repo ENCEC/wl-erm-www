@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:15:04
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-09 12:33:44
+ * @LastEditTime: 2022-08-10 18:04:48
  * @Description:
  */
 
@@ -11,12 +11,28 @@ export const filterConfig = _this => {
     inline: false,
     gutter: 3, // 栅格的间隔
     col: 6, // 栅格的格数
-    operateCol: 8,
+    operateCol: 24,
     labelWidth: '100px',
     filterList: [
       {
+        type: 'select',
+        label: '用户类型',
+        prop: 'userType',
+        width: '200px',
+        placeholder: '请选择用户类型',
+        col: 8,
+        optionLabel: 'label',
+        optionValue: 'value',
+        optionKey: 'value',
+        options: _this.$dict.getDictOptions('USER_TYPE_CN'),
+        changeSelect: optionVal => {
+          _this.filterForm.userType = optionVal || 1;
+          _this.handleUserTypeChange(optionVal)
+        }
+      },
+      {
         type: 'input',
-        label: ' ',
+        label: '标题',
         prop: 'taskTitle',
         width: '200px',
         clearable: true,
@@ -25,7 +41,7 @@ export const filterConfig = _this => {
       },
       {
         type: 'select',
-        label: ' ',
+        label: '任务状态',
         prop: 'status',
         width: '200px',
         clearable: true,
@@ -108,12 +124,7 @@ export const columns = _this => {
     },
     {
       prop: 'publishDate',
-      label: '发布日期',
-      formatter: (row, column) => {
-        const val = row.publishDate
-        const date = val ? _this.$moment(val).format('YYYY-MM-DD') : '';
-        return date
-      }
+      label: '发布日期'
     },
     {
       prop: 'planEndDate',
@@ -121,7 +132,7 @@ export const columns = _this => {
       width: '120px'
     },
     {
-      prop: 'creatorName',
+      prop: 'dispatchersName',
       label: '任务创建人',
       width: '120px'
     },
