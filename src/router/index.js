@@ -83,47 +83,76 @@ export const constantRoutes = [
  */
 export const asyncRoutes = [
   // hotRouter,
+  // {
+  //   path: '/demo',
+  //   component: Layout,
+  //   meta: { title: 'demo', icon: 'user' },
+  //   children: [
+  //     // 系统管理
+  //     {
+  //       path: 'staff-manage',
+  //       component: () => import('@/views/staff-manage/index'),
+  //       name: 'StaffManage',
+  //       meta: { title: '员工管理' }
+  //     }
+  //   ]
+  // },
+  // 员工管理
   {
-    path: '/demo',
+    path: '/staff',
     component: Layout,
-    meta: { title: 'demo', icon: 'user' },
+    meta: { title: '员工管理', icon: 'user' },
     children: [
       {
-        path: 'list',
-        component: () => import('@/views/demo-page/index'),
-        name: 'List',
-        meta: { title: '表格' }
-      },
-      // {
-      //   path: 'form',
-      //   component: () => import('@/views/demo-page/create'),
-      //   name: 'Form',
-      //   meta: { title: 'demoForm' }
-      // },
-      {
-        path: 'myvue',
-        component: () => import('@/views/myVue'),
-        name: 'myVue',
-        meta: { title: '联想控件练习' }
+        path: 'my-task',
+        component: () => import('@/views/my-task/index'),
+        name: '我的任务',
+        meta: { title: '我的任务' }
       },
       {
-        path: 'uploadFile',
-        component: () => import('@/views/uploadImage'),
-        name: 'uploadFile',
-        meta: { title: '图片上传示例' }
+        path: 'staff-task',
+        component: () => import('@/views/staff-task/index'),
+        name: 'StaffTask',
+        meta: { title: '任务分配' }
       },
       {
-        path: 'export',
-        component: () => import('@/views/export'),
-        name: 'export',
-        meta: { title: '导入导出示例' }
+        path: 'staff-manage',
+        component: () => import('@/views/staff-manage/index'),
+        name: 'StaffManage',
+        meta: { title: '员工管理' }
       },
-      // {
-      //   path: 'tabindex',
-      //   component: () => import('@/views/demo-page/tabindex'),
-      //   name: 'TabIndex',
-      //   meta: { title: '焦点切换' }
-      // }
+      {
+        path: 'staff-query',
+        component: () => import('@/views/staff-query/index'),
+        name: 'StaffQuery',
+        meta: { title: '员工查询' }
+      },
+      {
+        path: 'staff-info',
+        component: () => import('@/views/staff-info/index'),
+        name: 'StaffInfo',
+        meta: { title: '员工信息' }
+      }
+    ]
+  },
+  // 规范条目管理
+  {
+    path: '/standard',
+    component: Layout,
+    meta: { title: '字典管理', icon: 'user' },
+    children: [
+      {
+        path: 'standard-entry',
+        component: () => import('@/views/standard-entry/index'),
+        name: 'StandardEntry',
+        meta: { title: '规范条目管理' }
+      },
+      {
+        path: 'standard-detail',
+        component: () => import('@/views/standard-detail/index'),
+        name: 'StandardDetail',
+        meta: { title: '规范细则管理' }
+      }
     ]
   },
   { path: '*', redirect: '/404', hidden: true }

@@ -212,5 +212,3 @@ if (process.env.NODE_ENV === 'production') {
 ### 关于页面转场动画
 
 在/src/layout/component/appMain.vue 修改页面之间切换动画 transition中的name,不使用动画则去除
-
-

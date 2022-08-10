@@ -1,5 +1,15 @@
 <template>
-  <el-form :ref="formConfig.ref" :inline="formConfig.inline" :label-position="formConfig.labelPosition" :class="formConfig.class" :label-width="formConfig.labelWidth?formConfig.labelWidth:'80px'" :model="value" :rules="rules" :style="formConfig.style">
+  <el-form
+    :ref="formConfig.ref"
+    :inline="formConfig.inline"
+    :label-position="formConfig.labelPosition"
+    :class="formConfig.class"
+    :label-width="formConfig.labelWidth ? formConfig.labelWidth : '80px'"
+    :model="value"
+    :rules="rules"
+    :style="formConfig.style"
+    :disabled="dialogStatus === 'examine'"
+  >
     <el-row :gutter="formConfig.gutter">
       <slot name="formItem" />
       <el-col
@@ -7,14 +17,30 @@
         :key="item.prop"
         :span="item.col ? item.col : formConfig.col"
       >
-        <el-form-item :label="item.label" :prop="item.prop">
+        <el-form-item
+          :label="item.label"
+          :prop="item.prop"
+          :label-width="
+            item.labelWidth
+              ? item.labelWidth
+              : formConfig.labelWidth
+                ? formConfig.labelWidth
+                : '80px'
+          "
+        >
           <!-- input type: text | textarea | password-->
           <el-input
-            v-if="item.type === 'input' || item.type === 'textarea' || item.type === 'password'"
+            v-if="
+              item.type === 'input' ||
+                item.type === 'textarea' ||
+                item.type === 'password'
+            "
             v-model="value[item.prop]"
             :type="item.type"
             :rows="item.type === 'textarea' ? item.rows : ''"
-            :show-password="item.type === 'password' && item.showPassword ? true : false"
+            :show-password="
+              item.type === 'password' && item.showPassword ? true : false
+            "
             :placeholder="item.placeholder"
             :class="item.class"
             :autosize="item.autosize"
@@ -22,32 +48,45 @@
             :prefix-icon="item.type === 'text' ? item.prefix - icon : ''"
             :suffix-icon="item.type === 'text' ? item.suffix - icon : ''"
             :clearable="item.clearable ? item.clearable : false"
+            :style="{ width: item.width ? item.width : '100%' }"
           />
           <!-- radio -->
           <el-radio-group
             v-if="item.type === 'radio'"
             v-model="value[item.prop]"
-            @change="radioVal => {item.changeRadio? item.changeRadio(radioVal, item, index): ''}"
+            @change="
+              (radioVal) => {
+                item.changeRadio ? item.changeRadio(radioVal, item, index) : '';
+              }
+            "
           >
             <el-radio
               v-for="(radio, index) in item.radioArr"
               :key="index"
-              :label="radio[item.radioLabel?item.radioLabel:'label']"
+              :label="radio['label']"
               :disabled="radio.disabled"
-            >{{ radio[item.radioLabel?item.radioLabel:'label'] }}</el-radio>
+            >{{
+              radio[item.radioLabel ? item.radioLabel : "label"]
+            }}</el-radio>
           </el-radio-group>
           <!-- checkbox -->
           <el-checkbox-group
             v-if="item.type === 'checkbox'"
             v-model="value[item.prop]"
-            @change="checkVal => { item.changeCheck? item.changeCheck(checkVal, item, index): ''}"
+            @change="
+              (checkVal) => {
+                item.changeCheck ? item.changeCheck(checkVal, item, index) : '';
+              }
+            "
           >
             <el-checkbox
               v-for="(checkbox, index) in item.checkboxArr"
               :key="index"
-              :label="checkbox[item.checkLabel?item.checkLabel:'label']"
+              :label="checkbox[item.checkLabel ? item.checkLabel : 'label']"
               :disabled="checkbox.disabled"
-            >{{ checkbox[item.checkLabel?item.checkLabel:'label'] }}</el-checkbox>
+            >{{
+              checkbox[item.checkLabel ? item.checkLabel : "label"]
+            }}</el-checkbox>
           </el-checkbox-group>
           <!-- select -->
           <el-select
@@ -57,16 +96,52 @@
             :clearable="item.clearable"
             :multiple="item.multiple"
             :placeholder="item.placeholder"
-            @change="optionVal => {item.changeSelect? item.changeSelect(optionVal, item, index): ''}"
+            :style="{ width: item.width ? item.width : '100%' }"
+            @change="
+              (optionVal) => {
+                item.changeSelect
+                  ? item.changeSelect(optionVal, item, index)
+                  : '';
+              }
+            "
           >
             <el-option
               v-for="option in item.options"
-              :key="item.optionSingle?option:option[item.optionKey?item.optionKey:'value']"
-              :label="item.optionSingle?option:option[item.optionLabel?item.optionLabel:'label']"
-              :value="item.optionSingle?option:option[item.optionValue?item.optionValue:'value']"
+              :key="
+                item.optionSingle
+                  ? option
+                  : option[item.optionKey ? item.optionKey : 'value']
+              "
+              :label="
+                item.optionSingle
+                  ? option
+                  : option[item.optionLabel ? item.optionLabel : 'label']
+              "
+              :value="
+                item.optionSingle
+                  ? option
+                  : option[item.optionValue ? item.optionValue : 'value']
+              "
               :disabled="option.disabled"
             />
           </el-select>
+          <!-- :display-init="item.labelProp" -->
+          <!-- @blur="item.changeSelect ? item.blur(row, selectedRows) : ''"
+            @focus="item.changeSelect ? item.focus(row, selectedRows) : ''" -->
+          <el-associate
+            v-if="item.type === 'associate'"
+            ref="associate"
+            v-model="value[item.prop]"
+            class="el-associate"
+            :value-prop="item.valueProp"
+            :label-prop="item.labelProp"
+            :columns="item.columns"
+            :clearable="item.clearable"
+            :multiple="item.multiple"
+            :query-method="item.queryMethod"
+            :style="{ width: item.width ? item.width : '100%' }"
+            @change="item.changeSelect ? item.changeSelect(row, selectedRows) : ''"
+          />
           <!-- cascader -->
           <el-cascader
             v-if="item.type === 'cascader'"
@@ -74,17 +149,33 @@
             :options="item.options"
             :props="item.props"
             :clearable="item.clearable ? true : false"
-            @change="value => {item.changeCascader? item.changeCascader(value, item, index): ''}"
+            :style="{ width: item.width ? item.width : '100%' }"
+            @change="
+              (value) => {
+                item.changeCascader
+                  ? item.changeCascader(value, item, index)
+                  : '';
+              }
+            "
           />
           <!-- number -->
+          {{ item.prependText }}
           <el-input-number
             v-if="item.type === 'number'"
             v-model="value[item.prop]"
             :min="item.min"
             :max="item.max"
             :size="item.size"
-            @change="(currentValue, oldValue) => {item.changeNumber? item.changeNumber(currentValue, oldValue, item, index): ''}"
+            :style="{ width: item.width ? item.width : '100%' }"
+            @change="
+              (currentValue, oldValue) => {
+                item.changeNumber
+                  ? item.changeNumber(currentValue, oldValue, item, index)
+                  : '';
+              }
+            "
           />
+          {{ item.suffixText }}
           <!-- timePicker -->
           <el-time-select
             v-if="item.type === 'timePicker'"
@@ -97,9 +188,16 @@
             :start-placeholder="item.startPlaceholder"
             :end-placeholder="item.endPlaceholder"
             :prefix-icon="item.prefixIcon ? item.prefixIcon : 'el-icon-time'"
-            :clear-icon="item.clearIcon ? item.clearIcon : 'el-icon-circle-close'"
+            :clear-icon="
+              item.clearIcon ? item.clearIcon : 'el-icon-circle-close'
+            "
             :range-separator="item.rangeSeparator ? item.rangeSeparator : '至'"
-            @change="time => {item.changeTime ? item.changeTime(time, item, index) : ''}"
+            :style="{ width: item.width ? item.width : '100%' }"
+            @change="
+              (time) => {
+                item.changeTime ? item.changeTime(time, item, index) : '';
+              }
+            "
           />
           <!-- datePicker  --- subType:date daterange....-->
           <el-date-picker
@@ -111,15 +209,24 @@
             :unlink-panels="item.unlinkPanels ? item.unlinkPanels : false"
             :placeholder="item.placeholder ? item.placeholder : '选择日期'"
             :range-separator="item.rangeSeparator ? item.rangeSeparator : '至'"
-            :start-placeholder="item.startPlaceholder ? item.startPlaceholder : '开始日期'"
-            :end-placeholder="item.endPlaceholder ? item.endPlaceholder : '结束日期'"
+            :start-placeholder="
+              item.startPlaceholder ? item.startPlaceholder : '开始日期'
+            "
+            :end-placeholder="
+              item.endPlaceholder ? item.endPlaceholder : '结束日期'
+            "
             :picker-options="item.pickerOptions"
             :format="item.format"
             :align="item.align"
             :editable="item.editable"
             :clearable="item.clearable"
             :value-format="item.valueFormat"
-            @change="date => {item.changeDate ? item.changeDate(date, item, index) : ''}"
+            :style="{ width: item.width ? item.width : '100%' }"
+            @change="
+              (date) => {
+                item.changeDate ? item.changeDate(date, item, index) : '';
+              }
+            "
           />
           <!-- dateTimePicker -->
           <el-date-picker
@@ -131,33 +238,27 @@
             :unlink-panels="item.unlinkPanels ? item.unlinkPanels : false"
             :placeholder="item.placeholder"
             :range-separator="item.rangeSeparator ? item.rangeSeparator : '至'"
-            :start-placeholder="item.startPlaceholder ? item.startPlaceholder : '开始日期'"
-            :end-placeholder="item.endPlaceholder ? item.endPlaceholder : '结束日期'"
+            :start-placeholder="
+              item.startPlaceholder ? item.startPlaceholder : '开始日期'
+            "
+            :end-placeholder="
+              item.endPlaceholder ? item.endPlaceholder : '结束日期'
+            "
             :picker-options="item.pickerOptions"
             :format="item.format"
             :align="item.align"
             :editable="item.editable"
             :clearable="item.clearable"
             :value-format="item.valueFormat"
-            @change="dateTime => {item.changeDateTime? item.changeDateTime(dateTime, item, index): ''}"
+            :style="{ width: item.width ? item.width : '100%' }"
+            @change="
+              (dateTime) => {
+                item.changeDateTime
+                  ? item.changeDateTime(dateTime, item, index)
+                  : '';
+              }
+            "
           />
-        </el-form-item>
-      </el-col>
-      <el-col :span="formConfig.operateCol ? formConfig.operateCol : formConfig.col">
-        <el-form-item>
-          <!-- button -->
-          <el-button
-            v-for="(item,index) in formConfig.operates"
-            :key="index"
-            :type="item.type"
-            :size="item.size"
-            :disabled="item.disabled"
-            :plain="item.plain"
-            :icon="item.icon"
-            @click.native.prevent="item.method ? item.method(formItemList, item, index) : ''"
-          >{{ item.buttonLabel }}
-          </el-button>
-          <slot name="operate" />
         </el-form-item>
       </el-col>
     </el-row>
@@ -177,26 +278,38 @@ export default {
     rules: {
       type: Object,
       default: () => ({})
+    },
+    dialogStatus: {
+      type: String,
+      default: ''
     }
   },
   computed: {},
   mounted() {
-    this.setDefaultValue()
+    this.setDefaultValue();
+    // this.triggerAssociate();
   },
   methods: {
+    triggerAssociate() {
+      if (Array.isArray(this.$refs.associate)) {
+        const arr = this.$refs.associate
+        arr.forEach((item) => {
+          item.focus()
+        })
+      }
+    },
     setDefaultValue() {
-      const formData = { ...this.value }
+      const formData = { ...this.value };
       // 设置默认值
       this.formConfig.formItemList.forEach(({ key, value }) => {
         if (formData[key] === undefined || formData[key] === null) {
-          formData[key] = value
+          formData[key] = value;
         }
       });
-      this.$emit('input', formData)
+      this.$emit('input', formData);
     }
   }
 };
 </script>
 <style lang="scss" scope>
-
 </style>
