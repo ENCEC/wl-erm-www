@@ -700,7 +700,6 @@ export default {
       this.getList();
     },
     handleModifyStatus(row) {
-      debugger
       const params = Object.assign({}, row);
       updateStatus(params)
         .then(() => {
@@ -951,7 +950,7 @@ export default {
         queryUemUser({
           name: keyword,
           pageSize,
-          currentPage
+          pageNo: currentPage
         }).then((res) => {
           const records = res.data.records;
           resolve({

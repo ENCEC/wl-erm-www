@@ -1,5 +1,6 @@
 import request from '@/utils/request'
 const prefix = process.env.VUE_APP_WL_ERM_PREFIX// process.env.WL_ERM_PREFIX
+// const shareAuthPrefix = process.env.VUE_APP_SHARE_AUTH_PREFIX
 
 // 查询细则
 export function queryStandardDetail(data) {
