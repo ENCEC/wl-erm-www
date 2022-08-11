@@ -1,10 +1,3 @@
-<!--
- * @Author: Hongzf
- * @Date: 2022-08-05 21:05:06
- * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-08 10:42:35
- * @Description:
--->
 
 <template>
   <div class="staff-dialog">
@@ -18,16 +11,21 @@
       destroy-on-close
       v-on="$listeners"
     >
+      <div class="btn-exchange">
+        <el-button type="primary" @click="handleLookBasic">基本信息</el-button>
+        <el-button type="primary" @click="handleLookRegular">转正评语</el-button>
+      </div>
       <el-form
         ref="elForm"
         :model="form"
         :rules="rules"
+        :inline="false"
         size="mini"
         label-width="100px"
-        :inline="true"
         :disabled="type === 'detail'"
       >
-        <div class="form-wrap">
+        <div v-if="lookType==='basic'" class="form-wrap">
+
           <el-row>
             <el-col :span="12">
               <el-form-item label="姓名:" prop="name">
@@ -324,6 +322,171 @@
             </el-col>
           </el-row>
         </div>
+        <div v-if="lookType === 'regular'" class="form-wrap">
+          <el-row>
+            <el-col :span="12">
+              <el-form-item label="姓名:" prop="name">
+                <el-input
+                  v-model="form.name"
+                  placeholder="请输入姓名"
+                  clearable
+                />
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <!-- 性别（0男，1女） -->
+              <el-form-item label="性别:" prop="sex">
+                <el-radio-group v-model="form.sex">
+                  <!-- <el-radio
+                    v-for="item in sexOptions"
+                    :key="'sex' + item.value"
+                    :label="item.value"
+                  >{{ item.label }}</el-radio> -->
+                  <el-radio :label="false">男</el-radio>
+                  <el-radio :label="true">女</el-radio>
+                </el-radio-group>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="12">
+              <el-form-item label="入职时间:" prop="entryDate">
+                <!-- value-format="yyyy-MM-dd" -->
+                <el-date-picker
+                  v-model="form.entryDate"
+                  format="yyyy-MM-dd"
+                  class="input-width"
+                  placeholder="请选择入职时间"
+                  clearable
+                />
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <!-- 在职状态（0：试用员工 1：正式员工 2：离职员工） -->
+              <el-form-item label="在职状态:" prop="jobStatus">
+                <el-radio-group v-model="form.jobStatus">
+                  <el-radio
+                    v-for="item in jobStatusOptions"
+                    :key="'jobStatus' + item.value"
+                    :label="item.value"
+                  >{{ item.label }}</el-radio>
+                </el-radio-group>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="12">
+              <el-form-item label="入职部门:" prop="uemDeptId">
+                <Department v-model="form.uemDeptId" clearable placeholder="请选择入职部门" class="input-width" />
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="入职岗位:" prop="staffDutyCode">
+                <StaffDuty v-model="form.staffDutyCode" class="input-width" />
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="转正日期:" prop="offerDate">
+                <el-date-picker
+                  v-model="form.offerDate"
+                  format="yyyy-MM-dd"
+                  value-format="yyyy-MM-dd hh:mm:ss"
+                  class="input-width"
+                  placeholder="请选择转正日期"
+                  clearable
+                />
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="转正类型:" prop="positiveType">
+                <el-radio-group v-model="form.positiveType">
+                  <el-radio
+                    v-for="item in positiveTypeOptions"
+                    :key="'positiveType' + item.value"
+                    :label="item.value"
+                  >{{ item.label }}</el-radio>
+                </el-radio-group>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12.5">
+              <el-form-item label="转员工答辩成绩:" prop="defenseScore" label-width="140px">
+                <el-input
+                  v-model="form.defenseScore"
+                  clearable
+                  placeholder="请输入转员工答辩成绩"
+                />
+              </el-form-item>
+            </el-col>
+            <el-col :span="11.5">
+              <el-form-item label="附件:" prop="interviewerName" label-width="80px">
+                <el-button class="btn-attachment" type="text" @click="handleLookResume">个人简历</el-button>
+                <el-button class="btn-attachment" type="text" @click="handleLookQuestionnaire">试用期调查表</el-button>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12.5">
+              <el-form-item label="面谈评语:" prop="interviewerName" label-width="140px">
+                <el-input
+                  v-model="form.interviewerName"
+                  clearable
+                  placeholder="请输入面谈评语"
+                />
+              </el-form-item>
+            </el-col>
+            <el-col :span="24">
+              <el-form-item label="" prop="faceRemark" label-width="140px">
+                <el-input
+                  v-model="form.faceRemark"
+                  clearable
+                  type="textarea"
+                  :rows="3"
+                  placeholder=""
+                />
+              </el-form-item>
+            </el-col>
+            <el-col :span="12.5">
+              <el-form-item label="转正评语:" prop="approverName" label-width="140px">
+                <el-input
+                  v-model="form.approverName"
+                  clearable
+                  placeholder=""
+                />
+              </el-form-item>
+            </el-col>
+            <el-col :span="24">
+              <el-form-item label="" prop="offerRemark" label-width="140px">
+                <el-input
+                  v-model="form.offerRemark"
+                  clearable
+                  type="textarea"
+                  :rows="3"
+                  placeholder=""
+                />
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item v-if="type === 'detail'" label="创建时间:">
+                <el-input
+                  v-model="form.createTime"
+                  placeholder="请输入创建时间"
+                  clearable
+                  class="input-width"
+                  disabled
+                />
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item v-if="type === 'detail'" label="创建人:">
+                <el-input
+                  v-model="form.creatorName"
+                  placeholder="请输入创建人"
+                  clearable
+                  class="input-width"
+                  disabled
+                />
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </div>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button
@@ -344,7 +507,8 @@
 </template>
 <script>
 import { queryStaffById, updateStaff } from '@/api/staff-manage';
-// import { queryOfferInfo } from '@/api/staff-query';
+import { queryOfferInfo } from '@/api/staff-query';
+// import { preservationUemUser } from '@/api/staff-query.js';
 import { queryTechnicalNameBySelect, queryProjectNameBySelect } from '@/api/select';
 import { formRules } from './rules';
 import Department from '@/components/CurrentSystem/Department.vue'
@@ -366,6 +530,7 @@ export default {
   },
   data() {
     return {
+      lookType: 'basic', // basic查看基本信息，regular查看转正评语
       rules: formRules, // 验证规则
       form: {
         uemUserId: '',
@@ -389,11 +554,22 @@ export default {
         technicalTitleId: '', // 岗位职称
         email: '',
         seniority: '', // 工作年限
-        projectId: ''// 归属项目
+        projectId: '', // 归属项目,
+        offerDate: '', // 转正日期
+        positiveType: '', // 转正类型
+        defenseScore: '', // 答辩成绩
+        interviewerName: '',
+        faceRemark: '', // 面谈评语
+        approverName: '',
+        offerRemark: '', // 转正评语
+        creatorName: '', // 创建人
+        creatorTime: ''// 创建时间
+        // offerDate，positiveType，defenseScore，interviewerName,faceRemark,approverName,offerRemark
       },
       // sexOptions: this.$dict.getDictOptions('SEX'),
       maritalStatusOptions: this.$dict.getDictOptions('MARITAL_STATUS'),
       educationOptions: this.$dict.getDictOptions('EDUCATION'),
+      positiveTypeOptions: this.$dict.getDictOptions('OFFER_TYPE'),
       technicalOptions: [], // 岗位职称
       projectTypeOptions: []
     };
@@ -415,10 +591,39 @@ export default {
   },
   mounted() {},
   methods: {
+    // 查看个人’简历‘
+    handleLookResume() {
+    },
+    // 查看个人’试用期调查表‘
+    handleLookQuestionnaire() {
+    },
+    // 点击‘基本信息’按钮
+    handleLookBasic() {
+      this.lookType = 'basic'
+    },
+    // 点击‘转正评语’按钮
+    async handleLookRegular() {
+      await this.getOfferInfo()
+      this.lookType = 'regular'
+    },
     // 关闭弹框
     close() {
       this.$emit('update:visible', false);
       this.$refs['elForm'].resetFields();
+    },
+    getOfferInfo() {
+      const arr = ['offerDate', 'positiveType', 'defenseScore', 'interviewerName', 'faceRemark', 'approverName', 'offerRemark']
+      const params = {
+        dispatcher: this.editData.uemUserId,
+        name: this.form.name
+      }
+      queryOfferInfo(params).then((res) => {
+        debugger
+        const data = Object.assign({}, res[0], res[1])
+        for (const key of arr) {
+          this.form[key] = data[key] || ''
+        }
+      })
     },
     // 获取用户信息
     getDetailInfo() {
@@ -466,6 +671,9 @@ export default {
 </script>
 <style lang="scss">
 .staff-dialog {
+  .btn-exchange{
+    margin-bottom: 10px;
+  }
   .form-wrap {
     min-height:480px;
     margin-bottom: 20px;
@@ -473,14 +681,9 @@ export default {
       width: 180px;
     }
   }
-  // 底部按钮
-  .dialog-footer {
-    width: 100%;
-    // background: #bcf;
-    display: flex;
-    justify-content: center;
-    .el-button--default.el-button--mini {
-      min-width: 92px;
+  .btn-attachment{
+    &>span{
+      text-decoration: underline;
     }
   }
 }

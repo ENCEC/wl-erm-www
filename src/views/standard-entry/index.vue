@@ -7,6 +7,7 @@
       width="800px"
       :title="textMap[dialogStatus]"
       :visible.sync="dialogFormVisible"
+      :close-on-click-modal="false"
       @close="handleDialogClose"
     >
       <form-panel
