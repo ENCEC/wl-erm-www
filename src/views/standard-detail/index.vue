@@ -5,6 +5,7 @@
 
     <el-dialog
       width="800px"
+      :close-on-click-modal="false"
       :title="textMap[dialogStatus]"
       :visible.sync="dialogFormVisible"
       @close="handleDialogClose"

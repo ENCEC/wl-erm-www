@@ -29,12 +29,12 @@ export function uploadExternalFile(data) {
 }
 
 // 查看转正评语
-export function queryOfferInfo(uemUserId) {
+export function queryOfferInfo({ dispatcher, name }) {
   return request({
     url: prefix + '/uemUserManage/queryOfferInfo',
     method: 'get',
     params: {
-      uemUserId
+      dispatcher, name
     }
   });
 }
@@ -78,7 +78,7 @@ export function saveLeave(data) {
 // 查询员工
 export function queryUemUser(data) {
   return request({
-    url: shareAuthPrefix + '/uemUserManage/queryUemUser',
+    url: shareAuthPrefix + '/uemUserManage/queryStaffByPage',
     method: 'post',
     data
   });

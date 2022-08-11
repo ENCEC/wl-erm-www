@@ -1,10 +1,3 @@
-<!--
- * @Author: Hongzf
- * @Date: 2022-08-05 21:05:06
- * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-08 10:50:58
- * @Description:
--->
 
 <template>
   <div class="dismiss-dialog">
@@ -173,7 +166,7 @@
   </div>
 </template>
 <script>
-import { queryStaffInfo, savePositiveInfo, saveResignInfo, saveDismissInfo } from '@/api/staff-manage';
+import { queryStaffInfo, saveResignInfo, saveDismissInfo } from '@/api/staff-manage';
 import { dissmissFormRules } from './rules';
 import StaffDuty from '@/components/CurrentSystem/StaffDuty.vue'
 import Department from '@/components/CurrentSystem/Department.vue'
