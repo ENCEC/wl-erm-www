@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:15:03
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-09 15:38:25
+ * @LastEditTime: 2022-08-10 13:49:10
  * @Description:
 -->
 
@@ -54,7 +54,7 @@
           <el-row>
             <el-col :span="12">
               <el-form-item label="执行人:" prop="executor">
-                <UserAssociate v-model="formData.executor" class="input-width" />
+                <UserAssociate v-model="formData.executor" :init-label="formData.executorName" class="input-width" />
               </el-form-item>
             </el-col>
             <el-col :span="12">
@@ -64,7 +64,7 @@
                   placeholder="请选择任务类型"
                   clearable
                   class="input-width"
-                  @change="handleTaskTypeChange"
+                  @change="handleTaskTypeChange(formData.taskType,selectedRecords)"
                 >
                   <el-option
                     v-for="(item) in taskTypeOptions"
@@ -179,6 +179,7 @@ export default {
         taskInfoId: '',
         taskTitle: '',
         executor: '', // 执行人6957613061678637056
+        executorName: '',
         status: '', // 在职状态（0：试用员工 1：正式员工 2：离职员工）
         taskType: '', //
         taskDetailInfoDtoList: []// 列表勾选值
@@ -207,25 +208,53 @@ export default {
   mounted() {},
   methods: {
     // 任务类型变化-获取必选问题
-    handleTaskTypeChange(taskType) {
+    handleTaskTypeChange(taskType, arr = []) {
+      let selectedRecords = []
       taskType && queryNeedStandardFullDetailByTaskType({
         taskType
       }).then(res => {
-        this.selectedRecords = res.data
+        res.data.forEach(requiredItem => {
+          // 判断详情中是否已存在必选项
+          const isExist = arr.some((selectedItem) => requiredItem.standardDetailId === selectedItem.standardDetailId)
+          if (!isExist) {
+            // 不存在则加入
+            arr.unshift({
+              ...requiredItem,
+              standardEntryName: requiredItem.entryName,
+              standardDetailName: requiredItem.detailName,
+              leader: '',
+              isNeed: true
+            })
+          }
+        })
+        // 遍历判断是否是必选项
+        selectedRecords = arr.map(selectedItem => {
+          const isExist = res.data.some((requiredItem) => requiredItem.standardDetailId === selectedItem.standardDetailId)
+          return {
+            ...selectedItem,
+            isNeed: isExist
+          }
+        })
+        this.selectedRecords = selectedRecords
       });
     },
     // 勾选数据行的 Checkbox 时触发的事件
     handleRowSelect(isChecked, row) {
-      this.selectedRecords.push(row)
+      this.selectedRecords.push({
+        ...row,
+        standardEntryName: row.entryName,
+        standardDetailName: row.detailName,
+        leader: '',
+        isNeed: false
+      })
     },
     // TODO 全选
     getSelectedData(val) {
-      // console.log('【getSelectedData-val 】-202', val)
       // this.records = val
       // this.formData.taskDetailInfoDtoList = val.map(item => {
       //   const { standardDetailId } = item
-      //   // ordinator
-      //   return { standardDetailId, ordinator: '6957613061678637056' }
+      //   // leader
+      //   return { standardDetailId, leader: '6957613061678637056' }
       // })
     },
     // 关闭弹框
@@ -236,7 +265,6 @@ export default {
     // 获取详细信息
     getDetailInfo() {
       getTaskInfoDetail({ taskInfoId: this.editData.taskInfoId }).then(res => {
-        console.log('【 res 】-211', res)
         const result = res.data
         for (const key in this.formData) {
           if (key === 'status') {
@@ -245,17 +273,21 @@ export default {
             this.formData[key] = result[key] || ''
           }
         }
-        this.selectedRecords = result.taskDetailInfoDtoList
-        console.log('【 this.records 】-224', this.selectedRecords)
+        // 详情数据回显
+        if (this.type === 'detail') {
+          this.selectedRecords = result.taskDetailInfoDtoList
+        } else {
+          // 编辑数据回显
+          this.handleTaskTypeChange(this.formData.taskType, result.taskDetailInfoDtoList)
+        }
       });
     },
     // 提交表单信息
     handleConfirm() {
       const isTableFormValid = this.$refs.tableForm.validateTableForm()
-      console.log('【 isTableFormValid 】-230', isTableFormValid)
       this.formData.taskDetailInfoDtoList = this.selectedRecords.map(item => {
-        const { standardDetailId, ordinator } = item
-        return { standardDetailId, leader: ordinator.toString() }// : '6957613061678637056'
+        const { standardDetailId, leader } = item
+        return { standardDetailId, leader: leader.toString() }// : '6957613061678637056'
       })
       // this.formData.executor = '6957613061678637056'
       if (!this.formData.taskDetailInfoDtoList.length) {

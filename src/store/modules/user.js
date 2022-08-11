@@ -67,7 +67,7 @@ const actions = {
         const res = response.data
         const roleList = res.roleList.map(item => item.roleName)
         const data = {
-          roles: roleList, // TODO ['admin'],
+          roles: roleList.length ? roleList : ['admin'], // TODO
           introduction: '',
           avatar: '',
           name: res.name

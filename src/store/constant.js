@@ -2,14 +2,24 @@
  * @Author: Hongzf
  * @Date: 2022-07-22 16:25:46
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-08 17:39:22
+ * @LastEditTime: 2022-08-10 17:10:29
  * @Description: 字典
  */
-// TODO 用户类型
+// 用户类型
 export const USER_TYPE = {
-  STAFF: 1,
-  ORDINATOR: 2, // 统筹人
-  CHARGE: 3// 负责人
+  STAFF: '1',
+  ORDINATOR: '2', // 统筹人
+  CHARGE: '3', // 负责人
+  PROJECT_MANAGER: '4', // 项目经理
+  DEPT_LEADER: '5' // 部门领导
+}
+// 用户类型_中文
+export const USER_TYPE_CN = {
+  '1': '员工',
+  '2': '统筹人',
+  '3': '负责人',
+  '4': '项目经理',
+  '5': '部门领导'
 }
 
 // 禁用启用
@@ -61,6 +71,7 @@ export const TASK_TYPE = {
   'TASK_TRAIN': '培训任务',
   'TASK_OTHER': '其他任务'
 }
+
 // 我的任务-任务状态
 export const MY_TASK_STATUS = {
   '0': '审批中',

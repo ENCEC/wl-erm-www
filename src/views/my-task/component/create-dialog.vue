@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 17:38:09
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-09 10:28:42
+ * @LastEditTime: 2022-08-10 17:07:11
  * @Description: 我的任务-试用任务信息-弹框
 -->
 
@@ -34,7 +34,7 @@
                   <TaskTable
                     ref="tableForm"
                     :task-info-id="editData.taskInfoId"
-                    :type="type"
+                    :user-type="userType"
                     @getTableFormData="getTableFormData"
                   />
                 </div>
@@ -45,7 +45,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button
-          v-if="type !== 'detail'"
+          v-if="userType !== USER_TYPE.ORDINATOR"
           type="primary"
           size="mini"
           @click="handleConfirm"
@@ -55,13 +55,14 @@
           :plain="true"
           size="mini"
           @click="close"
-        >{{ type === 'detail'?'关闭':'取消' }}</el-button>
+        >{{ userType === USER_TYPE.ORDINATOR?'关闭':'取消' }}</el-button>
       </div>
     </el-dialog>
   </div>
 </template>
 <script>
 import TaskTable from './task-table'
+import { USER_TYPE } from '@/store/constant'
 
 export default {
   components: { TaskTable },
@@ -75,10 +76,16 @@ export default {
     type: {
       type: String,
       default: ''
+    },
+    // 用户类型
+    userType: {
+      type: String,
+      default: '1'
     }
   },
   data() {
     return {
+      USER_TYPE,
       rules: {}, // 验证规则
       formData: {}
     };
@@ -90,11 +97,14 @@ export default {
     }
   },
   watch: {},
-  created() {},
+  created() {
+    console.log('【 userType 】-81', this.userType)
+  },
   mounted() {},
   methods: {
     // 获取填写的数据 TODO
     getTableFormData(val, isClose) {
+      // TODO:优化
       isClose && this.close();
     },
     // 关闭弹框

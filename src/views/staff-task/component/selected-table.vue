@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 09:22:23
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-09 15:42:12
+ * @LastEditTime: 2022-08-10 09:42:15
  * @Description:
 -->
 
@@ -20,7 +20,7 @@
         size="mini"
       >
         <el-table-column type="index" label="序号" width="50" />
-        <el-table-column prop="entryName" label="规范条目" />
+        <el-table-column prop="standardEntryName" label="规范条目" />
         <el-table-column v-if="type!=='detail'" prop="actionTime" label="执行时间" width="110">
           <template slot-scope="scope">
             {{ scope.row.actionTime && scope.row.actionTime.toString()?`入职后第${scope.row.actionTime}天`:'' }}
@@ -28,20 +28,20 @@
         </el-table-column>
         <el-table-column v-if="type!=='detail'" prop="actionPeriod" label="执行周期(工时)" width="110" />
         <!-- taskName -->
-        <el-table-column prop="detailName" label="任务名称" />
+        <el-table-column prop="standardDetailName" label="任务名称" />
         <el-table-column prop="actionSerialNum" label="执行顺序" />
         <el-table-column v-if="type==='detail'" prop="leaderName" label="负责人" />
-        <el-table-column v-if="type!=='detail'" prop="ordinator" label="负责人" min-width="130">
+        <el-table-column v-if="type!=='detail'" prop="leader" label="负责人" min-width="130">
           <template slot-scope="scope">
             <el-form-item
               v-if="type!=='detail' && scope.$index >= 0"
-              :prop="`tableData[${scope.$index}].ordinator`"
-              :rules="tableFormRules.ordinator"
+              :prop="`tableData[${scope.$index}].leader`"
+              :rules="tableFormRules.leader"
             >
               <!-- [
               { required: scope.row.required && !scope.row.checked, message: '请选择', trigger: ['blur','change'] }
               ] -->
-              <UserAssociate v-model="scope.row.ordinator" />
+              <UserAssociate v-model="scope.row.leader" :init-label="scope.row.leaderName" />
             </el-form-item>
           </template>
         </el-table-column>
@@ -105,8 +105,8 @@ export default {
       },
       // 验证规则
       tableFormRules: {
-        ordinator: [
-          { required: true, message: '请选择姓名', trigger: 'change' }
+        leader: [
+          { required: true, message: '请选择负责人', trigger: 'change' }
         ]
       }
     };
@@ -139,9 +139,6 @@ export default {
     },
     // 验证表格
     validateTableForm() {
-      // this.tableForm && this.tableForm.tableData.forEach((item, index) => {
-      //   item.ordinator = '695761306167863705' + index
-      // })
       let isTableFormValid = false
       this.$refs.tableFormRef.validate(valid => {
         isTableFormValid = valid

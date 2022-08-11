@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 17:38:09
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-09 11:23:07
+ * @LastEditTime: 2022-08-10 17:34:50
  * @Description: 我的任务
 -->
 
@@ -22,12 +22,13 @@
       @handleSizeChange="handleSizeChange"
     />
     <!-- 表格 End -->
-    <!-- 编辑 -->
+    <!-- 试验任务 -->
     <CreateDialog
       v-if="dialogVisible"
       :visible.sync="dialogVisible"
       :edit-data="editData"
       :type="openType"
+      :user-type="filterForm.userType"
       @getTableData="getTableData"
     />
     <!-- 转正 -->
@@ -60,6 +61,7 @@ import {
   queryLeaderTaskInfo,
   queryOrdinatorTaskInfo
 } from '@/api/my-task';
+import { queryTaskInfoPage } from '@/api/staff-task';
 import tableMix from '@/mixins/table-mixin';
 import { USER_TYPE } from '@/store/constant'
 
@@ -76,7 +78,6 @@ export default {
   data() {
     return {
       USER_TYPE,
-      userType: 1,
       // 任务状态
       MY_TASK_STATUS: {
         check: 1, // 审批中
@@ -87,23 +88,15 @@ export default {
       filterConfig: filterConfig(this),
       filterForm: {
         taskTitle: '',
-        status: ''
+        status: '',
+        userType: '1'
       },
       // 表格
       columns: columns(this),
       operates: operates(this),
       listLoading: false,
       tableConfig,
-      tableData: [
-        // {
-        //   taskTitle: '转正申请',
-        //   taskType: '转正'
-        // },
-        // {
-        //   taskTitle: '离职申请',
-        //   taskType: '离职'
-        // }
-      ],
+      tableData: [],
       // 弹框
       editData: {},
       openType: '',
@@ -118,14 +111,22 @@ export default {
   },
   mounted() {},
   methods: {
+    // 用户类型切换
+    handleUserTypeChange(val) {
+      this.params.currentPage = 1
+      this.getTableData()
+    },
     // 获取表格数据
     getTableData() {
       const funcInfo = {
-        1: queryStaffTaskInfo,
-        2: queryOrdinatorTaskInfo,
-        3: queryLeaderTaskInfo
+        // 不同用户类型调不同接口
+        '1': queryStaffTaskInfo, // 员工
+        '2': queryOrdinatorTaskInfo, // 统筹人
+        '3': queryLeaderTaskInfo, // 负责人
+        '4': queryTaskInfoPage, // 项目经理
+        '5': queryTaskInfoPage// 部门领导
       }
-      const funcName = funcInfo[this.userType]
+      const funcName = funcInfo[this.filterForm.userType]
       // this.listLoading = true;
       funcName({
         pageNo: this.params.currentPage,
@@ -141,18 +142,19 @@ export default {
     // 打开弹框
     handleOpen(item = {}, type) {
       this.openType = type
-      this.editData = {
-        taskInfoId: item.taskInfoId || '',
-        taskTitle: item.taskTitle
-      };
+      this.editData = item
+      // {
+      //   taskInfoId: item.taskInfoId || '',
+      //   taskTitle: item.taskTitle
+      // };
+      // TODO:确认是否写死
       const TASK_TYPE = {
         TEST: '试用任务',
         POSITIVE: '员工转正',
         QUIT: '员工离职'
       }
-      // this.dialogVisible = true;
       // this.regularDialogVisible = true
-
+      this.quitDialogVisible = true
       // 编辑/查看
       if (item.taskType === TASK_TYPE.TEST) {
         this.dialogVisible = true;

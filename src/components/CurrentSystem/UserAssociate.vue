@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-03 10:20:28
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-09 13:40:03
+ * @LastEditTime: 2022-08-10 09:56:14
  * @Description:联想控件-用户
 -->
 
@@ -10,36 +10,15 @@
   <el-associate
     v-model="selectVal"
     v-bind="$attrs"
+    :display-init="initLabel"
     :columns="associateColumns"
     value-prop="uemUserId"
     label-prop="name"
     clearable
     :query-method="queryMethod"
-    :disabled="disabled"
     v-on="$listeners"
     @change="handleChange"
   />
-  <!-- <el-select
-    v-model="selectVal"
-    filterable
-    placeholder="请选择"
-    clearable
-    :disabled="disabled"
-    @change="handleChange"
-  >
-    <el-option
-      v-for="(item, index) in optionsList"
-      :key="'staffDutyCode' + index + item.staffDutyCode"
-      :label="item.staffDuty"
-      :value="item.staffDutyCode"
-    /> -->
-  <!-- <el-option
-      v-for="item in supplierList"
-      :key="item.supplierId"
-      :label="item.supplierName"
-      :value="item.supplierId"
-    /> -->
-  <!-- </el-select> -->
 </template>
 <script>
 import {
@@ -48,14 +27,19 @@ import {
 // import { getSupplier } from '@/api/procurement-manage'
 export default {
   props: {
-    disabled: {
-      type: Boolean,
-      default: false
+    // disabled: {
+    //   type: Boolean,
+    //   default: false
+    // },
+    value: {
+      type: String, // 传入的值
+      require: true
+    },
+    initLabel: {
+      type: String, // 初始值回显字符串
+      default: '',
+      require: true
     }
-    // value: {
-    //   type: String, // 传入的值
-    //   require: true
-    // }
   },
   data() {
     return {
@@ -66,17 +50,15 @@ export default {
           title: '姓名',
           field: 'name'
         }
-        // {
-        //   title: '教师性别',
-        //   field: 'sex'
-        // }
       ]
-
     };
   },
   watch: {
     value(newVal) {
-      this.selectVal = this.value;
+      this.selectVal = newVal;
+    },
+    initLabel(newVal) {
+      this.initLabel = newVal;
     }
   },
   created() {
@@ -90,14 +72,12 @@ export default {
       currentPage
 
     }) {
-      console.log('【  pageSize,currentPage 】-108', pageSize, currentPage)
       return new Promise((resolve) => {
         queryUser({
           name: keyword,
           pageSize,
           pageNo: currentPage
         }).then((res) => {
-          // console.log('【 res 】-111', res)
           const records = res.records
           resolve({
             records,
