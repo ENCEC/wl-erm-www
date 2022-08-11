@@ -1,7 +1,6 @@
 <template>
   <div class="login-container">
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" autocomplete="on" label-position="left">
-
       <div class="title-container">
         <h3 class="title">
           {{ $t('login.title') }}
@@ -108,8 +107,8 @@ export default {
     }
     return {
       loginForm: {
-        username: 'test13',
-        password: '654321',
+        username: '',
+        password: '',
         clientId: process.env.VUE_APP_CLIENT_ID,
         checkMoveId: ' ',
         xWidth: 0
@@ -169,7 +168,6 @@ export default {
     // 登录
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
-        console.log('【 clientId 】-174', this.loginForm.clientId)
         if (valid) {
           this.loading = true
           this.$store.dispatch('user/login',
@@ -177,7 +175,6 @@ export default {
               ...this.loginForm,
               account: this.loginForm.username,
               password: aesEncrypt(this.loginForm.password)
-              // clientId: process.env.CLIENT_ID
             }
           )
             .then((res) => {
@@ -232,6 +229,11 @@ $cursor: #fff;
 
 /* reset element-ui css */
 .login-container {
+  background-image:url('../../assets/images/login_bg2.jpg');
+  width:100%;
+  height:100%;
+  position:fixed;
+  background-size:100% 100%;
   .el-input__inner {
       color: #fff !important;
   }
@@ -277,14 +279,15 @@ $light_gray:#eee;
   width: 100%;
   background-color: $bg;
   overflow: hidden;
-
+  display: flex;
+  justify-content: center;
+  align-items: center;
   .login-form {
-    position: relative;
+    background: rgba(0, 0, 0, 0.4);
+
     width: 520px;
     max-width: 100%;
-    padding: 160px 35px 0;
-    margin: 0 auto;
-    overflow: hidden;
+    padding: 60px 35px 30px;
   }
 
   .tips {

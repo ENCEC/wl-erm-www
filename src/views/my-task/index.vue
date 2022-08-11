@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 17:38:09
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-10 17:34:50
+ * @LastEditTime: 2022-08-11 17:06:41
  * @Description: 我的任务
 -->
 
@@ -37,6 +37,7 @@
       :visible.sync="regularDialogVisible"
       :edit-data="editData"
       :type="openType"
+      :user-type="filterForm.userType"
       @getTableData="getTableData"
     />
     <!--离职 辞退 -->
@@ -147,15 +148,12 @@ export default {
       //   taskInfoId: item.taskInfoId || '',
       //   taskTitle: item.taskTitle
       // };
-      // TODO:确认是否写死
       const TASK_TYPE = {
         TEST: '试用任务',
         POSITIVE: '员工转正',
         QUIT: '员工离职'
       }
-      // this.regularDialogVisible = true
-      this.quitDialogVisible = true
-      // 编辑/查看
+      // 试用任务
       if (item.taskType === TASK_TYPE.TEST) {
         this.dialogVisible = true;
       }

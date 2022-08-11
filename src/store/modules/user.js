@@ -63,7 +63,7 @@ const actions = {
   // get user info
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
-      getInfo(state.token).then(response => {
+      getInfo().then(response => {
         const res = response.data
         const roleList = res.roleList.map(item => item.roleName)
         const data = {

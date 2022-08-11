@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-08 10:55:42
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-10 17:21:18
+ * @LastEditTime: 2022-08-11 16:10:37
  * @Description: 员工管理-我的任务
  */
 
@@ -75,7 +75,7 @@ export function queryAllStandardDetail(data) {
     data
   });
 }
-// 我的任务（项目经历初次审核） 添加基本转正信息
+// 我的任务（项目经历初次审核）
 export function savePositiveInfo(data) {
   return request({
     url: prefix + '/taskInfo/savePositiveInfo',
@@ -83,12 +83,45 @@ export function savePositiveInfo(data) {
     data
   });
 }
+// 我的任务（部门领导最终审核）
+export function savePositiveInfoByLeader(data) {
+  return request({
+    url: prefix + '/taskInfo/savePositiveInfoByLeader',
+    method: 'post',
+    data
+  });
+}
+
 // === 离职任务 ==
-// 查询员工离职原因
+// 我的任务（项目经历初次审核） 查询员工离职原因
 export function queryLeaveInfo(query) {
   return request({
     url: prefix + '/taskInfo/queryLeaveInfo',
     method: 'get',
     params: query
+  });
+}
+// 我的任务（部门领导最终审核）查看离职信息以及基本信息
+export function queryLeaveInfoByLeader(query) {
+  return request({
+    url: prefix + '/taskInfo/queryLeaveInfoByLeader',
+    method: 'get',
+    params: query
+  });
+}
+// 我的任务（项目经历初次审核） 添加离职基本信息
+export function saveLeaveInfo(data) {
+  return request({
+    url: prefix + '/taskInfo/saveLeaveInfo',
+    method: 'post',
+    data
+  });
+}
+// 我的任务（部门领导最终审核）添加离职基本信息
+export function saveLeaveInfoByLeader(data) {
+  return request({
+    url: prefix + '/taskInfo/saveLeaveInfoByLeader',
+    method: 'post',
+    data
   });
 }

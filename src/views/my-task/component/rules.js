@@ -2,13 +2,13 @@
  * @Author: Hongzf
  * @Date: 2022-08-08 18:45:59
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-10 18:32:53
+ * @LastEditTime: 2022-08-11 17:12:19
  * @Description:
  */
 
 // 转正申请
 export const regularFormRules = {
-  // 进行中
+  // 进行中（项目经理）
   faceTime: [
     {
       required: true,
@@ -44,22 +44,22 @@ export const regularFormRules = {
       trigger: 'blur'
     }
   ],
-  // 最终审批
-  approvalTime: [
+  // 进行中（部门领导）
+  approvalDate: [
     {
       required: true,
       message: '请选择审批时间',
       trigger: 'change'
     }
   ],
-  approvalResult: [
+  approvalRemark: [
     {
       required: true,
       message: '请选择审批结果',
       trigger: 'change'
     }
   ],
-  positiveComments: [
+  offerRemark: [
     {
       required: true,
       message: '请输入转正评语',
@@ -67,28 +67,29 @@ export const regularFormRules = {
     }
   ]
 };
-// 转正申请
+
+// 离职申请
 export const quitFormRules = {
   // 进行中
-  faceTime: [
+  auditDate: [
     {
       required: true,
-      message: '请选择面谈时间',
+      message: '请选择审核时间',
       trigger: 'change'
     }
   ],
-  resultAccess: [
+  auditResult: [
     {
       required: true,
-      message: '请选择面谈结果',
+      message: '请选择审核结果',
       trigger: 'change'
     }
   ],
-  faceScore: [
+  auditRemark: [
     {
       required: true,
-      message: '请输入转员工答辩成绩',
-      trigger: 'blur'
+      message: '请输入审核意见',
+      trigger: 'change'
     }
   ],
   approver: [
@@ -98,33 +99,26 @@ export const quitFormRules = {
       trigger: 'change'
     }
   ],
-  faceRemark: [
-    {
-      required: true,
-      message: '请输入面谈评语',
-      trigger: 'blur'
-    }
-  ],
-  // 最终审批
-  approvalTime: [
+  // 进行中（部门领导）
+  approvalDate: [
     {
       required: true,
       message: '请选择审批时间',
       trigger: 'change'
     }
   ],
-  approvalResult: [
+  approvalRemark: [
+    {
+      required: true,
+      message: '请选择审批意见',
+      trigger: 'change'
+    }
+  ],
+  resultAccess: [
     {
       required: true,
       message: '请选择审批结果',
       trigger: 'change'
-    }
-  ],
-  positiveComments: [
-    {
-      required: true,
-      message: '请输入转正评语',
-      trigger: 'blur'
     }
   ]
 };

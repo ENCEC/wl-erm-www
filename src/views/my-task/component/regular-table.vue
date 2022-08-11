@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-09 16:19:33
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-10 16:06:58
+ * @LastEditTime: 2022-08-11 11:10:25
  * @Description:
 -->
 
@@ -23,7 +23,8 @@
       <el-table-column prop="detailName" label="程序名称" />
       <el-table-column prop="actionSerialNum" label="执行顺序" width="80" />
       <!-- TODO：没字段 -->
-      <el-table-column v-if="userType" prop="planEndDate" label="计划完成日期" width="120">
+      <!-- 员工才显示计划完成日期 -->
+      <el-table-column v-if="userType == USER_TYPE.STAFF" prop="planEndDate" label="计划完成日期" width="120">
         <!-- <template slot-scope="scope">
           {{ scope.row.planEndDate? $moment(scope.row.planEndDate).format('YYYY-MM-DD') : '' }}
         </template> -->
@@ -35,6 +36,8 @@
 <script>
 import { queryAllStandardDetail } from '@/api/my-task';
 import tableMix from '@/mixins/table-mixin';
+import { USER_TYPE } from '@/store/constant'
+
 export default {
   name: 'TaskTable',
   mixins: [tableMix],
@@ -53,10 +56,16 @@ export default {
     taskType: {
       type: String,
       default: ''
+    },
+    // 用户类型
+    userType: {
+      type: String,
+      default: ''
     }
   },
   data() {
     return {
+      USER_TYPE,
       // 表单数据
       tableForm: {
         tableData: []

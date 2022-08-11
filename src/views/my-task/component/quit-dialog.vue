@@ -2,12 +2,12 @@
  * @Author: Hongzf
  * @Date: 2022-08-08 18:45:59
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-10 18:43:58
+ * @LastEditTime: 2022-08-11 17:05:28
  * @Description:
 -->
 
 <template>
-  <div class="staff-dialog">
+  <div class="my-quit-dialog">
     <el-dialog
       :title="dialogTitle"
       v-bind="$attrs"
@@ -29,11 +29,11 @@
         <div class="form-wrap">
           <el-row>
             <!-- 进行中 -->
-            <el-col v-if="status === STATUS_TYPE.on || status === STATUS_TYPE.final" :span="12">
+            <el-col v-if="status === STATUS_TYPE.ON_MANAGER || status === STATUS_TYPE.ON_LEADER" :span="12">
               <el-form-item label="申请人:" prop="dispatchersName">
                 <el-input
                   v-model="formData.dispatchersName"
-                  :disabled="status === STATUS_TYPE.on || status === STATUS_TYPE.final"
+                  disabled
                   placeholder="请输入申请人"
                   clearable
                 />
@@ -43,7 +43,7 @@
               <el-form-item label="申请日期:" prop="applyDate">
                 <el-date-picker
                   v-model="formData.applyDate"
-                  :disabled="status === STATUS_TYPE.on || status === STATUS_TYPE.final"
+                  disabled
                   format="yyyy-MM-dd"
                   value-format="yyyy-MM-dd hh:mm:ss"
                   class="input-width"
@@ -53,73 +53,70 @@
               </el-form-item>
             </el-col>
             <!-- 审批中 -->
-            <el-col v-if="status === STATUS_TYPE.check" :span="12">
-              <el-form-item label="审批结果:" prop="taskType">
-                <el-select
-                  v-model="formData.taskType"
-                  placeholder="请选择任务类型"
+            <el-col v-if="status === STATUS_TYPE.CHECK" :span="12">
+              <!-- TODO -->
+              <el-form-item label="审批结果:">
+                <el-input
+                  v-model="formData.resultAccess"
+                  disabled
+                  placeholder="请输入审批结果"
                   clearable
                   class="input-width"
-                >
-                  <el-option
-                    v-for="(item) in taskTypeOptions"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.label"
-                  />
-                </el-select>
+                />
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :span="24">
-              <el-form-item label="离职原因:" :prop="leaveReason">
+              <el-form-item label="离职原因:" prop="leaveReason">
                 <el-input
-                  v-model="formData. leaveReason"
-                  :disabled="status === STATUS_TYPE.on || status === STATUS_TYPE.final"
+                  v-model="formData.leaveReason"
+                  disabled
                   :rows="4"
                   type="textarea"
                   placeholder="请输入离职原因"
                   clearable
-                  style="width:500px"
+                  style="width:530px"
                 />
               </el-form-item>
             </el-col>
           </el-row>
           <el-row />
           <!-- 进行中 Start -->
-          <div v-if="status === STATUS_TYPE.on || status === STATUS_TYPE.final">
+          <div v-if="status === STATUS_TYPE.ON_MANAGER || status === STATUS_TYPE.ON_LEADER">
             <el-row>
-              <!-- 最终 -->
-              <el-col v-if="status === STATUS_TYPE.final" :span="12">
-                <el-form-item label="审核人:" prop="taskTitle">
+              <!-- 进行中（部门领导 -->
+              <el-col v-if="status === STATUS_TYPE.ON_LEADER" :span="12">
+                <!-- TODO：字段 -->
+                <el-form-item label="审核人:" prop="approverName">
                   <el-input
-                    v-model="formData.defenseScore"
+                    v-model="formData.approverName"
                     clearable
-                    :disabled="status === STATUS_TYPE.final"
+                    :disabled="status === STATUS_TYPE.ON_LEADER"
                   />
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="审核时间:" prop="taskTitle">
+                <el-form-item label="审核时间:" prop="auditDate">
                   <el-date-picker
-                    v-model="formData.taskTitle"
-                    format="yyyy-MM-dd"
+                    v-model="formData.auditDate"
+                    :disabled="status === STATUS_TYPE.ON_LEADER"
+                    type="datetime"
+                    format="yyyy-MM-dd hh:mm:ss"
                     value-format="yyyy-MM-dd hh:mm:ss"
                     class="input-width"
-                    placeholder="请选择申请日期"
+                    placeholder="请选择审核时间"
                     clearable
-                    :disabled="status === STATUS_TYPE.final"
                   />
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="审核结果:" prop="positiveType">
-                  <el-radio-group v-model="formData.positiveType" :disabled="status === STATUS_TYPE.final">
+                <el-form-item label="审核结果:" prop="auditResult">
+                  <el-radio-group v-model="formData.auditResult" :disabled="status === STATUS_TYPE.ON_LEADER">
                     <el-radio
-                      v-for="item in positiveTypeOptions"
-                      :key="'positiveType' + item.value"
-                      :label="item.value"
+                      v-for="item in inclinedAgreeOptions"
+                      :key="'auditResult' + item.label"
+                      :label="item.label"
                     >{{ item.label }}</el-radio>
                   </el-radio-group>
                 </el-form-item>
@@ -127,74 +124,73 @@
             </el-row>
             <el-row>
               <el-col :span="24">
-                <el-form-item label="审核意见：" prop="faceRemark" :hide-required-asterisk="false">
+                <el-form-item label="审核意见：" prop="auditRemark">
                   <el-input
-                    v-model="formData.faceRemark"
+                    v-model="formData.auditRemark"
+                    :disabled="status === STATUS_TYPE.ON_LEADER"
                     type="textarea"
-                    placeholder="输入评语"
+                    placeholder="输入审核意见"
                     clearable
-                    style="width:500px"
-                    :disabled="status === STATUS_TYPE.final"
+                    style="width:530px"
                   />
                 </el-form-item>
               </el-col>
             </el-row>
             <el-row>
-              <el-col v-if="status !== STATUS_TYPE.final" :span="12">
-                <el-form-item label="提交审批人:" prop="executor">
-                  <UserAssociate v-model="formData.executor" class="input-width" />
+              <el-col v-if="status !== STATUS_TYPE.ON_LEADER" :span="12">
+                <el-form-item label="提交审批人:" prop="approver">
+                  <UserAssociate v-model="formData.approver" class="input-width" />
                 </el-form-item>
               </el-col>
             </el-row>
-          </div>
-          <!-- 最终 -->
-          <div v-if="status === STATUS_TYPE.final">
-            <el-row>
-              <el-col :span="12">
-                <!-- TODO:字段 -->
-                <el-form-item label="审批时间:" prop="approvalTime">
-                  <el-date-picker
-                    v-model="formData.approvalTime"
-                    format="yyyy-MM-dd"
-                    value-format="yyyy-MM-dd hh:mm:ss"
-                    class="input-width"
-                    placeholder="请选择审批时间"
-                    clearable
-                  />
-                </el-form-item>
-              </el-col>
-              <el-col :span="12">
-                <!-- TODO:字段 -->
-                <el-form-item label="审批结果:" prop="approvalResult">
-                  <el-radio-group v-model="formData.approvalResult">
-                    <el-radio
-                      v-for="item in positiveTypeOptions"
-                      :key="'positiveType' + item.value"
-                      :label="item.value"
-                    >{{ item.label }}</el-radio>
-                  </el-radio-group>
-                </el-form-item>
-              </el-col>
-            </el-row>
-            <el-row>
-              <!-- TODO:字段 -->
-              <el-col :span="24">
-                <el-form-item label="审批意见" prop="positiveComments">
-                  <el-input
-                    v-model="formData.positiveComments"
-                    type="textarea"
-                    placeholder="输入评语"
-                    clearable
-                    style="width:500px"
-                  />
-                </el-form-item>
-              </el-col>
-            </el-row>
+            <!-- 进行中（部门领导） -->
+            <div v-if="status === STATUS_TYPE.ON_LEADER">
+              <el-row>
+                <el-col :span="12">
+                  <el-form-item label="审批时间:" prop="approvalDate">
+                    <el-date-picker
+                      v-model="formData.approvalDate"
+                      type="datetime"
+                      format="yyyy-MM-dd hh:mm:ss"
+                      value-format="yyyy-MM-dd hh:mm:ss"
+                      class="input-width"
+                      placeholder="请选择审批时间"
+                      clearable
+                    />
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="审批结果:" prop="resultAccess">
+                    <el-radio-group v-model="formData.resultAccess">
+                      <el-radio
+                        v-for="item in agreeOptions"
+                        :key="'resultAccess' + item.label"
+                        :label="item.label"
+                      >{{ item.label }}</el-radio>
+                    </el-radio-group>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+              <el-row>
+                <el-col :span="24">
+                  <el-form-item label="审批意见：" prop="approvalRemark">
+                    <el-input
+                      v-model="formData.approvalRemark"
+                      :rows="3"
+                      type="textarea"
+                      placeholder="请输入审批意见"
+                      clearable
+                      style="width:530px"
+                    />
+                  </el-form-item>
+                </el-col>
+              </el-row>
+            </div>
           </div>
           <!-- 进行中 End -->
           <!-- 已完成 Start -->
           <div>
-            <el-row v-if="status === STATUS_TYPE.check || status === STATUS_TYPE.completed">
+            <el-row v-if="status === STATUS_TYPE.CHECK || status === STATUS_TYPE.COMPLETED">
               <el-col :span="12">
                 <el-form-item
                   label="创建时间:"
@@ -204,6 +200,7 @@
                     placeholder="请输入创建时间"
                     clearable
                     class="input-width"
+                    disabled
                   />
                 </el-form-item>
               </el-col>
@@ -216,28 +213,31 @@
                     placeholder="请输入创建人"
                     clearable
                     class="input-width"
+                    disabled
                   />
                 </el-form-item>
               </el-col>
             </el-row>
             <!-- 已完成 -->
-            <el-row v-if="status === STATUS_TYPE.completed">
+            <el-row v-if="status === STATUS_TYPE.COMPLETED">
               <el-col :span="12">
                 <el-form-item
                   label="审核人:"
                 >
                   <el-input
-                    v-model="formData.createTime"
-                    placeholder="请输入创建时间"
+                    v-model="formData.auditName"
+                    disabled
+                    placeholder="请输入审核人"
                     clearable
                     class="input-width"
                   />
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="审批人:" prop="approver">
+                <el-form-item label="审批人:" prop="approverName">
                   <el-input
-                    v-model="formData.approver"
+                    v-model="formData.approverName"
+                    disabled
                     placeholder="请输入审批人"
                     clearable
                     class="input-width"
@@ -246,13 +246,14 @@
               </el-col>
             </el-row>
             <!-- 已完成 -->
-            <el-row v-if="status === STATUS_TYPE.completed">
+            <el-row v-if="status === STATUS_TYPE.COMPLETED">
               <el-col :span="12">
                 <el-form-item
                   label="审批结果:"
                 >
                   <el-input
-                    v-model="formData.creatorName"
+                    v-model="formData.resultAccess"
+                    disabled
                     placeholder="请输入审批结果"
                     clearable
                     class="input-width"
@@ -264,7 +265,8 @@
                   label="审批时间:"
                 >
                   <el-input
-                    v-model="formData.createTime"
+                    v-model="formData.approvalDate"
+                    disabled
                     placeholder="请输入审批时间"
                     clearable
                     class="input-width"
@@ -278,13 +280,13 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button
-          v-if="status === STATUS_TYPE.on || status === STATUS_TYPE.final"
+          v-if="status === STATUS_TYPE.CHECK"
           type="primary"
           size="mini"
-          @click="handleConfirm"
-        >提交</el-button>
+          @click="handleWithdraw"
+        >撤回</el-button>
         <el-button
-          v-if="status === STATUS_TYPE.check"
+          v-if="status === STATUS_TYPE.ON_MANAGER || status === STATUS_TYPE.ON_LEADER"
           type="primary"
           size="mini"
           @click="handleConfirm"
@@ -301,9 +303,9 @@
 </template>
 <script>
 import UserAssociate from '@/components/CurrentSystem/UserAssociate'
-import { saveTaskInfo, updateTaskInfo } from '@/api/staff-task';
 import { quitFormRules } from './rules';
-import { queryLeaveInfo, savePositiveInfo } from '@/api/my-task';
+import { queryLeaveInfoByLeader, saveLeaveInfo, saveLeaveInfoByLeader } from '@/api/my-task';
+import { USER_TYPE } from '@/store/constant'
 
 export default {
   components: { UserAssociate },
@@ -317,73 +319,84 @@ export default {
     type: {
       type: String,
       default: ''
+    },
+    // 用户类型
+    userType: {
+      type: String,
+      default: ''
     }
   },
   data() {
     return {
-      // Approval, in progress, completed
+      USER_TYPE,
       STATUS_TYPE: {
-        check: 1, // 审批中
-        on: 2, // 进行中
-        completed: 3,
-        final: 4
+        CHECK: 1, // 审批中
+        ON_MANAGER: 2, // 进行中
+        ON_LEADER: 4,
+        COMPLETED: 3// 已完成
       },
-      status: 2,
       rules: quitFormRules, // 验证规则
       formData: {
         taskInfoId: '',
+        uemUserId: '',
         // taskDetailId: '',
         dispatchersName: '', // 申请人
         applyDate: '', // 申请日期
         leaveReason: '', // 离职原因
-        // offerType: '', // 转正类型
-        // // 申请进度
-        // // 审核人
-        // approver: '', // TODO 审批人
-        // approverName: '', // TODO 审批人姓名
-        // approvalRemark: '', // TODO 审批结果
-        // interviewerId: '', // TODO  面谈id
-        // interviewerName: '', // TODO  面谈姓名
-        // //
-        // faceTime: '', // 面谈时间
-        // faceRemark: '', // 面谈评语
-        // resultAccess: '', // 面谈结果
-        // faceScore: '', // 转员工答辩成绩
-        // // 最终审批
-        // approvalDate: '', // 审批时间
-        // offerRemark: '', // 转正评语：
-        // //
-        // status: '', // 在职状态（0：试用员工 1：正式员工 2：离职员工）
-        // taskType: '' // // ====
-        // taskTitle: '4444',
-        executor: '6957613061678637056', // 执行人
-        status: '', // 在职状态（0：试用员工 1：正式员工 2：离职员工）
-        taskType: '', //
-        taskDetailInfoDtoList: [], // 列表勾选值
-        // 最终审批
-        approvalTime: ''
+        // 项目经理审核
+        auditName: '', // 审核人
+        auditDate: '', // 审核时间
+        auditResult: '', // 审核结果
+        auditRemark: '', // 审核意见
+        approver: '', // 提交审批人
+        // 部门领导审批
+        approverName: '', // TODO 审批人姓名
+        approvalDate: '', // 审批时间
+        resultAccess: '', // 审批结果
+        approvalRemark: '' // 审批意见
       },
+      inclinedAgreeOptions: this.$dict.getDictOptions('INCLINED_AGREE_TYPE'),
       taskTypeOptions: this.$dict.getDictOptions('TASK_TYPE'),
-      positiveTypeOptions: this.$dict.getDictOptions('OFFER_TYPE')
+      agreeOptions: this.$dict.getDictOptions('AGREE_TYPE')
     };
   },
   computed: {
     // 弹框标题
     dialogTitle() {
-      this.editData.taskInfoId && this.getDetailInfo();
-      console.log('【 this.editData.taskInfoId 】-373', this.editData.taskInfoId)
-      // return this.editData.taskInfoId
-      //   ? this.type === 'detail'
-      //     ? '任务详细信息'
-      //     : '编辑任务信息'
-      //   : '新增任务';
+      this.getDetailInfo();
       return this.formData.dispatchersName + '离职申请'
+    },
+    status() {
+      const taskStatus = this.editData.status.toString()
+      console.log('【 taskStatus 】-403', taskStatus)
+      let status = 0
+      // 审批中
+      if (taskStatus === '0') {
+        status = this.STATUS_TYPE.CHECK // 1
+      }
+      // 进行中 进行中分是项目经理还是部门领导
+      if (taskStatus === '1') {
+        if (this.userType === this.USER_TYPE.PROJECT_MANAGER) {
+          status = this.STATUS_TYPE.ON_MANAGER// 2
+        } else {
+          status = this.STATUS_TYPE.ON_LEADER// 4
+        }
+      }
+      // 已完成
+      if (taskStatus === '2') {
+        status = this.STATUS_TYPE.COMPLETED // 1
+      }
+      console.log('【 status==== 】-396', this.userType, status)
+      return status
     }
   },
   watch: {},
   created() {},
   mounted() {},
   methods: {
+    // 撤回 TODO
+    handleWithdraw() {
+    },
     // 关闭弹框
     close() {
       this.$emit('update:visible', false);
@@ -391,9 +404,19 @@ export default {
     },
     // 获取详细信息
     getDetailInfo() {
-      queryLeaveInfo({ taskInfoId: this.editData.taskInfoId }).then(res => {
-        console.log('【 res 】-211', res)
-        const _res = res.data
+      // queryLeaveInfo({ uemUserId: this.editData.dispatchers }).then(res => {
+      //   const _res = res.data
+      //   for (const key in this.formData) {
+      //     this.formData[key] = _res[key] || ''
+      //   }
+      // });
+      queryLeaveInfoByLeader({
+        // TODO
+        uemUserId: '6958664088091697152', // this.editData.dispatchers,
+        taskInfoId: this.editData.taskInfoId
+      }).then(res => {
+        // TODO
+        const _res = res.data[0].data
         for (const key in this.formData) {
           this.formData[key] = _res[key] || ''
         }
@@ -403,8 +426,16 @@ export default {
     handleConfirm() {
       this.$refs['elForm'].validate(valid => {
         if (valid) {
-          const funcName = this.editData.taskInfoId ? updateTaskInfo : saveTaskInfo;
-          funcName(this.formData).then(res => {
+          const funcInfo = {
+            2: saveLeaveInfo,
+            4: saveLeaveInfoByLeader
+          }
+
+          const funcName = funcInfo[this.status]// this.editData.dispatchers ? updateTaskInfo : saveTaskInfo;
+          funcName({
+            ...this.formData,
+            uemUserId: '6958664088091697152' // this.editData.dispatchers,
+          }).then(res => {
             this.$message.success('操作成功');
             this.$emit('getTableData', '');
             this.close();
@@ -416,10 +447,9 @@ export default {
 };
 </script>
 <style lang="scss">
-.staff-dialog {
+.my-quit-dialog {
   .form-wrap {
-    min-height: 450px;
-    margin-bottom: 20px;
+    min-height: 200px;
     .input-width {
       width: 180px;
     }
