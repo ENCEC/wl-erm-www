@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 17:38:09
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-11 17:06:41
+ * @LastEditTime: 2022-08-12 14:29:08
  * @Description: 我的任务
 -->
 
@@ -46,6 +46,7 @@
       :visible.sync="quitDialogVisible"
       :edit-data="editData"
       :type="openType"
+      :user-type="filterForm.userType"
       @getTableData="getTableData"
     />
   </div>

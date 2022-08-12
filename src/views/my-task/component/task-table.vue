@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 17:38:09
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-10 17:03:28
+ * @LastEditTime: 2022-08-12 15:28:19
  * @Description: 我的任务-试用任务信息-弹框-表格
 -->
 
@@ -254,7 +254,7 @@ export default {
       });
     },
     // 保存当前页数据
-    saveCurPageData(isClose) {
+    saveCurPageData() {
       // console.log('【 是否关闭弹框 】-255', isClose)
       return new Promise((resolve, reject) => {
         // 验证表单
@@ -285,7 +285,7 @@ export default {
           }
           funcName(tableFormData).then(res => {
             this.$message.success(res.data);
-            this.$emit('getTableFormData', tableFormData, isClose)
+            // this.$emit('getTableFormData', tableFormData)
             resolve()
             console.log('【保存成功 reject 】-287')
           });

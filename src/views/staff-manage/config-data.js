@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-01 13:52:08
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-05 11:08:44
+ * @LastEditTime: 2022-08-12 15:24:30
  * @Description:
  */
 
@@ -41,14 +41,14 @@ export const filterConfig = _this => {
       {
         type: 'select',
         label: '入职岗位',
-        prop: 'staffDutyCode',
+        prop: 'postId',
         width: '200px',
         clearable: true,
         placeholder: '请选择入职岗位',
         col: 8,
-        optionLabel: 'staffDuty',
-        optionValue: 'staffDutyCode',
-        optionKey: 'staffDutyCode',
+        optionLabel: 'postName',
+        optionValue: 'postId',
+        optionKey: 'postId',
         options: []
       },
       // 岗位职称

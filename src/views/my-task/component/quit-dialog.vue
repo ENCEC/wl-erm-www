@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-08 18:45:59
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-11 17:05:28
+ * @LastEditTime: 2022-08-12 18:14:54
  * @Description:
 -->
 
@@ -304,7 +304,7 @@
 <script>
 import UserAssociate from '@/components/CurrentSystem/UserAssociate'
 import { quitFormRules } from './rules';
-import { queryLeaveInfoByLeader, saveLeaveInfo, saveLeaveInfoByLeader } from '@/api/my-task';
+import { queryLeaveInfoByLeader, saveLeaveInfo, saveLeaveInfoByLeader, deletedApplyByStaff } from '@/api/my-task';
 import { USER_TYPE } from '@/store/constant'
 
 export default {
@@ -368,7 +368,6 @@ export default {
     },
     status() {
       const taskStatus = this.editData.status.toString()
-      console.log('【 taskStatus 】-403', taskStatus)
       let status = 0
       // 审批中
       if (taskStatus === '0') {
@@ -376,9 +375,10 @@ export default {
       }
       // 进行中 进行中分是项目经理还是部门领导
       if (taskStatus === '1') {
-        if (this.userType === this.USER_TYPE.PROJECT_MANAGER) {
+        if (this.userType.toString() === this.USER_TYPE.PROJECT_MANAGER.toString()) {
           status = this.STATUS_TYPE.ON_MANAGER// 2
-        } else {
+        }
+        if (this.userType.toString() === this.USER_TYPE.DEPT_LEADER.toString()) {
           status = this.STATUS_TYPE.ON_LEADER// 4
         }
       }
@@ -396,9 +396,14 @@ export default {
   methods: {
     // 撤回 TODO
     handleWithdraw() {
+      deletedApplyByStaff({ taskInfoId: this.editData.taskInfoId }).then(res => {
+        this.$message.success('撤回成功');
+        this.close();
+      })
     },
     // 关闭弹框
     close() {
+      this.$emit('getTableData', '');
       this.$emit('update:visible', false);
       this.$refs['elForm'].resetFields();
     },
@@ -420,6 +425,8 @@ export default {
         for (const key in this.formData) {
           this.formData[key] = _res[key] || ''
         }
+        this.formData.leaveReason = res.data[1].data.leaveReason || ' '
+        // console.log('【 this.formData.leaveReason  】-429', this.formData.leaveReason)
       });
     },
     // 提交表单信息
@@ -437,7 +444,6 @@ export default {
             uemUserId: '6958664088091697152' // this.editData.dispatchers,
           }).then(res => {
             this.$message.success('操作成功');
-            this.$emit('getTableData', '');
             this.close();
           });
         }

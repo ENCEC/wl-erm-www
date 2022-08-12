@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-08 10:55:42
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-11 16:10:37
+ * @LastEditTime: 2022-08-12 13:41:29
  * @Description: 员工管理-我的任务
  */
 
@@ -123,5 +123,13 @@ export function saveLeaveInfoByLeader(data) {
     url: prefix + '/taskInfo/saveLeaveInfoByLeader',
     method: 'post',
     data
+  });
+}
+// 我的任务 员工撤回申请
+export function deletedApplyByStaff(query) {
+  return request({
+    url: prefix + '/taskInfo/deletedApplyByStaff',
+    method: 'get',
+    params: query
   });
 }

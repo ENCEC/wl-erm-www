@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:15:03
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-11 17:12:52
+ * @LastEditTime: 2022-08-12 18:12:36
  * @Description:
 -->
 
@@ -149,11 +149,11 @@
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="面谈结果:" prop="resultAccess">
-                  <el-radio-group v-model="formData.resultAccess" :disabled="status === STATUS_TYPE.ON_LEADER">
+                <el-form-item label="面谈结果:" prop="faceResult">
+                  <el-radio-group v-model="formData.faceResult" :disabled="status === STATUS_TYPE.ON_LEADER">
                     <el-radio
                       v-for="item in inclinedAgreeOptions"
-                      :key="'resultAccess' + item.label"
+                      :key="'faceResult' + item.label"
                       :label="item.label"
                     >{{ item.label }}</el-radio>
                   </el-radio-group>
@@ -171,8 +171,8 @@
                 </el-form-item>
               </el-col>
               <el-col v-if="status === STATUS_TYPE.ON_MANAGER" :span="12">
-                <el-form-item label="提交审批人:" prop="approver">
-                  <UserAssociate v-model="formData.approver" :init-label="formData.approverName" class="input-width" />
+                <el-form-item label="提交审批人:" prop="uemUserId">
+                  <UserAssociate v-model="formData.uemUserId" :init-label="formData.approverName" class="input-width" />
                 </el-form-item>
               </el-col>
             </el-row>
@@ -208,11 +208,11 @@
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
-                  <el-form-item label="审批结果:" prop="approvalRemark">
-                    <el-radio-group v-model="formData.approvalRemark">
+                  <el-form-item label="审批结果:" prop="resultAccess">
+                    <el-radio-group v-model="formData.resultAccess">
                       <el-radio
                         v-for="item in agreeOptions"
-                        :key="'approvalRemark' + item.label"
+                        :key="'resultAccess' + item.label"
                         :label="item.label"
                       >{{ item.label }}</el-radio>
                     </el-radio-group>
@@ -272,7 +272,7 @@
                   label="审批结果:"
                 >
                   <el-input
-                    v-model="formData.approvalRemark"
+                    v-model="formData.resultAccess"
                     disabled
                     placeholder="请输入审批结果"
                     clearable
@@ -324,7 +324,7 @@
 <script>
 import RegularTable from './regular-table'
 import UserAssociate from '@/components/CurrentSystem/UserAssociate'
-import { queryPositiveApply, savePositiveInfo, savePositiveInfoByLeader } from '@/api/my-task';
+import { queryPositiveApply, savePositiveInfo, savePositiveInfoByLeader, deletedApplyByStaff } from '@/api/my-task';
 import { regularFormRules } from './rules';
 import { USER_TYPE } from '@/store/constant'
 
@@ -364,17 +364,17 @@ export default {
         applyDate: '', // 申请日期
         offerType: '', // 转正类型
         progress: '', // TODO 申请进度
-        approver: '', // TODO 审批人id（面谈人）
+        uemUserId: '', // TODO 审批人id（面谈人）
         approverName: '', // TODO 审批人姓名
         interviewerName: '', // TODO  面谈姓名
         // 进行中（项目经理）
         faceTime: '', // 面谈时间
-        resultAccess: '', // 面谈结果
+        faceResult: '', // 面谈结果
         faceScore: '', // 转员工答辩成绩
         faceRemark: '', // 面谈评语
         // 进行中（部门领导）
         approvalDate: '', // 审批时间
-        approvalRemark: '', // TODO 审批结果
+        resultAccess: '', // TODO 审批结果
         offerRemark: '', // 转正评语
         // 已完成
         auditName: ''// 审核人
@@ -400,9 +400,10 @@ export default {
       }
       // 进行中 进行中分是项目经理还是部门领导
       if (taskStatus === '1') {
-        if (this.userType === this.USER_TYPE.PROJECT_MANAGER) {
+        if (this.userType.toString() === this.USER_TYPE.PROJECT_MANAGER.toString()) {
           status = this.STATUS_TYPE.ON_MANAGER// 2
-        } else {
+        }
+        if (this.userType.toString() === this.USER_TYPE.DEPT_LEADER.toString()) {
           status = this.STATUS_TYPE.ON_LEADER// 4
         }
       }
@@ -420,6 +421,7 @@ export default {
   methods: {
     // 关闭弹框
     close() {
+      this.$emit('getTableData', '');
       this.$emit('update:visible', false);
       this.$refs['elForm'].resetFields();
     },
@@ -428,9 +430,8 @@ export default {
       queryPositiveApply({ taskInfoId: this.editData.taskInfoId }).then(res => {
         const _res = res.data
         for (const key in this.formData) {
-          if (key === 'status') {
-            // TODO
-            this.formData[key] = this.$dict.getDictNameByCode('MY_TASK_STATUS', _res[key])
+          if (key === 'uemUserId') {
+            this.formData[key] = _res['approver']
           } else {
             this.formData[key] = _res[key] || ''
           }
@@ -439,6 +440,10 @@ export default {
     },
     // 撤回
     handleWithdraw() {
+      deletedApplyByStaff({ taskInfoId: this.editData.taskInfoId }).then(res => {
+        this.$message.success('撤回成功');
+        this.close();
+      })
     },
     // 提交表单信息
     handleConfirm() {
@@ -451,7 +456,6 @@ export default {
           const funcName = funcInfo[this.status]// this.editData.taskInfoId ? updateTaskInfo : saveTaskInfo;
           funcName(this.formData).then(res => {
             this.$message.success('操作成功');
-            this.$emit('getTableData', '');
             this.close();
           });
         }
