@@ -46,9 +46,9 @@ export const filterConfig = _this => {
         clearable: true,
         placeholder: '请选择入职岗位',
         col: 8,
-        optionLabel: 'staffDuty',
-        optionValue: 'staffDutyCode',
-        optionKey: 'staffDutyCode',
+        optionLabel: 'postName',
+        optionValue: 'postCode',
+        optionKey: 'postCode',
         options: []
       },
       // 岗位职称
@@ -126,7 +126,7 @@ export const columns = _this => {
     {
       prop: 'sex',
       label: '性别',
-      formatter: (row, column) => {
+      formatter: (row) => {
         return row.sex ? '女' : '男'
       }
     },

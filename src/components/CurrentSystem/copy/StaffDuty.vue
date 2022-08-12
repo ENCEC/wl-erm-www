@@ -18,9 +18,9 @@
   >
     <el-option
       v-for="(item, index) in optionsList"
-      :key="'staffDutyCode' + index + item.staffDutyCode"
-      :label="item.staffDuty"
-      :value="item.staffDutyCode"
+      :key="'staffDutyCode' + index + item.postCode"
+      :label="item.postName"
+      :value="item.postCode"
     />
     <!-- <el-option
       v-for="item in supplierList"
@@ -33,7 +33,7 @@
 <script>
 import {
   queryStaffDutyBySelect
-} from '@/api/select';
+} from '@/api/select-02';
 
 // import { getSupplier } from '@/api/procurement-manage'
 export default {
@@ -44,7 +44,8 @@ export default {
     },
     value: {
       type: String, // 传入的值
-      require: true
+      require: true,
+      default: ''
     }
   },
   data() {
@@ -54,7 +55,7 @@ export default {
     };
   },
   watch: {
-    value(newVal) {
+    value() {
       this.selectVal = this.value;
     }
   },

@@ -14,9 +14,9 @@
     >
       <el-row :gutter="100">
         <el-col :span="12">
-          <el-form-item label="申请日期" prop="ApplyDate">
+          <el-form-item label="申请日期" prop="applyDate">
             <el-date-picker
-              v-model="form.ApplyDate"
+              v-model="form.applyDate"
               type="date"
               value-format="yyyy-MM-dd"
               format="yyyy-MM-dd"
@@ -25,8 +25,8 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="转正类型:" prop="OfferType">
-            <el-radio-group v-model="form.OfferType">
+          <el-form-item label="转正类型:" prop="offerType">
+            <el-radio-group v-model="form.offerType">
               <el-radio
                 v-for="item in positiveTypeOptions"
                 :key="item.value"
@@ -55,9 +55,9 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="审批人:" prop="Approver">
+          <el-form-item label="审批人:" prop="approver">
             <el-associate
-              v-model="form.Approver"
+              v-model="form.approver"
               :columns="approverColumns"
               value-prop="uemUserId"
               label-prop="name"
@@ -82,12 +82,13 @@
 <script>
 import { mapGetters } from 'vuex';
 import { queryStandardDetail } from '@/api/standard-detail.js';
+import { queryUemUser } from '@/api/standard-entry.js';
 import {
   saveOffer,
-  queryUemUser,
   downloadExternalFile
 } from '@/api/staff-query.js';
-import UploadFile from './upload-file';
+import UploadFile from '@/components/CurrentSystem/UploadFile';
+
 // import { saveOffer, downloadExternalFile, uploadExternalFile, queryOfferInfo, queryLeaveInfo, queryDismissInfo, preservationUemUser, saveLeave, queryUemUser, getUemUser } from '@/api/staff-query.js';
 const positiveTypeOptions = [
   { label: '正常转正', value: '正常转正' },
@@ -125,20 +126,20 @@ export default {
       tableData: [],
       form: {
         uemUserName: '',
-        ApplyDate: '',
-        OfferType: '',
-        Approver: '',
+        applyDate: '',
+        offerType: '',
+        approver: '',
         // standardDetailId: '6960887517290696704',
         standardEntryId: ''
       },
       rules: {
-        ApplyDate: [
+        applyDate: [
           { required: true, message: '请选择申请日期', trigger: 'blur' }
         ],
-        OfferType: [
+        offerType: [
           { required: true, message: '请选择转正类型', trigger: 'blur' }
         ],
-        Approver: [
+        approver: [
           { required: true, message: '请选择审批人', trigger: 'blur' }
         ]
       }
@@ -212,9 +213,9 @@ export default {
     resetForm() {
       this.form = {
         uemUserName: '',
-        ApplyDate: '',
-        OfferType: '',
-        Approver: '',
+        applyDate: '',
+        offerType: '',
+        approver: '',
         standardEntryId: ''
       };
     },

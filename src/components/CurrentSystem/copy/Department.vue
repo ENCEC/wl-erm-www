@@ -1,9 +1,9 @@
 <!--
  * @Author: Hongzf
- * @Date: 2022-08-03 09:55:18
+ * @Date: 2022-08-04 17:34:53
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-05 10:57:53
- * @Description: 入职岗位-下拉
+ * @LastEditTime: 2022-08-05 11:00:28
+ * @Description: 所属部门-下拉
 -->
 
 <template>
@@ -17,25 +17,18 @@
     @change="handleChange"
   >
     <el-option
-      v-for="(item, index) in optionsList"
-      :key="'staffDutyCode' + index + item.staffDutyCode"
-      :label="item.staffDuty"
-      :value="item.staffDutyCode"
+      v-for="(item,index) in optionsList"
+      :key="'deptId'+index+item.uemDeptId"
+      :label="item.deptName"
+      :value="item.uemDeptId"
     />
-    <!-- <el-option
-      v-for="item in supplierList"
-      :key="item.supplierId"
-      :label="item.supplierName"
-      :value="item.supplierId"
-    /> -->
   </el-select>
 </template>
 <script>
 import {
-  queryStaffDutyBySelect
-} from '@/api/select';
+  queryDepartmentBySelect
+} from '@/api/select-02';
 
-// import { getSupplier } from '@/api/procurement-manage'
 export default {
   props: {
     disabled: {
@@ -44,7 +37,8 @@ export default {
     },
     value: {
       type: String, // 传入的值
-      require: true
+      require: true,
+      default: ''
     }
   },
   data() {
@@ -54,7 +48,7 @@ export default {
     };
   },
   watch: {
-    value(newVal) {
+    value() {
       this.selectVal = this.value;
     }
   },
@@ -65,7 +59,7 @@ export default {
   methods: {
     // 获取下拉信息
     async getSelectOptions() {
-      this.optionsList = await queryStaffDutyBySelect();
+      this.optionsList = await queryDepartmentBySelect();
     },
     handleChange(value) {
       this.$emit('input', this.selectVal);

@@ -256,9 +256,9 @@
                 >
                   <el-option
                     v-for="(item, index) in staffDutyOptions"
-                    :key="'staffDutyCode' + item.staffDutyCode + index"
-                    :label="item.staffDuty"
-                    :value="item.staffDutyCode"
+                    :key="'staffDutyCode' + item.postCode + index"
+                    :label="item.postName"
+                    :value="item.postCode"
                   />
                 </el-select>
               </el-form-item>
@@ -314,15 +314,15 @@
 
 <script>
 import { queryStaffById } from '@/api/staff-manage';
-// import { preservationUemUser } from '@/api/staff-query.js';
+import { preservationUemUser } from '@/api/staff-query.js';
 import {
   queryTechnicalNameBySelect,
   queryProjectNameBySelect,
   queryStaffDutyBySelect
-} from '@/api/select';
+} from '@/api/select-02';
 import RegularDialog from './component/regular-dialog';
 import DismissDialog from './component/dismiss-dialog';
-import UploadFile from './component/upload-file';
+import UploadFile from '@/components/CurrentSystem/UploadFile';
 import { mapGetters } from 'vuex';
 export default {
   name: 'StaffInfo',
@@ -335,6 +335,7 @@ export default {
   data() {
     return {
       form: {
+        uemUserId: '',
         account: '',
         name: '',
         sex: '',
@@ -378,20 +379,46 @@ export default {
           { required: true, message: '请选择在职状态', trigger: 'change' }
         ],
         idCard: [
-          { validator: this.validateIdCard, trigger: 'blur' },
-          { required: true, message: '请输入身份证号码', trigger: 'blur' }
+          {
+            required: true,
+            message: '请输入身份证号码',
+            trigger: 'blur'
+          },
+          {
+            pattern:
+              /(^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$)|(^[1-9]\d{5}\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{2}$)/,
+            message: '请输入正确的身份证号码',
+            trigger: 'blur'
+          }
         ],
         mobile: [
-          { validator: this.validateMobile, trigger: 'blur' },
-          { required: true, message: '请输入手机号码', trigger: 'blur' }
+          {
+            required: true,
+            message: '请输入联系电话',
+            trigger: 'blur'
+          },
+          {
+            pattern: /^1(3|4|5|7|8|9)\d{9}$/,
+            message: '手机号格式错误',
+            trigger: 'blur'
+          }
         ],
         address: [
           { required: true, message: '请输入现住址', trigger: 'change' }
         ],
         // sourceAddress: [{ required: true, message: "请输入户籍地址", trigger: change }],
         email: [
-          { validator: this.validateEmail, trigger: 'blur' },
-          { required: true, message: '请输入邮箱地址', trigger: 'blur' }
+          {
+            required: true,
+            message: '请输入电子邮箱',
+            trigger: 'blur'
+          },
+          {
+            pattern:
+              /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+            message: '电子邮箱格式错误',
+            trigger: 'blur'
+          }
         ],
         seniority: [
           { required: true, message: '请输入工作年限', trigger: 'change' }
@@ -457,22 +484,16 @@ export default {
       });
     },
     handleSave() {
-      this.$refs['staffInfoForm'].validate((valid) => {
+      this.$refs.staffInfoForm.validate((valid) => {
         debugger;
         if (valid) {
-          debugger;
-          alert('submit!');
-        } else {
-          debugger;
-          console.log('error submit!!');
-          return false;
+          preservationUemUser(this.form).then(() => {
+            this.$message.success('保存成功')
+          }).catch(() => {
+            this.$message.error('保存失败')
+          })
         }
       });
-      // preservationUemUser(this.form).then((res)=>{
-      //   this.$message.success('保存成功')
-      // }).catch((err)=>{
-      //   this.$message.error('保存失败')
-      // })
     },
     validateEmail(rule, value, callback) {
       if (!value) {
@@ -508,8 +529,11 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .staff-info-wrap {
+  .staff-info-module-title{
+    font-weight: bold;
+  }
   .operate-button {
     text-align: center;
     .regular-btn {
@@ -520,6 +544,10 @@ export default {
       background-color: #f59a23;
       border-color: #797979;
     }
+  }
+  .el-divider{
+    margin: 5px 0px 15px 0px!important;
+    background-color: #AAAAAA;
   }
 }
 </style>

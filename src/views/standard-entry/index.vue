@@ -564,7 +564,8 @@ export default {
     initEntryTypeSelect() {
       const params = {
         pageSize: 1000,
-        currentPage: 1
+        currentPage: 1,
+        dictTypeCode: '条目类型'
       };
       querySysDictType(params)
         .then((res) => {

@@ -59,7 +59,7 @@ import {
   queryStaffByPage,
   deleteStaff
 } from '@/api/staff-manage';
-import { queryTechnicalNameBySelect, queryStaffDutyBySelect, queryDepartmentBySelect } from '@/api/select';
+import { queryTechnicalNameBySelect, queryStaffDutyBySelect, queryDepartmentBySelect } from '@/api/select-02';
 import tableMix from '@/mixins/table-mixin';
 export default {
   name: 'StaffManage',

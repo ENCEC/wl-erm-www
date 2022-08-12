@@ -489,12 +489,7 @@
         </div>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button
-          v-if="type !== 'detail'"
-          type="primary"
-          size="mini"
-          @click="handleConfirm"
-        >提交</el-button>
+
         <el-button
           type="primary"
           :plain="true"
@@ -509,10 +504,10 @@
 import { queryStaffById, updateStaff } from '@/api/staff-manage';
 import { queryOfferInfo } from '@/api/staff-query';
 // import { preservationUemUser } from '@/api/staff-query.js';
-import { queryTechnicalNameBySelect, queryProjectNameBySelect } from '@/api/select';
+import { queryTechnicalNameBySelect, queryProjectNameBySelect } from '@/api/select-02';
 import { formRules } from './rules';
-import Department from '@/components/CurrentSystem/Department.vue'
-import StaffDuty from '@/components/CurrentSystem/StaffDuty.vue'
+import Department from '@/components/CurrentSystem/copy/Department.vue'
+import StaffDuty from '@/components/CurrentSystem/copy/StaffDuty.vue'
 export default {
   components: { Department, StaffDuty },
   // inheritAttrs: false,

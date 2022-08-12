@@ -182,6 +182,8 @@ export default {
                 console.log('【 登录成功 】-184', res)
                 this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
               } else {
+                this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
+                debugger
                 this.$message.error('登录失败')
               }
               this.loading = false

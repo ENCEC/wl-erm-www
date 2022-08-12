@@ -152,11 +152,6 @@
       <div slot="footer" class="dialog-footer">
         <el-button
           type="primary"
-          size="mini"
-          @click="handleConfirm"
-        >提交</el-button>
-        <el-button
-          type="primary"
           :plain="true"
           size="mini"
           @click="close"

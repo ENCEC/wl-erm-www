@@ -2,6 +2,7 @@
 import request from '@/utils/request';
 const prefix = process.env.VUE_APP_WL_ERM_PREFIX
 const shareAuthPrefix = process.env.VUE_APP_SHARE_AUTH_PREFIX
+const shareFilePrefix = process.env.VUE_APP_SHARE_FILE_PREFIX
 
 // 转正申请
 export function saveOffer(data) {
@@ -14,16 +15,25 @@ export function saveOffer(data) {
 // 下载文件
 export function downloadExternalFile(data) {
   return request({
-    url: prefix + '/externalFile/downloadExternalFile',
+    url: shareFilePrefix + '/externalFile/downloadExternalFile',
     method: 'post',
     data
   });
 }
-// 上传文件
+// // 8083端口上传文件
+// export function uploadExternalFile(data) {
+//   return request({
+//     url: shareFilePrefix + '/externalFile/uploadExternalFile',
+//     method: 'post',
+//     data
+//   });
+// }
+
+// 8082端口上传文件
 export function uploadExternalFile(data) {
   return request({
-    url: prefix + '/externalFile/uploadExternalFile',
-    method: 'get',
+    url: shareAuthPrefix + '/uemUserManage/uploadExternalFile',
+    method: 'post',
     data
   });
 }
@@ -61,7 +71,7 @@ export function queryDismissInfo(uemUserId) {
 // 保存员工信息
 export function preservationUemUser(data) {
   return request({
-    url: prefix + '/uemUserManage/preservationUemUser',
+    url: shareAuthPrefix + '/uemUserManage/preservationUemUser',
     method: 'post',
     data
   });

@@ -23,9 +23,11 @@
   </el-upload>
 </template>
 <script>
+import { mapGetters } from 'vuex'
 import { uploadExternalFile } from '@/api/staff-query.js';
 
 export default {
+  name: 'UploadFile',
   props: {
     accept: {
       type: String,
@@ -42,18 +44,30 @@ export default {
       uploadFile: null
     };
   },
+  computed: {
+    ...mapGetters(['userId'])
+  },
   methods: {
     handleUpload(uploadObject) {
+      debugger;
       const arr = uploadObject.file.name.split('.');
-      this.uploadFile = arr[0];
+
       const params = {
+        systemId: 'YYDM200013',
         fileType: arr[1],
         fileName: arr[0],
         file: uploadObject.file
       };
-      console.log(params);
-      uploadExternalFile(params)
+      const formdata = new FormData();
+      formdata.append('fileType', params.fileType);
+      formdata.append('fileName', params.fileName);
+      formdata.append('systemId', 'YYDM200013');
+      formdata.append('file', uploadObject.file);
+      formdata.append('uemUserId', this.userId);
+      uploadExternalFile(formdata)
         .then(() => {
+          this.uploadFile = arr[0];
+
           debugger;
         })
         .catch(() => {
@@ -61,12 +75,9 @@ export default {
         });
     },
     handleSuccess(res, file) {
-      debugger;
-      this.imageUrl = URL.createObjectURL(file.raw);
     },
     handleRemove(file, fileList) {
       debugger;
-
       console.log(file, fileList);
     },
     handlePreview(file) {
@@ -76,17 +87,16 @@ export default {
     },
     handleExceed(files, fileList) {
       debugger;
-
       this.$message.warning(
         `当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${
           files.length + fileList.length
         } 个文件`
       );
     },
-    beforeUpload(file) {
-      debugger;
+    beforeUpload() {
+      this.$refs.uploadFile.fileList = [];
     },
-    beforeRemove(file, fileList) {
+    beforeRemove(file) {
       debugger;
       return this.$confirm(`确定移除 ${file.name}？`);
     }
@@ -100,7 +110,7 @@ export default {
   max-width: 90px;
   /* overflow: hidden; */
   .el-upload {
-    .el-button {
+    .el-button--text {
       span {
         display: inline-block !important;
         max-width: 90px;
