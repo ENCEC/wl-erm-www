@@ -153,7 +153,7 @@
         <el-button
           type="primary"
           :plain="true"
-          size="mini"
+          size="medium"
           @click="close"
         >取消</el-button>
       </div>
@@ -163,9 +163,9 @@
 <script>
 import { queryStaffInfo, saveResignInfo, saveDismissInfo } from '@/api/staff-manage';
 import { dissmissFormRules } from './rules';
-import StaffDuty from '@/components/CurrentSystem/StaffDuty.vue'
-import Department from '@/components/CurrentSystem/Department.vue'
-import Upload from '@/components/CurrentSystem/Upload.vue'
+import StaffDuty from '@/components/CurrentSystem/copy/StaffDuty.vue'
+import Department from '@/components/CurrentSystem/copy/Department.vue'
+import Upload from '@/components/CurrentSystem/UploadFile.vue'
 
 export default {
   components: { StaffDuty, Department, Upload },

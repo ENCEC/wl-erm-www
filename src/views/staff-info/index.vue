@@ -157,7 +157,7 @@
           </div>
         </div>
         <div class="staff-info-module">
-          <div class="staff-info-module-title">毕业学校信息</div>
+          <div class="staff-info-module-title margin">毕业学校信息</div>
           <el-divider />
           <el-row :gutter="100">
             <el-col :span="12">
@@ -211,7 +211,7 @@
           </el-row>
         </div>
         <div class="staff-info-module">
-          <div class="staff-info-module-title">入职信息</div>
+          <div class="staff-info-module-title margin">入职信息</div>
           <el-divider />
           <el-row :gutter="100">
             <el-col :span="12">
@@ -533,6 +533,9 @@ export default {
 .staff-info-wrap {
   .staff-info-module-title{
     font-weight: bold;
+    &.margin{
+      margin-top: 30px;
+    }
   }
   .operate-button {
     text-align: center;

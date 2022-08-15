@@ -193,7 +193,7 @@
         <el-button
           type="primary"
           :plain="true"
-          size="mini"
+          size="medium"
           @click="close"
         >取消</el-button>
       </div>
@@ -206,7 +206,7 @@ import { regularFormRules } from './rules';
 // import StaffDuty from '@/components/CurrentSystem/StaffDuty.vue'
 import UserAssociate from '@/components/CurrentSystem/UserAssociate'
 // import Department from '@/components/CurrentSystem/Department.vue'
-import Upload from '@/components/CurrentSystem/Upload.vue'
+import Upload from '@/components/CurrentSystem/UploadFile.vue'
 
 export default {
   components: { UserAssociate, Upload },

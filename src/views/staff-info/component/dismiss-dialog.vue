@@ -47,9 +47,10 @@
       <el-button
         v-loading="buttonLoading"
         type="primary"
+        size="medium"
         @click="handleSumbit"
       >提 交</el-button>
-      <el-button @click="dialogVisible = false">取 消</el-button>
+      <el-button size="medium" @click="dialogVisible = false">取 消</el-button>
     </div>
   </el-dialog>
 </template>

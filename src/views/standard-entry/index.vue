@@ -22,9 +22,10 @@
           v-if="dialogStatus !== 'examine'"
           :loading="dialogButtonLoading"
           type="primary"
+          size="medium"
           @click="dialogStatus === 'create' ? createData() : updateData()"
         >提交</el-button>
-        <el-button @click="dialogFormVisible = false">取消</el-button>
+        <el-button size="medium" @click="dialogFormVisible = false">取消</el-button>
       </div>
     </el-dialog>
 
@@ -299,15 +300,15 @@ export default {
         inline: false,
         gutter: 20, // 栅格的间隔
         col: 8, // 栅格的格数
-        operateCol: 24,
-        labelWidth: '80px',
-        labelPosition: 'left',
+        operateCol: 16,
+        labelWidth: '100px',
+        labelPosition: 'right',
         filterList: [
           {
             type: 'input',
             label: '条目名称',
             prop: 'entryName',
-            // width: '200px',
+            width: '200px',
             clearable: false,
             placeholder: '请输入条目名称'
             // col: 8,
@@ -316,7 +317,7 @@ export default {
             type: 'associate',
             label: '适用岗位',
             prop: 'applyPostId',
-            // width: "200px",
+            width: '200px',
             valueProp: 'postId',
             labelProp: 'postName',
             displayInit: 'postName',
@@ -332,7 +333,7 @@ export default {
             type: 'select',
             class: 'filter-item',
             prop: 'actionRoleId',
-            // width: "200px",
+            width: '200px',
             label: '执行角色',
             placeholder: '请选择执行角色',
             optionLabel: 'display_name',
@@ -345,7 +346,7 @@ export default {
             label: '状态',
             prop: 'status',
             // col: 8,
-            // width: '200px',
+            width: '200px',
             clearable: true,
             placeholder: '请选择状态',
             optionLabel: 'display_name',

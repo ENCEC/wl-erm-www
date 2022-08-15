@@ -22,9 +22,10 @@
           v-if="dialogStatus !== 'examine'"
           :loading="dialogButtonLoading"
           type="primary"
+          size="medium"
           @click="dialogStatus === 'create' ? createData() : updateData()"
         >提交</el-button>
-        <el-button @click="dialogFormVisible = false">取消</el-button>
+        <el-button size="medium" @click="dialogFormVisible = false">取消</el-button>
       </div>
     </el-dialog>
 
@@ -128,15 +129,15 @@ export default {
         inline: false,
         gutter: 20, // 栅格的间隔
         col: 8, // 栅格的格数
-        operateCol: 24,
-        labelWidth: '80px',
-        labelPosition: 'left',
+        operateCol: 16,
+        labelWidth: '100px',
+        labelPosition: 'right',
         filterList: [
           {
             type: 'input',
             label: '细则名称',
             prop: 'detailName',
-            // width: '200px',
+            width: '200px',
             clearable: false,
             placeholder: '请输入细则名称'
             // col: 8,
@@ -146,7 +147,7 @@ export default {
             type: 'select',
             class: 'filter-item',
             prop: 'entryName',
-            // width: "200px",
+            width: '200px',
             label: '规范条目',
             placeholder: '请选择规范条目',
             optionLabel: 'display_name',
@@ -160,7 +161,7 @@ export default {
             prop: 'status',
             labelWidth: '40px',
             // col: 8,
-            // width: '200px',
+            width: '200px',
             clearable: true,
             placeholder: '请选择状态',
             optionLabel: 'display_name',
@@ -175,7 +176,7 @@ export default {
             type: 'select',
             class: 'filter-item',
             prop: 'itemType',
-            // width: "200px",
+            width: '200px',
             label: '条目类型',
             placeholder: '请选择条目类型',
             optionLabel: 'display_name',
@@ -256,7 +257,10 @@ export default {
         },
         {
           prop: 'createTime',
-          label: '创建时间'
+          label: '创建时间',
+          formatter: (row) => {
+            return row.createTime.substring(0, 11);
+          }
         },
         {
           prop: 'status',

@@ -458,15 +458,16 @@ $--color-white: #FFFFFF;
 
         tr {
             th {
-                background-color: #F5F9FF;
-            }
+                background-color: #81D3F8;
+        padding: 5px 0px !important;
+            }   
         }
     }
 
     // 修改斑马线色值
     .el-table__row--striped {
         td {
-            background-color: #F8F8F8 !important;
+            background-color: #E2F2FA !important;
 
         }
     }
@@ -476,7 +477,8 @@ $--color-white: #FFFFFF;
     }
 
     td {
-        border: 1px solid #E8EFFA;
+        border: 1px solid white;
+        padding: 5px 0px !important;
 
         .cell {
             color: $--font-primary;
