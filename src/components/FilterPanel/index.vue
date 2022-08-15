@@ -198,3 +198,9 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.operate-area{
+  float: right;
+}
+</style>
