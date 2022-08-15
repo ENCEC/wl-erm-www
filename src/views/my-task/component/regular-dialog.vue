@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:15:03
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-12 18:12:36
+ * @LastEditTime: 2022-08-15 14:29:27
  * @Description:
 -->
 
@@ -473,7 +473,7 @@ export default {
       flex-wrap: wrap;
     }
     .input-width {
-      width: 180px;
+      width: 180px !important;
     }
     .table-wrap{
       width:600px;

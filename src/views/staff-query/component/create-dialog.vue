@@ -673,7 +673,7 @@ export default {
     min-height:480px;
     margin-bottom: 20px;
     .input-width {
-      width: 180px;
+      width: 180px !important;
     }
   }
   .btn-attachment{

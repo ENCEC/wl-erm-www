@@ -1,0 +1,114 @@
+<!--
+ * @Author: Hongzf
+ * @Date: 2022-08-04 17:34:53
+ * @LastEditors: Hongzf
+ * @LastEditTime: 2022-08-15 10:47:07
+ * @Description: 所属部门-下拉
+-->
+
+<template>
+  <el-upload
+    :action="uploadUrl"
+    :data="uploadData"
+    :on-preview="handlePreview"
+    :on-remove="handleRemove"
+    :before-remove="beforeRemove"
+    :limit="1"
+    :on-exceed="handleExceed"
+    :file-list="fileList"
+    :before-upload="beforeUpload"
+    v-bind="$attrs"
+    size="mini"
+    class="upload-demo"
+    v-on="$listeners"
+  >
+    <el-button size="small" type="primary">点击上传</el-button>
+    <!-- <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div> -->
+  </el-upload>
+</template>
+<script>
+export default {
+  props: {
+    uploadData: {
+      type: Object, // 传入的值
+      require: true,
+      default: () => {}
+    }
+  },
+  data() {
+    return {
+      uploadUrl: process.env.VUE_APP_SHARE_AUTH_PREFIX + '/uemUserManage/uploadExternalFile',
+      optionsList: [],
+      fileList: [],
+      fileSize: 2
+      // fileList: [{ name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100' }, { name: 'food2.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100' }]
+    };
+  },
+  watch: {},
+  created() {},
+  mounted() {},
+  methods: {
+    // 上传个数限制
+    handleExceed(files, fileList) {
+      this.$message.error('最多只能上传1个文件');
+    },
+    // 上传大小格式限制
+    beforeUpload(file) {
+      const isPDF = file.type === 'application/pdf';
+      const isLtNM = file.size / 1024 / 1024 < this.fileSize;
+      if (!isPDF) {
+        this.$message.error('上传文件只能是 PDF 格式!');
+      }
+      if (!isLtNM) {
+        this.$message.error(`文件大小不能超过${this.fileSize}MB!`);
+      }
+      if (isPDF && isLtNM) {
+        const fileName = file.name
+        this.uploadData.fileName = fileName.substring(0, fileName.lastIndexOf('.'))
+        this.uploadData.fileType = fileName.substring(fileName.lastIndexOf('.') + 1)
+      }
+      return isPDF && isLtNM;
+    },
+    handlePreview(file) {
+      console.log(file);
+    },
+    beforeRemove(file, fileList) {
+      // 在beforeRemove方法中对文件的状态进行判断，只有当前文件存在并且上传状态为success时才弹框提示。
+      if (file && file.status === 'success') {
+        this.$confirm(
+          `确定移除 ${file.name}？`,
+          '删除提示',
+          {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }
+        ).then(() => {
+
+        });
+      }
+    },
+    handleRemove(file, fileList) {
+      console.log(file, fileList);
+    }
+    // handleChange(value) {
+    //   this.$emit('input', this.selectVal);
+    //   this.$emit('getSelectVal', this.selectVal);
+    // }
+  }
+};
+</script>
+<style lang="scss" coped>
+.el-upload-list__item-name {
+    color: #606266;
+    display: block;
+    margin-right: 40px;
+    overflow: hidden;
+    padding-left: 4px;
+    text-overflow: ellipsis;
+    -webkit-transition: color .3s;
+    transition: color .3s;
+    white-space: nowrap;
+    width: 170px;
+}
+</style>

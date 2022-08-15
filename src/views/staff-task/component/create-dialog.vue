@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:15:03
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-10 13:49:10
+ * @LastEditTime: 2022-08-15 14:29:56
  * @Description:
 -->
 
@@ -314,7 +314,7 @@ export default {
     min-height: 400px;
     margin-bottom: 20px;
     .input-width {
-      width: 180px;
+      width: 180px !important;
     }
     .table-wrap{
       width:750px;

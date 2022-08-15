@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 21:05:06
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-08 10:42:35
+ * @LastEditTime: 2022-08-15 14:59:47
  * @Description:
 -->
 
@@ -272,19 +272,7 @@
             <el-col :span="12">
               <!-- TODO 联想控件 -->
               <el-form-item label="归属项目:" prop="projectId">
-                <el-select
-                  v-model="formData.projectId"
-                  placeholder="请选择归属项目"
-                  clearable
-                  class="input-width"
-                >
-                  <el-option
-                    v-for="(item,index) in projectTypeOptions"
-                    :key="'projectId'+index+item.projectId"
-                    :label="item.projectName"
-                    :value="item.projectId"
-                  />
-                </el-select>
+                <ProjectSelect v-model="formData.projectId" placeholder="请选择归属项目" class="input-width" />
               </el-form-item>
             </el-col>
             <el-col :span="12">
@@ -344,12 +332,13 @@
 </template>
 <script>
 import { queryStaffById, updateStaff } from '@/api/staff-manage';
-import { queryTechnicalNameBySelect, queryProjectNameBySelect } from '@/api/select';
+import { queryTechnicalNameBySelect } from '@/api/select';
 import { formRules } from './rules';
 import Department from '@/components/CurrentSystem/Department.vue'
 import StaffDuty from '@/components/CurrentSystem/StaffDuty.vue'
+import ProjectSelect from '@/components/CurrentSystem/ProjectSelect.vue'
 export default {
-  components: { Department, StaffDuty },
+  components: { Department, StaffDuty, ProjectSelect },
   // inheritAttrs: false,
   props: {
     // 编辑信息
@@ -393,8 +382,7 @@ export default {
       // sexOptions: this.$dict.getDictOptions('SEX'),
       maritalStatusOptions: this.$dict.getDictOptions('MARITAL_STATUS'),
       educationOptions: this.$dict.getDictOptions('EDUCATION'),
-      technicalOptions: [], // 岗位职称
-      projectTypeOptions: []
+      technicalOptions: [] // 岗位职称
     };
   },
   computed: {
@@ -431,22 +419,11 @@ export default {
             this.formData[key] = res[key] || ''
           }
         }
-        // this.formData = {
-        //   ...this.formData,
-        //   ...res,
-        //   jobStatus: res.jobStatus || '',
-        //   entryDate: res.entryDate || '',
-        //   uemDeptId: res.uemDeptId || '',
-        //   staffDutyCode: res.staffDutyCode || '',
-        //   technicalTitleId: res.technicalTitleId || '',
-        //   projectId: res.projectId || ''
-        // };
       });
     },
     // 获取下拉信息
     async getSelectOptions() {
       this.technicalOptions = await queryTechnicalNameBySelect()
-      this.projectTypeOptions = await queryProjectNameBySelect()
     },
     // 提交表单信息
     handleConfirm() {
@@ -469,7 +446,7 @@ export default {
     min-height:480px;
     margin-bottom: 20px;
     .input-width {
-      width: 180px;
+      width: 180px !important;
     }
   }
   // 底部按钮

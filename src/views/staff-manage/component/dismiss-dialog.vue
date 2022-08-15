@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 21:05:06
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-09 14:25:10
+ * @LastEditTime: 2022-08-15 14:33:44
  * @Description:
 -->
 
@@ -296,7 +296,7 @@ export default {
     // height: 350px;
     margin-bottom: 20px;
     .input-width {
-      width: 180px;
+      width: 180px !important;
     }
   }
   // 底部按钮
