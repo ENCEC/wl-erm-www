@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 21:05:06
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-08 14:33:27
+ * @LastEditTime: 2022-08-15 14:36:38
  * @Description: 员工转正
 -->
 
@@ -135,7 +135,7 @@
             <el-col :span="12">
               <!-- TODO -->
               <el-form-item label="附件:" prop="speciality">
-                <Upload />
+                <Upload :upload-data.sync="uploadData" />
               </el-form-item>
             </el-col>
           </el-row>
@@ -206,8 +206,7 @@ import { regularFormRules } from './rules';
 // import StaffDuty from '@/components/CurrentSystem/StaffDuty.vue'
 import UserAssociate from '@/components/CurrentSystem/UserAssociate'
 // import Department from '@/components/CurrentSystem/Department.vue'
-import Upload from '@/components/CurrentSystem/Upload.vue'
-
+import Upload from './Upload.vue'
 export default {
   components: { UserAssociate, Upload },
   // inheritAttrs: false,
@@ -244,6 +243,12 @@ export default {
         positiveComments: '', // 转正评语
         speciality: '' // 在校专业
       },
+      uploadData: {
+        systemId: process.env.VUE_APP_SYSTEMID, // 写死
+        fileName: '',
+        fileType: '',
+        uemUserId: ''
+      },
       positiveTypeOptions: this.$dict.getDictOptions('OFFER_TYPE')
     };
   },
@@ -267,7 +272,7 @@ export default {
 
   },
   created() {
-    // this.getDetailInfo()
+    this.uploadData.uemUserId = this.editData.uemUserId
   },
   mounted() {},
   methods: {
@@ -315,7 +320,7 @@ export default {
     // height: 350px;
     margin-bottom: 20px;
     .input-width {
-      width: 180px;
+      width: 180px !important;
     }
   }
   // 底部按钮

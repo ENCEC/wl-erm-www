@@ -271,7 +271,7 @@ export default {
     // height: 350px;
     margin-bottom: 20px;
     .input-width {
-      width: 180px;
+      width: 180px !important;
     }
   }
   // 底部按钮

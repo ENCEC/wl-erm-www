@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-08 18:45:59
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-12 18:14:54
+ * @LastEditTime: 2022-08-15 14:29:22
  * @Description:
 -->
 
@@ -457,7 +457,7 @@ export default {
   .form-wrap {
     min-height: 200px;
     .input-width {
-      width: 180px;
+      width: 180px !important;
     }
     .table-wrap{
       width:660px;

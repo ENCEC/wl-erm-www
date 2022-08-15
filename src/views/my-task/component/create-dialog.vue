@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 17:38:09
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-12 14:06:04
+ * @LastEditTime: 2022-08-15 14:29:09
  * @Description: 我的任务-试用任务信息-弹框
 -->
 
@@ -128,7 +128,7 @@ export default {
     height: 350px;
     margin-bottom: 20px;
     .input-width {
-      width: 180px;
+      width: 180px !important;
     }
     .table-wrap{
       width:900px;

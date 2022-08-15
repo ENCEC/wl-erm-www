@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-01 15:55:04
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-04 18:02:41
+ * @LastEditTime: 2022-08-15 14:29:13
  * @Description: 修改密码
 -->
 
@@ -159,7 +159,7 @@ export default {
   .form-wrap {
     height: 140px;
     .input-width {
-      width: 300px;
+      width: 180px !important;
     }
   }
   // 底部按钮
