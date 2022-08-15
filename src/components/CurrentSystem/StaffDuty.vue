@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-03 09:55:18
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-05 10:57:53
+ * @LastEditTime: 2022-08-12 15:20:03
  * @Description: 入职岗位-下拉
 -->
 
@@ -18,24 +18,16 @@
   >
     <el-option
       v-for="(item, index) in optionsList"
-      :key="'staffDutyCode' + index + item.staffDutyCode"
-      :label="item.staffDuty"
-      :value="item.staffDutyCode"
+      :key="'postId' + index + item.postId"
+      :label="item.postName"
+      :value="item.postId"
     />
-    <!-- <el-option
-      v-for="item in supplierList"
-      :key="item.supplierId"
-      :label="item.supplierName"
-      :value="item.supplierId"
-    /> -->
   </el-select>
 </template>
 <script>
 import {
   queryStaffDutyBySelect
 } from '@/api/select';
-
-// import { getSupplier } from '@/api/procurement-manage'
 export default {
   props: {
     disabled: {

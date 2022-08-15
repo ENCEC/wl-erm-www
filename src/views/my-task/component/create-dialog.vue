@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 17:38:09
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-10 17:07:11
+ * @LastEditTime: 2022-08-12 14:06:04
  * @Description: 我的任务-试用任务信息-弹框
 -->
 
@@ -35,8 +35,8 @@
                     ref="tableForm"
                     :task-info-id="editData.taskInfoId"
                     :user-type="userType"
-                    @getTableFormData="getTableFormData"
                   />
+                  <!-- @getTableFormData="getTableFormData" -->
                 </div>
               </el-form-item>
             </el-col>
@@ -45,7 +45,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button
-          v-if="userType !== USER_TYPE.ORDINATOR"
+          v-if="userType === USER_TYPE.STAFF || userType === USER_TYPE.CHARGE"
           type="primary"
           size="mini"
           @click="handleConfirm"
@@ -103,10 +103,10 @@ export default {
   mounted() {},
   methods: {
     // 获取填写的数据 TODO
-    getTableFormData(val, isClose) {
-      // TODO:优化
-      isClose && this.close();
-    },
+    // getTableFormData(val, isClose) {
+    //   // TODO:优化
+    //   isClose && this.close();
+    // },
     // 关闭弹框
     close() {
       this.$emit('getTableData', '');
@@ -114,8 +114,9 @@ export default {
       this.$refs['elForm'].resetFields();
     },
     // 提交表单信息
-    handleConfirm() {
-      this.$refs.tableForm.saveCurPageData(true)
+    async handleConfirm() {
+      await this.$refs.tableForm.saveCurPageData(true)
+      this.close();
       // this.$refs['elForm'].validate(valid => {});
     }
   }

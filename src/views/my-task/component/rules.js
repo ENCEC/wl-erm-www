@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-08 18:45:59
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-11 17:12:19
+ * @LastEditTime: 2022-08-12 18:11:44
  * @Description:
  */
 
@@ -16,7 +16,7 @@ export const regularFormRules = {
       trigger: 'change'
     }
   ],
-  resultAccess: [
+  faceResult: [
     {
       required: true,
       message: '请选择面谈结果',
@@ -30,7 +30,7 @@ export const regularFormRules = {
       trigger: 'blur'
     }
   ],
-  approver: [
+  uemUserId: [
     {
       required: true,
       message: '请选择提交审批人',
@@ -52,7 +52,7 @@ export const regularFormRules = {
       trigger: 'change'
     }
   ],
-  approvalRemark: [
+  resultAccess: [
     {
       required: true,
       message: '请选择审批结果',
