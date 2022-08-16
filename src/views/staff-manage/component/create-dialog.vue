@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 21:05:06
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-15 14:59:47
+ * @LastEditTime: 2022-08-16 13:56:08
  * @Description:
 -->
 
@@ -15,6 +15,8 @@
       center
       :close-on-click-modal="false"
       top="10vh"
+      z-index="10000"
+      :append-to-body="true"
       destroy-on-close
       v-on="$listeners"
     >
@@ -317,13 +319,13 @@
         <el-button
           v-if="type !== 'detail'"
           type="primary"
-          size="mini"
+          size="medium"
           @click="handleConfirm"
         >提交</el-button>
         <el-button
           type="primary"
           :plain="true"
-          size="mini"
+          size="medium"
           @click="close"
         >{{ type === 'detail'?'关闭':'取消' }}</el-button>
       </div>
@@ -332,7 +334,7 @@
 </template>
 <script>
 import { queryStaffById, updateStaff } from '@/api/staff-manage';
-import { queryTechnicalNameBySelect } from '@/api/select';
+import { queryTechnicalNameBySelect } from '@/api/common';
 import { formRules } from './rules';
 import Department from '@/components/CurrentSystem/Department.vue'
 import StaffDuty from '@/components/CurrentSystem/StaffDuty.vue'

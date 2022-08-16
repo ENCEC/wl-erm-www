@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-01 19:02:14
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-12 11:44:49
+ * @LastEditTime: 2022-08-15 17:08:23
  * @Description: 员工管理-员工管理
 -->
 
@@ -59,7 +59,7 @@ import {
   queryStaffByPage,
   deleteStaff
 } from '@/api/staff-manage';
-import { queryTechnicalNameBySelect, queryStaffDutyBySelect, queryDepartmentBySelect } from '@/api/select';
+import { queryTechnicalNameBySelect, queryStaffDutyBySelect, queryDepartmentBySelect } from '@/api/common';
 import tableMix from '@/mixins/table-mixin';
 export default {
   name: 'StaffManage',

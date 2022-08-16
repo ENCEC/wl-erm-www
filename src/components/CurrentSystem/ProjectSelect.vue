@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-15 14:54:15
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-15 14:58:12
+ * @LastEditTime: 2022-08-15 17:07:53
  * @Description: 归属项目-下拉
 -->
 
@@ -26,7 +26,7 @@
 <script>
 import {
   queryProjectNameBySelect
-} from '@/api/select';
+} from '@/api/common';
 export default {
   props: {},
   data() {

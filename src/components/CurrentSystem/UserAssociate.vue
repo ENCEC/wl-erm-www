@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-03 10:20:28
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-10 09:56:14
+ * @LastEditTime: 2022-08-15 17:08:05
  * @Description:联想控件-用户
 -->
 
@@ -23,7 +23,7 @@
 <script>
 import {
   queryUser
-} from '@/api/select';
+} from '@/api/common';
 // import { getSupplier } from '@/api/procurement-manage'
 export default {
   props: {
