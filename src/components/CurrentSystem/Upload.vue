@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-04 17:34:53
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-05 14:13:10
+ * @LastEditTime: 2022-08-15 17:08:02
  * @Description: 所属部门-下拉
 -->
 
@@ -26,7 +26,7 @@
 <script>
 import {
   queryDepartmentBySelect
-} from '@/api/select';
+} from '@/api/common';
 
 export default {
   props: {

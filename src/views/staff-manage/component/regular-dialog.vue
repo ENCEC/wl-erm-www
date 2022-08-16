@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 21:05:06
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-15 14:36:38
+ * @LastEditTime: 2022-08-16 13:56:26
  * @Description: 员工转正
 -->
 
@@ -15,6 +15,8 @@
       center
       :close-on-click-modal="false"
       top="10vh"
+      z-index="10000"
+      :append-to-body="true"
       v-on="$listeners"
     >
       <el-form
@@ -135,7 +137,7 @@
             <el-col :span="12">
               <!-- TODO -->
               <el-form-item label="附件:" prop="speciality">
-                <Upload :upload-data.sync="uploadData" />
+                <Upload :upload-data.sync="uploadData" :file-info="formData.resume" />
               </el-form-item>
             </el-col>
           </el-row>
@@ -187,13 +189,13 @@
       <div slot="footer" class="dialog-footer">
         <el-button
           type="primary"
-          size="mini"
+          size="medium"
           @click="handleConfirm"
         >提交</el-button>
         <el-button
           type="primary"
           :plain="true"
-          size="mini"
+          size="medium"
           @click="close"
         >取消</el-button>
       </div>
@@ -241,7 +243,8 @@ export default {
         interviewComments: '', // 面谈评语
         positiveUid: '', // 审批人
         positiveComments: '', // 转正评语
-        speciality: '' // 在校专业
+        speciality: '', // 在校专业
+        resume: ''// 文件key
       },
       uploadData: {
         systemId: process.env.VUE_APP_SYSTEMID, // 写死

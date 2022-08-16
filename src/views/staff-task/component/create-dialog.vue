@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:15:03
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-15 14:29:56
+ * @LastEditTime: 2022-08-16 14:25:38
  * @Description:
 -->
 
@@ -16,6 +16,8 @@
       :close-on-click-modal="false"
       top="10vh"
       destroy-on-close
+      z-index="1000"
+      :append-to-body="true"
       v-on="$listeners"
     >
       <el-form
@@ -136,13 +138,13 @@
         <el-button
           v-if="type !== 'detail'"
           type="primary"
-          size="mini"
+          size="medium"
           @click="handleConfirm"
         >提交</el-button>
         <el-button
           type="primary"
           :plain="true"
-          size="mini"
+          size="medium"
           @click="close"
         >{{ type === 'detail'?'关闭':'取消' }}</el-button>
       </div>

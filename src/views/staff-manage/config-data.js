@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-01 13:52:08
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-12 15:24:30
+ * @LastEditTime: 2022-08-15 18:27:27
  * @Description:
  */
 
@@ -126,6 +126,7 @@ export const columns = _this => {
     {
       prop: 'sex',
       label: '性别',
+      width: '60px',
       formatter: (row, column) => {
         return row.sex ? '女' : '男'
       }

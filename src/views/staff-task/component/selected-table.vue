@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 09:22:23
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-10 09:42:15
+ * @LastEditTime: 2022-08-16 15:30:22
  * @Description:
 -->
 
@@ -150,6 +150,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .table-wrap {
+  width:750px;
   .btn-wrap {
     display: flex;
     justify-content: flex-end;

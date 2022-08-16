@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 21:05:06
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-15 14:29:52
+ * @LastEditTime: 2022-08-16 13:58:20
  * @Description: 员工转正
 -->
 
@@ -15,6 +15,8 @@
       center
       :close-on-click-modal="false"
       top="10vh"
+      z-index="10000"
+      :append-to-body="true"
       v-on="$listeners"
     >
       <el-form

@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-03 09:55:18
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-12 15:20:03
+ * @LastEditTime: 2022-08-15 17:07:58
  * @Description: 入职岗位-下拉
 -->
 
@@ -27,7 +27,7 @@
 <script>
 import {
   queryStaffDutyBySelect
-} from '@/api/select';
+} from '@/api/common';
 export default {
   props: {
     disabled: {

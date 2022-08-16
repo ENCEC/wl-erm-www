@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 17:38:09
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-12 15:28:19
+ * @LastEditTime: 2022-08-16 14:07:25
  * @Description: 我的任务-试用任务信息-弹框-表格
 -->
 
@@ -301,6 +301,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .table-wrap {
+   width:900px;
   .btn-wrap {
     display: flex;
     justify-content: flex-end;
