@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 21:05:06
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-12 16:52:36
+ * @LastEditTime: 2022-08-15 17:08:37
  * @Description:
 -->
 
@@ -342,7 +342,7 @@
 </template>
 <script>
 import { queryStaffById, updateStaff } from '@/api/staff-manage';
-import { queryTechnicalNameBySelect, queryProjectNameBySelect } from '@/api/select';
+import { queryTechnicalNameBySelect, queryProjectNameBySelect } from '@/api/common';
 import { formRules } from './rules';
 import Department from '@/components/CurrentSystem/Department.vue'
 import StaffDuty from '@/components/CurrentSystem/StaffDuty.vue'

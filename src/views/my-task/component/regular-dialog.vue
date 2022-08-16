@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:15:03
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-15 14:29:27
+ * @LastEditTime: 2022-08-16 13:55:42
  * @Description:
 -->
 
@@ -16,6 +16,8 @@
       :close-on-click-modal="false"
       top="10vh"
       destroy-on-close
+      z-index="10000"
+      :append-to-body="true"
       v-on="$listeners"
     >
       <el-form
@@ -302,19 +304,19 @@
         <el-button
           v-if="status === STATUS_TYPE.CHECK"
           type="primary"
-          size="mini"
+          size="medium"
           @click="handleWithdraw"
         >撤回</el-button>
         <el-button
           v-if="status === STATUS_TYPE.ON_MANAGER || status === STATUS_TYPE.ON_LEADER"
           type="primary"
-          size="mini"
+          size="medium"
           @click="handleConfirm"
         >提交</el-button>
         <el-button
           type="primary"
           :plain="true"
-          size="mini"
+          size="medium"
           @click="close"
         >取消</el-button>
       </div>

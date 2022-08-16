@@ -8,6 +8,8 @@
       center
       :close-on-click-modal="false"
       top="10vh"
+      z-index="10000"
+      :append-to-body="true"
       v-on="$listeners"
     >
       <el-form

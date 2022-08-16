@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 17:38:09
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-15 14:29:09
+ * @LastEditTime: 2022-08-16 14:08:33
  * @Description: 我的任务-试用任务信息-弹框
 -->
 
@@ -15,6 +15,8 @@
       center
       :close-on-click-modal="false"
       top="10vh"
+      z-index="100"
+      :append-to-body="true"
       destroy-on-close
       v-on="$listeners"
     >
@@ -30,14 +32,12 @@
           <el-row>
             <el-col :span="24">
               <el-form-item label=" ">
-                <div class="table-wrap">
-                  <TaskTable
-                    ref="tableForm"
-                    :task-info-id="editData.taskInfoId"
-                    :user-type="userType"
-                  />
-                  <!-- @getTableFormData="getTableFormData" -->
-                </div>
+                <TaskTable
+                  ref="tableForm"
+                  :task-info-id="editData.taskInfoId"
+                  :user-type="userType"
+                />
+                <!-- @getTableFormData="getTableFormData" -->
               </el-form-item>
             </el-col>
           </el-row>
@@ -47,13 +47,13 @@
         <el-button
           v-if="userType === USER_TYPE.STAFF || userType === USER_TYPE.CHARGE"
           type="primary"
-          size="mini"
+          size="medium"
           @click="handleConfirm"
         >保存</el-button>
         <el-button
           type="primary"
           :plain="true"
-          size="mini"
+          size="medium"
           @click="close"
         >{{ userType === USER_TYPE.ORDINATOR?'关闭':'取消' }}</el-button>
       </div>
@@ -129,9 +129,6 @@ export default {
     margin-bottom: 20px;
     .input-width {
       width: 180px !important;
-    }
-    .table-wrap{
-      width:900px;
     }
   }
   // 底部按钮

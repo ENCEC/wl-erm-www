@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 21:05:06
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-15 14:33:44
+ * @LastEditTime: 2022-08-16 13:56:18
  * @Description:
 -->
 
@@ -15,6 +15,8 @@
       center
       :close-on-click-modal="false"
       top="10vh"
+      z-index="10000"
+      :append-to-body="true"
       v-on="$listeners"
     >
       <el-form
@@ -170,13 +172,13 @@
       <div slot="footer" class="dialog-footer">
         <el-button
           type="primary"
-          size="mini"
+          size="medium"
           @click="handleConfirm"
         >提交</el-button>
         <el-button
           type="primary"
           :plain="true"
-          size="mini"
+          size="medium"
           @click="close"
         >取消</el-button>
       </div>

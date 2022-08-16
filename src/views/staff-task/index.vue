@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:15:04
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-09 13:39:36
+ * @LastEditTime: 2022-08-15 17:08:33
  * @Description: 员工管理-任务分配
 -->
 
@@ -43,7 +43,7 @@ import {
 } from '@/api/staff-task';
 import {
   queryUser
-} from '@/api/select';
+} from '@/api/common';
 import tableMix from '@/mixins/table-mixin';
 export default {
   name: 'StaffTask',

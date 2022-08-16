@@ -1,16 +1,16 @@
 <template>
   <div id="app">
     <router-view />
-<!--    <my-vue/>-->
+    <!--    <my-vue/>-->
   </div>
 </template>
 
 <script>
-import MyVue from "@/views/myVue";
+// import MyVue from '@/views/myVue';
 window.backend_ctx = 'http://localhost:8081/ec-demo/'
 export default {
   name: 'App',
-  components: {MyVue},
+  // components: { MyVue },
   created() {
     const config = {}
     this.$tabIndex.registerGlobal(config)
