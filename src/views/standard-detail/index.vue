@@ -49,10 +49,12 @@ import {
   standardDetailStartStop,
   addStandardDetail,
   updateStandardDetail,
-  deleteStandardDetail,
-  selectEntryNameSpecies,
-  selectItemTypeSpecies
+  deleteStandardDetail
 } from '@/api/standard-detail.js';
+import {
+  querySysDictType,
+  queryStandardEntry
+} from '@/api/standard-entry.js';
 import tableComponent from '@/components/TableComponent';
 import filterPanel from '@/components/FilterPanel';
 import formPanel from '@/components/FormPanel';
@@ -92,7 +94,10 @@ export default {
             optionLabel: 'display_name',
             optionValue: 'key',
             optionKey: 'key',
-            options: entryTypeOptions
+            options: entryTypeOptions,
+            changeSelect: (optionVal) => {
+              this.handleEntryTypeChange(optionVal)
+            }
           },
           {
             type: 'select',
@@ -104,7 +109,11 @@ export default {
             optionLabel: 'display_name',
             optionValue: 'key',
             optionKey: 'key',
-            options: entryOptions
+            options: entryOptions,
+            changeSelect: () => {
+              if (!this.temp.itemType) { this.temp.entryName = ''; }
+              this.$message.error('请先选择条目类型')
+            }
           },
           {
             type: 'textarea',
@@ -365,14 +374,15 @@ export default {
     initEntryTypeSelect() {
       const params = {
         pageSize: 1000,
-        currentPage: 1
+        currentPage: 1,
+        dictTypeCode: '条目类型'
       };
-      selectItemTypeSpecies(params)
+      querySysDictType(params)
         .then((res) => {
-          res.data.forEach((item) => {
+          res.data.records.forEach((item) => {
             this.entryTypeOptions.push({
-              key: item,
-              display_name: item
+              key: item.sysDictTypeId,
+              display_name: item.dictTypeName
             });
           });
         })
@@ -380,20 +390,30 @@ export default {
           this.$message.error('初始化条目类型失败');
         });
     },
+    async handleEntryTypeChange(entryType) {
+      debugger
+      await this.initEntryOptions()
+      this.entryOptions = this.entryOptions.filter((item) => {
+        debugger
+        return item.itemType === entryType
+      })
+    },
     initEntryOptions() {
       const params = {
         pageSize: 1000,
-        currentPage: 1,
-        status: '0'
+        currentPage: 1
       };
-      selectEntryNameSpecies(params)
+      queryStandardEntry(params)
         .then((res) => {
-          res.data.forEach((item) => {
-            this.entryOptions.push({
-              key: item,
-              display_name: item
+          const arr = []
+          res.data.records.forEach((item) => {
+            arr.push({
+              key: item.standardEntryId,
+              display_name: item.entryName,
+              itemType: item.itemType
             });
           });
+          this.entryOptions = arr
         })
         .catch(() => {
           this.$message.error('初始化规范条目失败');
@@ -577,6 +597,7 @@ export default {
     handleDialogClose() {
       this.$nextTick(() => {
         this.handleResetForm();
+        this.initEntryOptions()
       });
       this.$refs['formPanel'].$refs['dataForm'].clearValidate();
     }

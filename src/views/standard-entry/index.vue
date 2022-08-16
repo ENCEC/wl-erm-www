@@ -69,6 +69,7 @@ const statusTypeOptions = [
 const entryTypeOptions = [];
 // 适用岗位
 const postOptions = [];
+// 统筹人
 const userOptions = [];
 // 执行角色
 const roleOptions = [];
@@ -500,7 +501,9 @@ export default {
         currentPage: 1,
         pageSize: 20,
         totalRecord: 0,
-        postName: '',
+        entryName: '',
+        applyPostId: '',
+        actionRoleId: '',
         status: ''
       },
       statusTypeOptions,
