@@ -84,7 +84,7 @@ export const constantRoutes = [
 export const asyncRoutes = [
   // hotRouter,
   {
-    path: '/',
+    path: '/task',
     component: Layout,
     meta: { title: '我的任务', icon: 'user' },
     children: [

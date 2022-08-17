@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 21:05:06
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-16 13:56:18
+ * @LastEditTime: 2022-08-17 14:28:39
  * @Description:
 -->
 
@@ -23,7 +23,7 @@
         ref="elForm"
         :model="formData"
         :rules="rules"
-        size="mini"
+        size="medium"
         label-width="100px"
         :inline="true"
         destroy-on-close
@@ -161,8 +161,8 @@
             </el-row>
             <el-row>
               <!-- TODO -->
-              <el-form-item label="附件:" prop="speciality">
-                <Upload />
+              <el-form-item label="附件:">
+                <Upload :upload-data.sync="uploadData" :file-info="formData.resume" />
               </el-form-item>
             </el-row>
           </div>
@@ -190,7 +190,7 @@ import { queryStaffInfo, saveResignInfo, saveDismissInfo } from '@/api/staff-man
 import { dissmissFormRules } from './rules';
 // import StaffDuty from '@/components/CurrentSystem/StaffDuty.vue'
 // import Department from '@/components/CurrentSystem/Department.vue'
-import Upload from '@/components/CurrentSystem/Upload.vue'
+import Upload from './Upload.vue'
 
 export default {
   components: { Upload },
@@ -208,6 +208,12 @@ export default {
   },
   data() {
     return {
+      uploadData: {
+        systemId: process.env.VUE_APP_SYSTEMID, // 写死
+        fileName: '',
+        fileType: '',
+        uemUserId: ''
+      },
       rules: dissmissFormRules, // 验证规则
       formData: {
         name: '',
@@ -224,7 +230,7 @@ export default {
         // 辞退
         dismissDate: '', // 2022-05-20 00:00:00辞退时间
         dismissComments: '',
-        speciality: ''
+        resume: ''// 文件key
       }
     };
   },
@@ -247,6 +253,7 @@ export default {
   watch: {},
   created() {
     this.getDetailInfo()
+    this.uploadData.uemUserId = this.editData.uemUserId
   },
   mounted() {
   },
@@ -261,7 +268,7 @@ export default {
       queryStaffInfo({
         uemUserId: this.editData.uemUserId
       }).then(result => {
-        const res = result.data
+        const res = result
         for (const key in this.formData) {
           if (key === 'sex') {
             this.formData[key] = res[key] || false

@@ -2,205 +2,204 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 21:05:06
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-16 13:56:26
+ * @LastEditTime: 2022-08-17 14:26:50
  * @Description: 员工转正
 -->
 
 <template>
-  <div class="regular-dialog">
-    <el-dialog
-      :title="'员工'+dialogTitle"
-      v-bind="$attrs"
-      width="750px"
-      center
-      :close-on-click-modal="false"
-      top="10vh"
-      z-index="10000"
-      :append-to-body="true"
-      v-on="$listeners"
+  <el-dialog
+    :title="'员工'+dialogTitle"
+    class="regular-dialog"
+    v-bind="$attrs"
+    width="750px"
+    center
+    :close-on-click-modal="false"
+    top="10vh"
+    z-index="10000"
+    :append-to-body="true"
+    v-on="$listeners"
+  >
+    <el-form
+      ref="elForm"
+      :model="formData"
+      :rules="rules"
+      size="mini"
+      label-width="100px"
+      :inline="true"
+      destroy-on-close
     >
-      <el-form
-        ref="elForm"
-        :model="formData"
-        :rules="rules"
-        size="mini"
-        label-width="100px"
-        :inline="true"
-        destroy-on-close
-      >
-        <div class="form-wrap">
-          <el-row>
-            <el-col :span="12">
-              <el-form-item label="姓名:" prop="name">
-                <el-input
-                  v-model="formData.name"
-                  placeholder="请输入姓名"
-                  clearable
-                />
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item label="性别:" prop="sex">
-                <el-radio-group v-model="formData.sex">
-                  <el-radio :label="false">男</el-radio>
-                  <el-radio :label="true">女</el-radio>
-                </el-radio-group>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="12">
-              <el-form-item label="入职时间:" prop="entryDate">
-                <el-date-picker
-                  v-model="formData.entryDate"
-                  format="yyyy-MM-dd"
-                  value-format="yyyy-MM-dd hh:mm:ss"
-                  class="input-width"
-                  placeholder="请选择入职时间"
-                  clearable
-                />
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <!-- 在职状态（0：试用员工 1：正式员工 2：离职员工） -->
-              <el-form-item label="在职状态:" prop="jobStatus">
-                <el-radio-group v-model="formData.jobStatus">
-                  <el-radio
-                    v-for="item in jobStatusOptions"
-                    :key="'jobStatus' + item.value"
-                    :label="item.value"
-                  >{{ item.label }}</el-radio>
-                </el-radio-group>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="12">
-              <el-form-item label="入职部门:" prop="deptName">
-                <el-input
-                  v-model="formData.deptName"
-                  placeholder="请输入入职部门"
-                  clearable
-                  disabled
-                />
-                <!-- <Department v-model="formData.uemDeptId" clearable placeholder="请选择入职部门" class="input-width" disabled /> -->
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item label="入职岗位:" prop="staffDuty">
-                <el-input
-                  v-model="formData.staffDuty"
-                  placeholder="请输入入职岗位"
-                  clearable
-                  disabled
-                />
-                <!-- <StaffDuty v-model="formData.staffDutyCode" placeholder="请选择入职岗位" class="input-width" disabled /> -->
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <!-- 转正 -->
-          <el-row>
-            <el-col :span="12">
-              <el-form-item label="转正日期:" prop="offerDate">
-                <el-date-picker
-                  v-model="formData.offerDate"
-                  format="yyyy-MM-dd"
-                  value-format="yyyy-MM-dd hh:mm:ss"
-                  class="input-width"
-                  placeholder="请选择转正日期"
-                  clearable
-                />
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item label="转正类型:" prop="positiveType">
-                <el-radio-group v-model="formData.positiveType">
-                  <el-radio
-                    v-for="item in positiveTypeOptions"
-                    :key="'positiveType' + item.value"
-                    :label="item.value"
-                  >{{ item.label }}</el-radio>
-                </el-radio-group>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="12">
-              <el-form-item label="转员工答辩成绩:" prop="defenseScore" label-width="130px">
-                <el-input
-                  v-model="formData.defenseScore"
-                  placeholder="请输入转员工答辩成绩"
-                  clearable
-                />
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <!-- TODO -->
-              <el-form-item label="附件:" prop="speciality">
-                <Upload :upload-data.sync="uploadData" :file-info="formData.resume" />
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row />
-          <el-row>
-            <el-col :span="24">
-              <el-form-item label="面谈评语:" prop="interviewUid">
-                <UserAssociate v-model="formData.interviewUid" placeholder="请选择面谈人" class="input-width" />
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <!-- 面谈评语 -->
-          <el-row>
-            <el-col :span="24">
-              <el-form-item label=" " prop="interviewComments" :hide-required-asterisk="false">
-                <el-input
-                  v-model="formData.interviewComments"
-                  type="textarea"
-                  placeholder="输入评语"
-                  clearable
-                  style="width:500px"
-                />
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="24">
-              <el-form-item label="转正评语:" prop="positiveUid">
-                <UserAssociate v-model="formData.positiveUid" placeholder="请选择审批人" class="input-width" />
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <!-- 转正评语 -->
-          <el-row>
-            <el-col :span="24">
-              <el-form-item label=" " prop="positiveComments" :hide-required-asterisk="true">
-                <el-input
-                  v-model="formData.positiveComments"
-                  type="textarea"
-                  placeholder="输入评语"
-                  clearable
-                  style="width:500px"
-                />
-              </el-form-item>
-            </el-col>
-          </el-row>
-        </div>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button
-          type="primary"
-          size="medium"
-          @click="handleConfirm"
-        >提交</el-button>
-        <el-button
-          type="primary"
-          :plain="true"
-          size="medium"
-          @click="close"
-        >取消</el-button>
+      <div class="form-wrap">
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="姓名:" prop="name">
+              <el-input
+                v-model="formData.name"
+                placeholder="请输入姓名"
+                clearable
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="性别:" prop="sex">
+              <el-radio-group v-model="formData.sex">
+                <el-radio :label="false">男</el-radio>
+                <el-radio :label="true">女</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="入职时间:" prop="entryDate">
+              <el-date-picker
+                v-model="formData.entryDate"
+                format="yyyy-MM-dd"
+                value-format="yyyy-MM-dd hh:mm:ss"
+                class="input-width"
+                placeholder="请选择入职时间"
+                clearable
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <!-- 在职状态（0：试用员工 1：正式员工 2：离职员工） -->
+            <el-form-item label="在职状态:" prop="jobStatus">
+              <el-radio-group v-model="formData.jobStatus">
+                <el-radio
+                  v-for="item in jobStatusOptions"
+                  :key="'jobStatus' + item.value"
+                  :label="item.value"
+                >{{ item.label }}</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="入职部门:" prop="deptName">
+              <el-input
+                v-model="formData.deptName"
+                placeholder="请输入入职部门"
+                clearable
+                disabled
+              />
+              <!-- <Department v-model="formData.uemDeptId" clearable placeholder="请选择入职部门" class="input-width" disabled /> -->
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="入职岗位:" prop="staffDuty">
+              <el-input
+                v-model="formData.staffDuty"
+                placeholder="请输入入职岗位"
+                clearable
+                disabled
+              />
+              <!-- <StaffDuty v-model="formData.staffDutyCode" placeholder="请选择入职岗位" class="input-width" disabled /> -->
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <!-- 转正 -->
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="转正日期:" prop="offerDate">
+              <el-date-picker
+                v-model="formData.offerDate"
+                format="yyyy-MM-dd"
+                value-format="yyyy-MM-dd hh:mm:ss"
+                class="input-width"
+                placeholder="请选择转正日期"
+                clearable
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="转正类型:" prop="positiveType">
+              <el-radio-group v-model="formData.positiveType">
+                <el-radio
+                  v-for="item in positiveTypeOptions"
+                  :key="'positiveType' + item.value"
+                  :label="item.value"
+                >{{ item.label }}</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="转员工答辩成绩:" prop="defenseScore" label-width="130px">
+              <el-input
+                v-model="formData.defenseScore"
+                placeholder="请输入转员工答辩成绩"
+                clearable
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <!-- TODO -->
+            <el-form-item label="附件:">
+              <Upload :upload-data.sync="uploadData" :file-info="formData.resume" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row />
+        <el-row>
+          <el-col :span="24">
+            <el-form-item label="面谈评语:" prop="interviewUid">
+              <UserAssociate v-model="formData.interviewUid" placeholder="请选择面谈人" class="input-width" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <!-- 面谈评语 -->
+        <el-row>
+          <el-col :span="24">
+            <el-form-item label=" " prop="interviewComments" :hide-required-asterisk="false">
+              <el-input
+                v-model="formData.interviewComments"
+                type="textarea"
+                placeholder="输入评语"
+                clearable
+                style="width:500px"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="24">
+            <el-form-item label="转正评语:" prop="positiveUid">
+              <UserAssociate v-model="formData.positiveUid" placeholder="请选择审批人" class="input-width" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <!-- 转正评语 -->
+        <el-row>
+          <el-col :span="24">
+            <el-form-item label=" " prop="positiveComments" :hide-required-asterisk="true">
+              <el-input
+                v-model="formData.positiveComments"
+                type="textarea"
+                placeholder="输入评语"
+                clearable
+                style="width:500px"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
       </div>
-    </el-dialog>
-  </div>
+    </el-form>
+    <div slot="footer" class="dialog-footer">
+      <el-button
+        type="primary"
+        size="medium"
+        @click="handleConfirm"
+      >提交</el-button>
+      <el-button
+        type="primary"
+        :plain="true"
+        size="medium"
+        @click="close"
+      >取消</el-button>
+    </div>
+  </el-dialog>
 </template>
 <script>
 import { queryStaffInfo, savePositiveInfo } from '@/api/staff-manage';
@@ -243,7 +242,6 @@ export default {
         interviewComments: '', // 面谈评语
         positiveUid: '', // 审批人
         positiveComments: '', // 转正评语
-        speciality: '', // 在校专业
         resume: ''// 文件key
       },
       uploadData: {
@@ -289,7 +287,7 @@ export default {
       queryStaffInfo({
         uemUserId: this.editData.uemUserId
       }).then(result => {
-        const res = result.data
+        const res = result
         // 表单赋值
         for (const key in this.formData) {
           if (key === 'sex') {

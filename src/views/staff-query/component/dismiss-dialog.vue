@@ -1,166 +1,165 @@
 
 <template>
-  <div class="dismiss-dialog">
-    <el-dialog
-      :title="'员工'+dialogTitle"
-      v-bind="$attrs"
-      width="750px"
-      center
-      :close-on-click-modal="false"
-      top="10vh"
-      z-index="10000"
-      :append-to-body="true"
-      v-on="$listeners"
+  <el-dialog
+    class="dismiss-dialog"
+    :title="'员工'+dialogTitle"
+    v-bind="$attrs"
+    width="750px"
+    center
+    :close-on-click-modal="false"
+    top="10vh"
+    z-index="10000"
+    :append-to-body="true"
+    v-on="$listeners"
+  >
+    <el-form
+      ref="elForm"
+      :model="formData"
+      :rules="rules"
+      size="mini"
+      disabled
+      label-width="100px"
+      :inline="true"
+      destroy-on-close
     >
-      <el-form
-        ref="elForm"
-        :model="formData"
-        :rules="rules"
-        size="mini"
-        disabled
-        label-width="100px"
-        :inline="true"
-        destroy-on-close
-      >
-        <div class="form-wrap">
+      <div class="form-wrap">
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="姓名:" prop="name">
+              <el-input
+                v-model="formData.name"
+                placeholder="请输入姓名"
+                clearable
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <!-- 性别（0男，1女） -->
+            <el-form-item label="性别:" prop="sex">
+              <el-radio-group v-model="formData.sex">
+                <el-radio :label="false">男</el-radio>
+                <el-radio :label="true">女</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="入职时间:" prop="entryDate">
+              <el-date-picker
+                v-model="formData.entryDate"
+                format="yyyy-MM-dd"
+                value-format="yyyy-MM-dd"
+                class="input-width"
+                placeholder="请选择入职时间"
+                clearable
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <!-- 在职状态（0：试用员工 1：正式员工 2：离职员工） -->
+            <el-form-item label="在职状态:" prop="jobStatus">
+              <el-radio-group v-model="formData.jobStatus">
+                <el-radio
+                  v-for="item in jobStatusOptions"
+                  :key="'jobStatus' + item.value"
+                  :label="item.value"
+                >{{ item.label }}</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="入职部门:" prop="uemDeptId">
+              <Department v-model="formData.uemDeptId" clearable placeholder="请选择入职部门" class="input-width" disabled />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="入职岗位:" prop="staffDutyCode">
+              <StaffDuty v-model="formData.staffDutyCode" placeholder="请选择入职岗位" class="input-width" disabled />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <!-- 离职 Start -->
+        <div v-if="type==='quit'">
           <el-row>
-            <el-col :span="12">
-              <el-form-item label="姓名:" prop="name">
-                <el-input
-                  v-model="formData.name"
-                  placeholder="请输入姓名"
-                  clearable
-                />
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <!-- 性别（0男，1女） -->
-              <el-form-item label="性别:" prop="sex">
-                <el-radio-group v-model="formData.sex">
-                  <el-radio :label="false">男</el-radio>
-                  <el-radio :label="true">女</el-radio>
-                </el-radio-group>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="12">
-              <el-form-item label="入职时间:" prop="entryDate">
+            <el-col :span="24">
+              <el-form-item label="离职日期:" prop="leaveDate">
                 <el-date-picker
-                  v-model="formData.entryDate"
+                  v-model="formData.leaveDate"
                   format="yyyy-MM-dd"
-                  value-format="yyyy-MM-dd"
+                  value-format="yyyy-MM-dd hh:mm:ss"
                   class="input-width"
-                  placeholder="请选择入职时间"
+                  placeholder="请选择离职日期"
                   clearable
                 />
               </el-form-item>
             </el-col>
-            <el-col :span="12">
-              <!-- 在职状态（0：试用员工 1：正式员工 2：离职员工） -->
-              <el-form-item label="在职状态:" prop="jobStatus">
-                <el-radio-group v-model="formData.jobStatus">
-                  <el-radio
-                    v-for="item in jobStatusOptions"
-                    :key="'jobStatus' + item.value"
-                    :label="item.value"
-                  >{{ item.label }}</el-radio>
-                </el-radio-group>
+          </el-row>
+          <el-row>
+            <el-col :span="24">
+              <el-form-item label="离职原因：" prop="leaveReason" :hide-required-asterisk="false">
+                <el-input
+                  v-model="formData.leaveReason"
+                  type="textarea"
+                  placeholder="输入离职原因"
+                  clearable
+                  style="width:500px"
+                />
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </div>
+        <!-- 离职 End -->
+        <!-- 辞退 Start -->
+        <div v-if="type==='dismiss'">
+          <el-row>
+            <el-col :span="24">
+              <el-form-item label="辞退日期:" prop="dismissDate">
+                <el-date-picker
+                  v-model="formData.dismissDate"
+                  format="yyyy-MM-dd"
+                  value-format="yyyy-MM-dd hh:mm:ss"
+                  class="input-width"
+                  placeholder="请选择辞退日期"
+                  clearable
+                />
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
-            <el-col :span="12">
-              <el-form-item label="入职部门:" prop="uemDeptId">
-                <Department v-model="formData.uemDeptId" clearable placeholder="请选择入职部门" class="input-width" disabled />
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item label="入职岗位:" prop="staffDutyCode">
-                <StaffDuty v-model="formData.staffDutyCode" placeholder="请选择入职岗位" class="input-width" disabled />
+            <el-col :span="24">
+              <el-form-item label="辞退原因：" prop="dismissComments" :hide-required-asterisk="false">
+                <el-input
+                  v-model="formData.dismissComments"
+                  type="textarea"
+                  placeholder="输入辞退原因"
+                  clearable
+                  style="width:500px"
+                />
               </el-form-item>
             </el-col>
           </el-row>
-          <!-- 离职 Start -->
-          <div v-if="type==='quit'">
-            <el-row>
-              <el-col :span="24">
-                <el-form-item label="离职日期:" prop="leaveDate">
-                  <el-date-picker
-                    v-model="formData.leaveDate"
-                    format="yyyy-MM-dd"
-                    value-format="yyyy-MM-dd hh:mm:ss"
-                    class="input-width"
-                    placeholder="请选择离职日期"
-                    clearable
-                  />
-                </el-form-item>
-              </el-col>
-            </el-row>
-            <el-row>
-              <el-col :span="24">
-                <el-form-item label="离职原因：" prop="leaveReason" :hide-required-asterisk="false">
-                  <el-input
-                    v-model="formData.leaveReason"
-                    type="textarea"
-                    placeholder="输入离职原因"
-                    clearable
-                    style="width:500px"
-                  />
-                </el-form-item>
-              </el-col>
-            </el-row>
-          </div>
-          <!-- 离职 End -->
-          <!-- 辞退 Start -->
-          <div v-if="type==='dismiss'">
-            <el-row>
-              <el-col :span="24">
-                <el-form-item label="辞退日期:" prop="dismissDate">
-                  <el-date-picker
-                    v-model="formData.dismissDate"
-                    format="yyyy-MM-dd"
-                    value-format="yyyy-MM-dd hh:mm:ss"
-                    class="input-width"
-                    placeholder="请选择辞退日期"
-                    clearable
-                  />
-                </el-form-item>
-              </el-col>
-            </el-row>
-            <el-row>
-              <el-col :span="24">
-                <el-form-item label="辞退原因：" prop="dismissComments" :hide-required-asterisk="false">
-                  <el-input
-                    v-model="formData.dismissComments"
-                    type="textarea"
-                    placeholder="输入辞退原因"
-                    clearable
-                    style="width:500px"
-                  />
-                </el-form-item>
-              </el-col>
-            </el-row>
-            <el-row>
-              <!-- TODO -->
-              <el-form-item label="附件:" prop="speciality">
-                <Upload />
-              </el-form-item>
-            </el-row>
-          </div>
-          <!-- 辞退 End -->
+          <el-row>
+            <!-- TODO -->
+            <el-form-item label="附件:" prop="speciality">
+              <Upload />
+            </el-form-item>
+          </el-row>
         </div>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button
-          type="primary"
-          :plain="true"
-          size="medium"
-          @click="close"
-        >取消</el-button>
+        <!-- 辞退 End -->
       </div>
-    </el-dialog>
-  </div>
+    </el-form>
+    <div slot="footer" class="dialog-footer">
+      <el-button
+        type="primary"
+        :plain="true"
+        size="medium"
+        @click="close"
+      >取消</el-button>
+    </div>
+  </el-dialog>
 </template>
 <script>
 import { queryStaffInfo, saveResignInfo, saveDismissInfo } from '@/api/staff-manage';

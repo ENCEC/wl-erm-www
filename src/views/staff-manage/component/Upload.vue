@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-04 17:34:53
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-15 18:26:33
+ * @LastEditTime: 2022-08-17 14:27:10
  * @Description: 所属部门-下拉
 -->
 
@@ -21,7 +21,7 @@
     size="mini"
     class="upload-demo"
   >
-    <el-button size="small" type="primary">点击上传</el-button>
+    <el-button size="small" type="primary">上传</el-button>
     <!-- <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div> -->
   </el-upload>
 </template>
@@ -29,6 +29,8 @@
 import {
   downloadExternalFile, deleteFile
 } from '@/api/common';
+import { downloadFile } from '@/utils/util'
+
 export default {
   props: {
     uploadData: {
@@ -99,12 +101,12 @@ export default {
     // 点击文件下载
     handlePreview(file) {
       console.log(file);
-      // TODO
       downloadExternalFile({
         systemId: process.env.VUE_APP_SYSTEMID, // 写死
         fileKey: file.fileKey.toString()// ''4312d611-9c3a-4f45-932e-a71e91b81863.txt''
       }).then(res => {
-        console.log('【 res 】-90', res)
+        const fileName = res.fileName.substring(0, res.fileName.lastIndexOf('.'));
+        downloadFile(res.file, fileName)
       })
     },
     // 确认删除前执行的操作

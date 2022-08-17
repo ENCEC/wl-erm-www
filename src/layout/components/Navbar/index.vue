@@ -79,8 +79,8 @@ export default {
     ])
   },
   created() {
-    console.log('【 userId 】-94', this.userId)
-    console.log('【 userInfo 】-95', this.userInfo)
+    // console.log('【 userId 】-94', this.userId)
+    // console.log('【 userInfo 】-95', this.userInfo)
   },
   methods: {
     // 打开用户资料弹框
