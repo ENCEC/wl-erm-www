@@ -4,7 +4,7 @@
     class="upload-file"
     :file-list="fileList"
     :show-file-list="false"
-    :multiple="false"
+    :multiple="true"
     :accept="accept"
     action="/"
     :limit="1"
@@ -16,14 +16,15 @@
     :on-exceed="handleExceed"
     :http-request="handleUpload"
   >
-    <el-button v-if="!uploadFile" size="medium" type="primary">上传</el-button>
-    <el-button v-else :title="uploadFile" type="text" size="medium">{{
-      uploadFile
+    <el-button v-if="!resume" size="medium" type="primary">上传</el-button>
+    <el-button v-else type="text" size="medium">{{
+      userName+type
     }}</el-button>
+    <div slot="tip" class="el-upload__tip">只能上传pdf文件，且不超过2MB</div>
   </el-upload>
 </template>
 <script>
-import { mapGetters } from 'vuex'
+// import { mapGetters } from "vuex";
 import { uploadExternalFile } from '@/api/staff-query.js';
 
 export default {
@@ -33,29 +34,44 @@ export default {
       type: String,
       default: ''
     },
-    value: {
+    resume: {
+      type: String,
+      default: ''
+    },
+    userName: {
+      type: String,
+      default: ''
+    },
+    userId: {
+      type: String,
+      default: ''
+    },
+    type: {
       type: String,
       default: ''
     }
   },
   data() {
     return {
-      fileList: [],
-      uploadFile: null
+      // fileList: [],
+      // uploadFile: null,
     };
   },
-  computed: {
-    ...mapGetters(['userId'])
-  },
+
   methods: {
     handleUpload(uploadObject) {
-      debugger;
-      const arr = uploadObject.file.name.split('.');
+      var suffix = uploadObject.file.name.substring(
+        uploadObject.file.name.lastIndexOf('.') + 1
+      ); // txt
+      var fileName = uploadObject.file.name.substring(
+        0,
+        uploadObject.file.name.lastIndexOf('.')
+      );
 
       const params = {
         systemId: 'YYDM200013',
-        fileType: arr[1],
-        fileName: arr[0],
+        fileType: suffix,
+        fileName: fileName,
         file: uploadObject.file
       };
       const formdata = new FormData();
@@ -64,17 +80,19 @@ export default {
       formdata.append('systemId', 'YYDM200013');
       formdata.append('file', uploadObject.file);
       formdata.append('uemUserId', this.userId);
+      formdata.append('type', this.type);
       uploadExternalFile(formdata)
-        .then(() => {
-          this.uploadFile = arr[0];
-
-          debugger;
+        .then((res) => {
+          console.log(Object.keys(res.data)[0]);
+          this.$emit('resumeChange', Object.keys(res.data)[0])
+          this.$message.success('上传成功')
         })
         .catch(() => {
-          debugger;
+          this.$message.error('上传失败')
         });
     },
     handleSuccess(res, file) {
+      debugger
     },
     handleRemove(file, fileList) {
       debugger;
@@ -113,7 +131,7 @@ export default {
     .el-button--text {
       span {
         display: inline-block !important;
-        max-width: 90px;
+        max-width: 200px;
         overflow: hidden;
       }
     }

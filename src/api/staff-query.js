@@ -39,12 +39,12 @@ export function uploadExternalFile(data) {
 }
 
 // 查看转正评语
-export function queryOfferInfo({ dispatcher, name }) {
+export function queryOfferInfo({ dispatchers, name }) {
   return request({
-    url: prefix + '/uemUserManage/queryOfferInfo',
+    url: prefix + '/taskDetailInfo/queryOffer',
     method: 'get',
     params: {
-      dispatcher, name
+      dispatchers, name
     }
   });
 }

@@ -200,7 +200,9 @@ export const operates = _this => {
         id: 'quit',
         label: '离职',
         type: 'text',
-        show: true,
+        show: (index, row) => {
+          return row.jobStatus === '2'
+        },
         disabled: false,
         method: (row, index) => {
           console.log('【 index 】-163', index)

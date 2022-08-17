@@ -482,7 +482,7 @@ $--color-white: #FFFFFF;
 
         .cell {
             color: $--font-primary;
-            max-height: 48px;
+            // max-height: 48px;
             overflow: hidden;
             text-overflow: ellipsis;
             display: -webkit-box;

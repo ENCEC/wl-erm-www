@@ -3,6 +3,11 @@
     title="转正申请"
     :visible.sync="dialogVisible"
     width="800px"
+    center
+    :close-on-click-modal="false"
+    top="10vh"
+    z-index="10000"
+    :append-to-body="true"
     @close="handleClose"
   >
     <el-form
@@ -51,7 +56,7 @@
               type="primary"
               @click="handleDownload"
             >申请表下载</el-button>
-            <upload-file accept="" />
+            <upload-file accept=".pdf" :resume="form.resume" type="转正申请表" :user-id="userId" :user-name="name" />
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -84,10 +89,7 @@
 import { mapGetters } from 'vuex';
 import { queryStandardDetail } from '@/api/standard-detail.js';
 import { queryUemUser } from '@/api/standard-entry.js';
-import {
-  saveOffer,
-  downloadExternalFile
-} from '@/api/staff-query.js';
+import { saveOffer, downloadExternalFile } from '@/api/staff-query.js';
 import UploadFile from '@/components/CurrentSystem/UploadFile';
 
 // import { saveOffer, downloadExternalFile, uploadExternalFile, queryOfferInfo, queryLeaveInfo, queryDismissInfo, preservationUemUser, saveLeave, queryUemUser, getUemUser } from '@/api/staff-query.js';
@@ -147,7 +149,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['name'])
+    ...mapGetters(['name', 'userId'])
   },
   mounted() {
     this.getTableData();
@@ -172,25 +174,88 @@ export default {
         });
       });
     },
+    createFile(urlData) {
+      const data = urlData.split(',')[1];
+      var bytes = window.atob(data);
+      // var bytes=window.atob(urlData),//如果是不带前缀的base64则直接执行此行代码即可
+      var n = bytes.length;
+      var u8arr = new Uint8Array(n);
+      while (n--) {
+        u8arr[n] = bytes.charCodeAt(n);
+      }
+      return u8arr;
+    },
+    Blob_down(erjinzhi) {
+      const text = erjinzhi;
+      let blob;
+      const result = document.getElementById('result');
+      console.log(window.Blob);
+      if (!window.Blob) result.innerHTML = '不支持';
+      else blob = new Blob([text]);
+      if (window.URL) {
+        // 最好自定义文件名且带上后缀，这样下载的文件比较好找且加上文件后缀不用选择打开的工具即可走默认的打开文件的软件
+        result.innerHTML =
+          '<a download=' +
+          'name.xls' +
+          ' href="' +
+          window.URL.createObjectURL(blob) +
+          '" target="_blank">文件下载</a>';
+      }
+      // var read=new FileReader();
+      // 创建读取器对象FileReader
+      // read.readAsText(blob);
+      // read.οnlοad=function () {//数据读完会触发onload事件
+      //     console.log(read.result);//read有个result属性存放这结果，从result获取到数据
+      //     result.innerHTML = read.result
+      // }
+    },
+
     handleDownload() {
       const params = {
         systemId: 'YYDM200013',
-        fileKey: '4893fd6e-1101-44a5-a766-d5337b415249.txt'
+        fileKey: '120df0ff-8d74-4868-a5b9-bcb34333df0e.pdf'
       };
-      downloadExternalFile(params).then((res) => {
-        debugger
-        console.log(res);
-      }).catch((err) => {
-        debugger
-        console.log(err);
-      })
+      downloadExternalFile(params)
+        .then((res) => {
+          const fileName = res.file.substring(0, res.file.lastIndexOf('.'));
+          console.log(res);
+          const base = res.file; // 你要传入的base64数据
+          const bstr = window.atob(base);
+          let n = bstr.length;
+          const u8arr = new Uint8Array(n);
+          while (n--) {
+            u8arr[n] = bstr.charCodeAt(n);
+          }
+          // 确定解析格式，可能可以变成img，没有深入研究
+          const blob = new Blob([u8arr], {
+            type: 'application/pdf;chartset=UTF-8'
+          });
+          const url = window.URL.createObjectURL(blob);
+          // 在新窗口打开该pdf用这个
+          window.open(url);
+          // 下载dpf用这个
+          const a = document.createElement('a');
+          a.setAttribute('href', url);
+          a.setAttribute('download', fileName + '.pdf');
+          a.setAttribute('target', '_blank'); // 打开一个新的窗口
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          // 删除url绑定
+          window.URL.revokeObjectURL(url);
+        })
+        .catch((err) => {
+          debugger;
+          console.log(err);
+        });
     },
     handleSumbit() {
       this.$refs.regularForm.validate((valid) => {
         if (valid) {
           this.buttonLoading = true;
           const params = Object.assign({}, this.form, {
-            uemUserName: this.name
+            uemUserName: this.name,
+            uemUserId: this.userId
           });
           saveOffer(params)
             .then(() => {

@@ -540,6 +540,9 @@ export default {
         entryName: [
           { required: true, message: '请输入条目名称', trigger: 'change' }
         ],
+        actionRoleId: [
+          { required: true, message: '请选择执行角色', trigger: 'change' }
+        ],
         applyPostId: [
           { required: true, message: '请选择适用岗位', trigger: 'change' }
         ],
@@ -774,8 +777,14 @@ export default {
           tempData.applyProfessorId = tempData.applyProfessorId.join(',');
           tempData.ordinatorId = tempData.ordinatorId.join(',');
           saveStandardEntry(tempData)
-            .then(() => {
-              // this.handleResetForm();
+            .then((res) => {
+              if (!res.success) {
+                this.$message.error(
+                  res.errorMessages ? res.errorMessages[0] : '创建失败'
+                );
+                this.dialogButtonLoading = false;
+                return;
+              }
               this.$message({
                 title: '成功',
                 message: '创建成功',
@@ -807,7 +816,14 @@ export default {
           tempData.applyProfessorId = tempData.applyProfessorId.join(',');
           tempData.ordinatorId = tempData.ordinatorId.join(',');
           updateStandardEntry(tempData)
-            .then(() => {
+            .then((res) => {
+              if (!res.success) {
+                this.$message.error(
+                  res.errorMessages ? res.errorMessages[0] : '创建失败'
+                );
+                this.dialogButtonLoading = false;
+                return;
+              }
               this.$message({
                 title: '成功',
                 message: '修改成功',

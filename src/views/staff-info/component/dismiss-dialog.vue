@@ -3,6 +3,12 @@
     title="离职申请"
     :visible.sync="dialogVisible"
     width="800px"
+    center
+    border
+    :close-on-click-modal="false"
+    top="10vh"
+    z-index="10000"
+    :append-to-body="true"
     @close="handleClose"
   >
     <el-form
@@ -14,9 +20,9 @@
     >
       <el-row :gutter="100">
         <el-col :span="12">
-          <el-form-item label="申请日期" prop="ApplyDate">
+          <el-form-item label="申请日期" prop="applyDate">
             <el-date-picker
-              v-model="form.ApplyDate"
+              v-model="form.applyDate"
               type="date"
               value-format="yyyy-MM-dd"
               format="yyyy-MM-dd"
@@ -26,13 +32,18 @@
         </el-col>
         <el-col :span="24">
           <el-form-item label="离职原因:">
-            <el-input v-model="form.leaveReason" type="textarea" :rows="4" placeholder="请输入离职原因" />
+            <el-input
+              v-model="form.leaveReason"
+              type="textarea"
+              :rows="4"
+              placeholder="请输入离职原因"
+            />
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="审批人:" prop="Approver">
+          <el-form-item label="审批人:" prop="approver">
             <el-associate
-              v-model="form.Approver"
+              v-model="form.approver"
               :columns="approverColumns"
               value-prop="uemUserId"
               label-prop="name"
@@ -58,7 +69,8 @@
 <script>
 import { mapGetters } from 'vuex';
 import { queryStandardDetail } from '@/api/standard-detail.js';
-import { saveLeave, queryUemUser } from '@/api/staff-query.js';
+import { queryUemUser } from '@/api/standard-entry.js';
+import { saveLeave } from '@/api/staff-query.js';
 // import { saveOffer, downloadExternalFile, uploadExternalFile, queryOfferInfo, queryLeaveInfo, queryDismissInfo, preservationUemUser, saveLeave, queryUemUser, getUemUser } from '@/api/staff-query.js';
 
 const approverColumns = [
@@ -89,27 +101,27 @@ export default {
       tableData: [],
       form: {
         uemUserName: '',
-        ApplyDate: '',
-        Approver: '',
+        applyDate: '',
+        approver: '',
         leaveReason: '',
         // standardDetailId: '6960887517290696704',
         standardEntryId: ''
       },
       rules: {
-        ApplyDate: [
+        applyDate: [
           { required: true, message: '请选择申请日期', trigger: 'blur' }
         ],
         leaveReason: [
           { required: true, message: '请输入离职原因', trigger: 'blur' }
         ],
-        Approver: [
+        approver: [
           { required: true, message: '请选择审批人', trigger: 'blur' }
         ]
       }
     };
   },
   computed: {
-    ...mapGetters(['name'])
+    ...mapGetters(['name', 'userId'])
   },
   mounted() {
     this.getTableData();
@@ -139,7 +151,8 @@ export default {
         if (valid) {
           this.buttonLoading = true;
           const params = Object.assign({}, this.form, {
-            uemUserName: this.name
+            uemUserName: this.name,
+            uemUserId: this.userId
           });
           saveLeave(params)
             .then(() => {
@@ -163,9 +176,9 @@ export default {
     resetForm() {
       this.form = {
         uemUserName: '',
-        ApplyDate: '',
+        applyDate: '',
         leaveReason: '',
-        Approver: '',
+        approver: '',
         standardEntryId: ''
       };
     },

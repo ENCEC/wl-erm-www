@@ -265,7 +265,7 @@
             </el-col>
             <el-col :span="12">
               <el-form-item label="个人简历:">
-                <upload-file accept=".pdf" />
+                <upload-file accept=".pdf" :resume="form.resume" type="个人简历" :user-id="form.uemUserId" :user-name="form.name" @resumeChange="handleResumeChange" />
               </el-form-item>
             </el-col>
           </el-row>
@@ -294,11 +294,13 @@
         <div class="operate-button">
           <el-button type="primary" @click="handleSave">保存</el-button>
           <el-button
+            v-if="form.jobStatus==='0'"
             class="regular-btn"
             type="primary"
             @click="handleRegular"
           >转正申请</el-button>
           <el-button
+            v-if="form.jobStatus==='1'"
             class="dismiss-btn"
             type="primary"
             @click="handleDismiss"
@@ -340,6 +342,7 @@ export default {
         name: '',
         sex: '',
         birthday: '',
+        resume: '', // 简历地址
         jobStatus: '', // 在职状态（0：试用员工 1：正式员工 2：离职员工）
         idCard: '',
         mobile: '',
@@ -458,6 +461,11 @@ export default {
     this.getSelectOptions();
   },
   methods: {
+    // 文件上传后
+    handleResumeChange(resume) {
+      debugger
+      this.form.resume = resume || ''
+    },
     // 获取下拉信息
     async getSelectOptions() {
       this.technicalOptions = await queryTechnicalNameBySelect();
