@@ -57,6 +57,13 @@ export const MARITAL_STATUS = {
   '1': '已婚',
   '2': '离婚'
 }
+export const POLITICAL_STATUS = {
+  '1': '群众',
+  '2': '党员',
+  '3': '无党派人士',
+  '4': '共青团员',
+  '5': '预备党员'
+}
 // 学历（0：专科 1：本科 2：研究生 3：博士生）
 export const EDUCATION = {
   '0': '专科',
@@ -97,6 +104,7 @@ export const COMPLETION_EN = {
   TODO: '待完成',
   REDO: '退回重做'
 }
+
 // TODO 拟同意类型
 export const INCLINED_AGREE_TYPE = {
   '0': '拟不同意',

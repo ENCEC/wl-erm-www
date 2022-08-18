@@ -572,16 +572,14 @@ export default {
   methods: {
     initEntryTypeSelect() {
       const params = {
-        pageSize: 1000,
-        currentPage: 1,
-        dictTypeCode: '条目类型'
+        dictTypeCode: 'TASK_TYPE'
       };
       querySysDictType(params)
         .then((res) => {
-          res.data.records.forEach((item) => {
+          res.data.forEach((item) => {
             this.entryTypeOptions.push({
-              key: item.sysDictTypeId,
-              display_name: item.dictTypeName
+              key: item.dictCode,
+              display_name: item.dictName
             });
           });
         })
