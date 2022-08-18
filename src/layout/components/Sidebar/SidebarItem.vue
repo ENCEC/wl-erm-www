@@ -1,3 +1,10 @@
+<!--
+ * @Author: Hongzf
+ * @Date: 2022-08-05 17:38:09
+ * @LastEditors: Hongzf
+ * @LastEditTime: 2022-08-17 15:55:47
+ * @Description:
+-->
 <template>
   <div v-if="!item.hidden">
     <template v-if="hasOneShowingChild(item.children,item) && (!onlyOneChild.children||onlyOneChild.noShowingChildren)&&!item.alwaysShow">
@@ -59,16 +66,18 @@ export default {
   },
   methods: {
     hasOneShowingChild(children = [], parent) {
-      const showingChildren = children.filter(item => {
-        if (item.hidden) {
-          return false
-        } else {
+      let showingChildren = []
+      if (children && children.length) {
+        showingChildren = children.filter(item => {
+          if (item.hidden) {
+            return false
+          } else {
           // Temp set(will be used if only has one showing child)
-          this.onlyOneChild = item
-          return true
-        }
-      })
-
+            this.onlyOneChild = item
+            return true
+          }
+        })
+      }
       // When there is only one child router, the child router is displayed by default
       if (showingChildren.length === 1) {
         return true

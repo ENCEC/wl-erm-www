@@ -2,154 +2,153 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:15:03
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-16 14:25:38
+ * @LastEditTime: 2022-08-18 11:13:36
  * @Description:
 -->
 
 <template>
-  <div class="staff-dialog">
-    <el-dialog
-      :title="dialogTitle"
-      v-bind="$attrs"
-      width="1000px"
-      center
-      :close-on-click-modal="false"
-      top="10vh"
-      destroy-on-close
-      z-index="1000"
-      :append-to-body="true"
-      v-on="$listeners"
+  <el-dialog
+    class="staff-dialog"
+    :title="dialogTitle"
+    v-bind="$attrs"
+    width="1000px"
+    center
+    :close-on-click-modal="false"
+    top="10vh"
+    destroy-on-close
+    z-index="1000"
+    :append-to-body="true"
+    v-on="$listeners"
+  >
+    <el-form
+      ref="elForm"
+      :model="formData"
+      :rules="rules"
+      size="mini"
+      label-width="100px"
+      :inline="true"
+      :disabled="type === 'detail'"
     >
-      <el-form
-        ref="elForm"
-        :model="formData"
-        :rules="rules"
-        size="mini"
-        label-width="100px"
-        :inline="true"
-        :disabled="type === 'detail'"
-      >
-        <div class="form-wrap">
-          <el-row>
-            <el-col :span="12">
-              <el-form-item label="标题:" prop="taskTitle">
-                <el-input
-                  v-model="formData.taskTitle"
-                  placeholder="请输入标题"
-                  clearable
-                />
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <!-- 在职状态（0：试用员工 1：正式员工 2：离职员工） -->
-              <el-form-item label="在职状态:" prop="status">
-                <el-radio-group v-model="formData.status">
-                  <el-radio
-                    v-for="item in jobStatusOptions"
-                    :key="'jobStatus' + item.value"
-                    :label="item.value"
-                  >{{ item.label }}</el-radio>
-                </el-radio-group>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="12">
-              <el-form-item label="执行人:" prop="executor">
-                <UserAssociate v-model="formData.executor" :init-label="formData.executorName" class="input-width" />
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item label="任务类型:" prop="taskType">
-                <el-select
-                  v-model="formData.taskType"
-                  placeholder="请选择任务类型"
-                  clearable
-                  class="input-width"
-                  @change="handleTaskTypeChange(formData.taskType,selectedRecords)"
-                >
-                  <el-option
-                    v-for="(item) in taskTypeOptions"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.label"
-                  />
-                </el-select>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="24">
-              <el-form-item label="员工任务:" prop="taskList">
-                <div class="table-wrap">
-                  <!--  :selected-list.sync="selectedData"  -->
-                  <TaskTable
-                    v-if="type!=='detail'"
-                    ref="taskTableRef"
-                    :records="selectedRecords"
-                    :task-type="formData.taskType"
-                    @getSelectedData="getSelectedData"
-                    @handleRowSelect="handleRowSelect"
-                  />
-                  <SelectedTable
-                    ref="tableForm"
-                    :records="selectedRecords"
-                    :type="type"
-                    @getSelectedData="getSelectedData"
-                  />
-                  <!-- :task-type="formData.taskType" -->
-                </div>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="12">
-              <el-form-item
-                v-if="type === 'detail'"
-                label="创建时间:"
+      <div class="form-wrap">
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="标题:" prop="taskTitle">
+              <el-input
+                v-model="formData.taskTitle"
+                placeholder="请输入标题"
+                clearable
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <!-- 在职状态（0：试用员工 1：正式员工 2：离职员工） -->
+            <el-form-item label="在职状态:" prop="status">
+              <el-radio-group v-model="formData.status">
+                <el-radio
+                  v-for="item in jobStatusOptions"
+                  :key="'jobStatus' + item.value"
+                  :label="item.value"
+                >{{ item.label }}</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="执行人:" prop="executor">
+              <UserAssociate v-model="formData.executor" :init-label="formData.executorName" class="input-width" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="任务类型:" prop="taskType">
+              <el-select
+                v-model="formData.taskType"
+                placeholder="请选择任务类型"
+                clearable
+                class="input-width"
+                @change="handleTaskTypeChange(formData.taskType,selectedRecords)"
               >
-                <el-input
-                  v-model="formData.createTime"
-                  placeholder="请输入创建时间"
-                  clearable
-                  class="input-width"
-                  disabled
+                <el-option
+                  v-for="(item) in taskTypeOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.label"
                 />
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item
-                v-if="type === 'detail'"
-                label="创建人:"
-              >
-                <el-input
-                  v-model="formData.creatorName"
-                  placeholder="请输入创建人"
-                  clearable
-                  class="input-width"
-                  disabled
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="24">
+            <el-form-item label="员工任务:" prop="taskList">
+              <div class="table-wrap">
+                <!--  :selected-list.sync="selectedData"  -->
+                <TaskTable
+                  v-if="type!=='detail'"
+                  ref="taskTableRef"
+                  :records="selectedRecords"
+                  :task-type="formData.taskType"
+                  @getSelectedData="getSelectedData"
+                  @handleRowSelect="handleRowSelect"
                 />
-              </el-form-item>
-            </el-col>
-          </el-row>
-        </div>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button
-          v-if="type !== 'detail'"
-          type="primary"
-          size="medium"
-          @click="handleConfirm"
-        >提交</el-button>
-        <el-button
-          type="primary"
-          :plain="true"
-          size="medium"
-          @click="close"
-        >{{ type === 'detail'?'关闭':'取消' }}</el-button>
+                <SelectedTable
+                  ref="tableForm"
+                  :records="selectedRecords"
+                  :type="type"
+                  @getSelectedData="getSelectedData"
+                />
+                <!-- :task-type="formData.taskType" -->
+              </div>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item
+              v-if="type === 'detail'"
+              label="创建时间:"
+            >
+              <el-input
+                v-model="createTime"
+                placeholder="请输入创建时间"
+                clearable
+                class="input-width"
+                disabled
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item
+              v-if="type === 'detail'"
+              label="创建人:"
+            >
+              <el-input
+                v-model="formData.creatorName"
+                placeholder="请输入创建人"
+                clearable
+                class="input-width"
+                disabled
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
       </div>
-    </el-dialog>
-  </div>
+    </el-form>
+    <div slot="footer" class="dialog-footer">
+      <el-button
+        v-if="type !== 'detail'"
+        type="primary"
+        size="medium"
+        @click="handleConfirm"
+      >提交</el-button>
+      <el-button
+        type="primary"
+        :plain="true"
+        size="medium"
+        @click="close"
+      >{{ type === 'detail'?'关闭':'取消' }}</el-button>
+    </div>
+  </el-dialog>
 </template>
 <script>
 import TaskTable from './task-table'
@@ -184,8 +183,11 @@ export default {
         executorName: '',
         status: '', // 在职状态（0：试用员工 1：正式员工 2：离职员工）
         taskType: '', //
-        taskDetailInfoDtoList: []// 列表勾选值
+        taskDetailInfoDtoList: [], // 列表勾选值
+        createTime: '',
+        creatorName: ''
       },
+      createTime: '',
       // 任务类型下拉
       taskTypeOptions: this.$dict.getDictOptions('TASK_TYPE')
     };
@@ -274,6 +276,7 @@ export default {
           } else {
             this.formData[key] = result[key] || ''
           }
+          this.createTime = this.$moment(this.formData.createTime).format('YYYY-MM-DD')
         }
         // 详情数据回显
         if (this.type === 'detail') {

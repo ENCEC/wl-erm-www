@@ -2,12 +2,13 @@
  * @Author: Hongzf
  * @Date: 2022-08-01 19:02:14
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-15 17:06:07
+ * @LastEditTime: 2022-08-17 16:43:14
  * @Description:
  */
 
 import request from '@/utils/request';
 const prefix = process.env.VUE_APP_SHARE_AUTH_PREFIX
+const prefix2 = process.env.VUE_APP_WL_ERM_PREFIX
 
 // 列表
 export function queryStaffByPage(data) {
@@ -54,7 +55,7 @@ export function updateStaff(data) {
 // 转正
 export function savePositiveInfo(data) {
   return request({
-    url: prefix + '/uemUserManage/savePositiveInfo',
+    url: prefix2 + '/taskInfo/savePositiveInfoByStaff',
     method: 'post',
     data
   });
