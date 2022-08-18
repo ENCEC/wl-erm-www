@@ -124,7 +124,6 @@ export default {
         ...this.filterForm
       }).then(res => {
         this.records = res.records;
-        this.records = [{}, {}];
         this.params.totalRecord = res.totalRecord;
         this.listLoading = false;
       });

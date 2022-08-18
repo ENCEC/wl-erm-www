@@ -27,7 +27,10 @@
           size="medium"
           @click="dialogStatus === 'create' ? createData() : updateData()"
         >提交</el-button>
-        <el-button size="medium" @click="dialogFormVisible = false">取消</el-button>
+        <el-button
+          size="medium"
+          @click="dialogFormVisible = false"
+        >取消</el-button>
       </div>
     </el-dialog>
 
@@ -51,10 +54,9 @@ import {
   standardDetailStartStop,
   addStandardDetail,
   updateStandardDetail,
-  deleteStandardDetail,
-  selectEntryNameSpecies,
-  selectItemTypeSpecies
+  deleteStandardDetail
 } from '@/api/standard-detail.js';
+import { querySysDictType, queryStandardEntry } from '@/api/standard-entry.js';
 import tableComponent from '@/components/TableComponent';
 import filterPanel from '@/components/FilterPanel';
 import formPanel from '@/components/FormPanel';
@@ -86,7 +88,6 @@ export default {
         formItemList: [
           {
             type: 'select',
-            class: 'filter-item',
             prop: 'itemType',
             // width: "200px",
             label: '条目类型',
@@ -94,11 +95,14 @@ export default {
             optionLabel: 'display_name',
             optionValue: 'key',
             optionKey: 'key',
-            options: entryTypeOptions
+            options: entryTypeOptions,
+            changeSelect: (optionVal) => {
+              this.temp.entryName = '';
+              this.handleEntryTypeChange(optionVal);
+            }
           },
           {
             type: 'select',
-            class: 'filter-item',
             prop: 'entryName',
             // width: "200px",
             label: '规范条目',
@@ -106,7 +110,13 @@ export default {
             optionLabel: 'display_name',
             optionValue: 'key',
             optionKey: 'key',
-            options: entryOptions
+            options: entryOptions,
+            changeSelect: () => {
+              if (!this.temp.itemType) {
+                this.temp.entryName = '';
+                this.$message.error('请先选择条目类型');
+              }
+            }
           },
           {
             type: 'textarea',
@@ -192,7 +202,6 @@ export default {
             type: 'primary',
             buttonLabel: '新增细则',
             btnType: 'primary',
-            //   icon: 'el-icon-search',
             method: () => {
               this.handleAdd();
             }
@@ -201,7 +210,6 @@ export default {
             type: 'primary',
             buttonLabel: '查询',
             btnType: 'primary',
-            //   icon: 'el-icon-edit',
             method: () => {
               this.getList();
             }
@@ -211,7 +219,6 @@ export default {
             buttonLabel: '重置',
             btnType: 'primary',
             plain: true,
-            //   icon: 'el-icon-download',
             method: () => {
               this.resetListQuery();
             }
@@ -367,14 +374,15 @@ export default {
     initEntryTypeSelect() {
       const params = {
         pageSize: 1000,
-        currentPage: 1
+        currentPage: 1,
+        dictTypeCode: '条目类型'
       };
-      selectItemTypeSpecies(params)
+      querySysDictType(params)
         .then((res) => {
-          res.data.forEach((item) => {
+          res.data.records.forEach((item) => {
             this.entryTypeOptions.push({
-              key: item,
-              display_name: item
+              key: item.sysDictTypeId,
+              display_name: item.dictTypeName
             });
           });
         })
@@ -382,20 +390,37 @@ export default {
           this.$message.error('初始化条目类型失败');
         });
     },
-    initEntryOptions() {
+    async handleEntryTypeChange(entryType) {
+      const arr = this.entryOptions.filter((item) => {
+        return item.itemType === entryType;
+      });
+      await this.initEntryOptions(arr);
+
+      // this.formConfig.formItemList[1].options=arr
+      // this.entryOptions = arr;
+    },
+    async initEntryOptions(arr) {
+      this.entryOptions = [];
       const params = {
         pageSize: 1000,
-        currentPage: 1,
-        status: '0'
+        currentPage: 1
       };
-      selectEntryNameSpecies(params)
+      queryStandardEntry(params)
         .then((res) => {
-          res.data.forEach((item) => {
+          res.data.records.forEach((item) => {
             this.entryOptions.push({
-              key: item,
-              display_name: item
+              key: item.entryName,
+              display_name: item.entryName,
+              itemType: item.itemType
             });
           });
+          console.log(this.entryOptions);
+          if (arr) {
+            this.formConfig.formItemList[1].options = arr;
+          } else {
+            this.formConfig.formItemList[1].options = this.entryOptions;
+          }
+          this.filterConfig.filterList[1].options = this.entryOptions;
         })
         .catch(() => {
           this.$message.error('初始化规范条目失败');
@@ -483,7 +508,14 @@ export default {
         if (valid) {
           this.dialogButtonLoading = true;
           addStandardDetail(this.temp)
-            .then(() => {
+            .then((res) => {
+              if (!res.success) {
+                this.$message.error(
+                  res.errorMessages ? res.errorMessages[0] : '创建失败'
+                );
+                this.dialogButtonLoading = false;
+                return;
+              }
               // this.handleResetForm();
               this.$message({
                 title: '成功',
@@ -512,7 +544,14 @@ export default {
         if (valid) {
           const tempData = Object.assign({}, this.temp);
           updateStandardDetail(tempData)
-            .then(() => {
+            .then((res) => {
+              if (!res.success) {
+                this.$message.error(
+                  res.errorMessages ? res.errorMessages[0] : '创建失败'
+                );
+                this.dialogButtonLoading = false;
+                return;
+              }
               this.$message({
                 title: '成功',
                 message: '修改成功',
@@ -579,15 +618,11 @@ export default {
     handleDialogClose() {
       this.$nextTick(() => {
         this.handleResetForm();
+        this.initEntryOptions();
+        this.dialogButtonLoading = false
       });
       this.$refs['formPanel'].$refs['dataForm'].clearValidate();
     }
-    // getStandardEntryName(entryName) {
-    //   const find = this.entryOptions.find((item) => {
-    //     return item.key === entryName;
-    //   });
-    //   return find.display_name ? find.display_name : "";
-    // },
   }
 };
 </script>

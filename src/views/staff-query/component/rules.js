@@ -162,7 +162,7 @@ export const regularFormRules = {
     message: '请选择转正类型',
     trigger: 'change'
   }],
-  defenseScore: [
+  faceScore: [
     {
       required: true,
       message: '请输入转员工答辩成绩',

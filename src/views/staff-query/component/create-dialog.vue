@@ -411,9 +411,9 @@
               </el-form-item>
             </el-col>
             <el-col :span="12.5">
-              <el-form-item label="转员工答辩成绩:" prop="defenseScore" label-width="140px">
+              <el-form-item label="转员工答辩成绩:" prop="faceScore" label-width="140px">
                 <el-input
-                  v-model="form.defenseScore"
+                  v-model="form.faceScore"
                   clearable
                   placeholder="请输入转员工答辩成绩"
                 />
@@ -554,14 +554,14 @@ export default {
         projectId: '', // 归属项目,
         offerDate: '', // 转正日期
         positiveType: '', // 转正类型
-        defenseScore: '', // 答辩成绩
+        faceScore: '', // 答辩成绩
         interviewerName: '',
         faceRemark: '', // 面谈评语
         approverName: '',
         offerRemark: '', // 转正评语
         creatorName: '', // 创建人
-        creatorTime: ''// 创建时间
-        // offerDate，positiveType，defenseScore，interviewerName,faceRemark,approverName,offerRemark
+        createTime: ''// 创建时间
+        // offerDate，positiveType，faceScore，interviewerName,faceRemark,approverName,offerRemark
       },
       // sexOptions: this.$dict.getDictOptions('SEX'),
       maritalStatusOptions: this.$dict.getDictOptions('MARITAL_STATUS'),
@@ -609,18 +609,22 @@ export default {
       this.$refs['elForm'].resetFields();
     },
     getOfferInfo() {
-      const arr = ['offerDate', 'positiveType', 'defenseScore', 'interviewerName', 'faceRemark', 'approverName', 'offerRemark']
+      const arr = ['offerDate', 'createTime', 'positiveType', 'faceScore', 'interviewerName', 'faceRemark', 'approverName', 'offerRemark']
       const params = {
-        dispatcher: this.editData.uemUserId,
+        dispatchers: this.editData.uemUserId,
         name: this.form.name
       }
       queryOfferInfo(params).then((res) => {
         debugger
-        const data = Object.assign({}, res[0], res[1])
+        const data = Object.assign({}, res[1], res[0])
         for (const key of arr) {
           this.form[key] = data[key] || ''
         }
-      })
+      }).catch((err) => {
+        this.$message.error(
+          err.errorMessages ? err.errorMessages[0] : '查看转正评语失败'
+        );
+      });
     },
     // 获取用户信息
     getDetailInfo() {
