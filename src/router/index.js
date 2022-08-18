@@ -60,7 +60,6 @@ export const constantRoutes = [
       }
     ]
   },
-
   {
     path: '/profile',
     component: Layout,
@@ -84,7 +83,7 @@ export const constantRoutes = [
 export const asyncRoutes = [
   // hotRouter,
   {
-    path: '/task',
+    path: '/',
     component: Layout,
     meta: { title: '我的任务', icon: 'user' },
     children: [
