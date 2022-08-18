@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 21:05:06
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-17 14:20:35
+ * @LastEditTime: 2022-08-18 10:37:33
  * @Description:
 -->
 
@@ -139,7 +139,6 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <!-- TODO 下拉值-->
             <el-form-item label="政治面貌:" prop="politicalStatus">
               <el-select
                 v-model="formData.politicalStatus"
@@ -148,10 +147,10 @@
                 class="input-width"
               >
                 <el-option
-                  v-for="(item,index) in []"
-                  :key="'politicalStatus'+index+item.projectId"
-                  :label="item.projectName"
-                  :value="item.projectId"
+                  v-for="(item,index) in politicalList"
+                  :key="'politicalStatus'+index+item.dictCode"
+                  :label="item.dictName"
+                  :value="item.dictCode"
                 />
               </el-select>
             </el-form-item>
@@ -272,7 +271,6 @@
         </el-row>
         <el-row>
           <el-col :span="12">
-            <!-- TODO 联想控件 -->
             <el-form-item label="归属项目:" prop="projectId">
               <ProjectSelect v-model="formData.projectId" placeholder="请选择归属项目" class="input-width" />
             </el-form-item>
@@ -333,7 +331,7 @@
 </template>
 <script>
 import { queryStaffById, updateStaff } from '@/api/staff-manage';
-import { queryTechnicalNameBySelect } from '@/api/common';
+import { queryTechnicalNameBySelect, querySysDictCodeByDictType } from '@/api/common';
 import { formRules } from './rules';
 import Department from '@/components/CurrentSystem/Department.vue'
 import StaffDuty from '@/components/CurrentSystem/StaffDuty.vue'
@@ -360,7 +358,8 @@ export default {
         systemId: process.env.VUE_APP_SYSTEMID, // 写死
         fileName: '',
         fileType: '',
-        uemUserId: ''
+        uemUserId: '',
+        type: '个人简历'
       },
       rules: formRules, // 验证规则
       formData: {
@@ -391,7 +390,9 @@ export default {
       // sexOptions: this.$dict.getDictOptions('SEX'),
       maritalStatusOptions: this.$dict.getDictOptions('MARITAL_STATUS'),
       educationOptions: this.$dict.getDictOptions('EDUCATION'),
-      technicalOptions: [] // 岗位职称
+      technicalOptions: [], // 岗位职称
+      politicalList: [] // 政治面貌
+
     };
   },
   computed: {
@@ -434,6 +435,8 @@ export default {
     // 获取下拉信息
     async getSelectOptions() {
       this.technicalOptions = await queryTechnicalNameBySelect()
+      const politicalList = await querySysDictCodeByDictType({ dictTypeCode: 'POLITICAL_STATUS' })
+      this.politicalList = politicalList.data
     },
     // 提交表单信息
     handleConfirm() {

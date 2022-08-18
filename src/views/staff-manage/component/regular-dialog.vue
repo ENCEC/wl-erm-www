@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 21:05:06
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-18 09:56:19
+ * @LastEditTime: 2022-08-18 10:55:08
  * @Description: 员工转正
 -->
 
@@ -227,6 +227,8 @@ export default {
     return {
       rules: regularFormRules, // 验证规则
       formData: {
+        uemUserId: '',
+        uemUserIds: [],
         name: '',
         sex: '',
         entryDate: '', // 2022-05-20 00:00:00入职时间
@@ -248,7 +250,8 @@ export default {
         systemId: process.env.VUE_APP_SYSTEMID, // 写死
         fileName: '',
         fileType: '',
-        uemUserId: ''
+        uemUserId: '',
+        type: '转正申请表'
       },
       positiveTypeOptions: this.$dict.getDictOptions('OFFER_TYPE')
     };
@@ -303,8 +306,13 @@ export default {
     handleConfirm() {
       this.$refs['elForm'].validate(valid => {
         if (valid) {
-          const uemUserIds = [this.editData.uemUserId, this.formData.interviewUid, this.formData.positiveUid]
-          savePositiveInfo({ ...this.formData, uemUserIds }).then(res => {
+          // const uemUserIds = [this.editData.uemUserId, this.formData.interviewUid, this.formData.positiveUid]
+          const uemUserIds = [this.formData.interviewUid, this.formData.positiveUid]
+          savePositiveInfo({
+            ...this.formData,
+            uemUserIds,
+            uemUserId: this.editData.uemUserId.toString()
+          }).then(res => {
             this.$message.success('操作成功');
             this.$emit('getTableData', '');
             this.close();

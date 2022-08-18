@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-07-26 14:43:35
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-16 15:29:54
+ * @LastEditTime: 2022-08-18 11:49:40
  * @Description:
 -->
 <template>
@@ -15,7 +15,7 @@
         :data="tableForm.tableData"
         :row-key="rowKey"
         :reserve-selection="true"
-        height="200px"
+        height="220px"
         style="width: 100%"
         border
         size="mini"
@@ -24,7 +24,7 @@
       >
         <!--  v-if="type!=='detail'"  -->
         <el-table-column type="selection" width="40" />
-        <el-table-column prop="entryName" label="规范条目" />
+        <el-table-column prop="entryName" label="规范条目" width="120" />
         <!--  v-if="type!=='detail'" -->
         <el-table-column prop="actionTime" label="执行时间" width="110">
           <template slot-scope="scope">
@@ -154,7 +154,7 @@ export default {
     },
     // 获取表格数据
     getTableData() {
-      queryNotNeedStandardFullDetailByTaskType({
+      this.taskType && queryNotNeedStandardFullDetailByTaskType({
         pageNo: this.params.currentPage,
         pageSize: this.params.pageSize,
         taskType: this.taskType
@@ -173,7 +173,7 @@ export default {
       // 勾选操作
       if (isChecked) {
         const isExit = this.records.some((item) => {
-          return item.standardEntryId === row.standardEntryId
+          return item.standardDetailId === row.standardDetailId
         })
         // 不存在数据则添加
         if (!isExit) {

@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-01 13:52:08
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-15 18:27:27
+ * @LastEditTime: 2022-08-18 11:51:55
  * @Description:
  */
 
@@ -219,17 +219,6 @@ export const operates = _this => {
           _this.handleOpen(row, 'dismiss');
         }
       },
-      // {
-      //   id: 'resetPassword',
-      //   label: '重置密码',
-      //   type: 'text',
-      //   // icon: 'el-icon-delete',
-      //   show: true,
-      //   plain: false,
-      //   method: (row, index) => {
-      //     _this.resetPassword(row.uemUserId);
-      //   }
-      // },
       {
         id: 'delete',
         label: '删除',
@@ -243,6 +232,6 @@ export const operates = _this => {
       }
     ],
     fixed: false,
-    width: 230
+    width: 250
   }; // 列操作按钮
 };

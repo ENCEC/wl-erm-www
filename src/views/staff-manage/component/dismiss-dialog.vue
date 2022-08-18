@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 21:05:06
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-17 14:28:39
+ * @LastEditTime: 2022-08-18 10:36:33
  * @Description:
 -->
 
@@ -212,7 +212,8 @@ export default {
         systemId: process.env.VUE_APP_SYSTEMID, // 写死
         fileName: '',
         fileType: '',
-        uemUserId: ''
+        uemUserId: '',
+        type: '转正申请表'
       },
       rules: dissmissFormRules, // 验证规则
       formData: {

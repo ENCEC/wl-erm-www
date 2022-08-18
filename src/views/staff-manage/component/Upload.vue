@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-04 17:34:53
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-17 14:27:10
+ * @LastEditTime: 2022-08-18 11:23:02
  * @Description: 所属部门-下拉
 -->
 
@@ -88,15 +88,15 @@ export default {
     // 上传成功
     handleSuccess(response, file, fileList) {
       console.log('【handleSuccess- response, file, fileList 】-87', response.data, file, fileList)
-      const obj = response.data
-      this.fileList = []
-      for (const key in obj) {
-        this.fileList = [{
-          name: obj[key],
-          fileKey: key
-        }]
-      }
-      // console.log('【 this.fileList 】-92', this.fileList)
+      // const obj = response.data
+      // this.fileList = []
+      // for (const key in obj) {
+      //   this.fileList = [{
+      //     name: obj[key],
+      //     fileKey: key
+      //   }]
+      // }
+      console.log('【 this.fileList 】-92', this.fileList)
     },
     // 点击文件下载
     handlePreview(file) {

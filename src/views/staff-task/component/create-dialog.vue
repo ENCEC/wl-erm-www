@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:15:03
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-17 13:58:06
+ * @LastEditTime: 2022-08-18 11:13:36
  * @Description:
 -->
 
@@ -109,7 +109,7 @@
               label="创建时间:"
             >
               <el-input
-                v-model="formData.createTime"
+                v-model="createTime"
                 placeholder="请输入创建时间"
                 clearable
                 class="input-width"
@@ -183,8 +183,11 @@ export default {
         executorName: '',
         status: '', // 在职状态（0：试用员工 1：正式员工 2：离职员工）
         taskType: '', //
-        taskDetailInfoDtoList: []// 列表勾选值
+        taskDetailInfoDtoList: [], // 列表勾选值
+        createTime: '',
+        creatorName: ''
       },
+      createTime: '',
       // 任务类型下拉
       taskTypeOptions: this.$dict.getDictOptions('TASK_TYPE')
     };
@@ -273,6 +276,7 @@ export default {
           } else {
             this.formData[key] = result[key] || ''
           }
+          this.createTime = this.$moment(this.formData.createTime).format('YYYY-MM-DD')
         }
         // 详情数据回显
         if (this.type === 'detail') {

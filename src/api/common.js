@@ -2,14 +2,21 @@
  * @Author: Hongzf
  * @Date: 2022-08-01 19:02:14
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-15 17:19:41
+ * @LastEditTime: 2022-08-18 10:27:13
  * @Description: 公共部分-接口
  */
 
 import request from '@/utils/request';
 const prefix = process.env.VUE_APP_SHARE_AUTH_PREFIX
 const shareFilePrefix = process.env.VUE_APP_SHARE_FILE_PREFIX
-
+// 字典-下拉
+export function querySysDictCodeByDictType(data) {
+  return request({
+    url: prefix + '/sysDictType/querySysDictCodeByDictType',
+    method: 'post',
+    data
+  });
+}
 // 部门-下拉
 export function queryDepartmentBySelect(data) {
   return request({
