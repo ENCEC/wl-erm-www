@@ -2,13 +2,13 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:15:03
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-18 11:13:36
+ * @LastEditTime: 2022-08-18 16:42:56
  * @Description:
 -->
 
 <template>
   <el-dialog
-    class="staff-dialog"
+    class="staff-task-dialog"
     :title="dialogTitle"
     v-bind="$attrs"
     width="1000px"
@@ -82,17 +82,18 @@
           <el-col :span="24">
             <el-form-item label="员工任务:" prop="taskList">
               <div class="table-wrap">
-                <!--  :selected-list.sync="selectedData"  -->
+                <!-- 未勾选的数据 -->
                 <TaskTable
                   v-if="type!=='detail'"
                   ref="taskTableRef"
                   :records="selectedRecords"
                   :task-type="formData.taskType"
-                  @getSelectedData="getSelectedData"
+                  @handleSelectAll="getAllSelectedData"
                   @handleRowSelect="handleRowSelect"
                 />
+                <!-- 已勾选的数据 -->
                 <SelectedTable
-                  ref="tableForm"
+                  ref="selectedTableForm"
                   :records="selectedRecords"
                   :type="type"
                   @getSelectedData="getSelectedData"
@@ -242,7 +243,7 @@ export default {
         this.selectedRecords = selectedRecords
       });
     },
-    // 勾选数据行的 Checkbox 时触发的事件
+    // 单选-勾选数据行的 Checkbox 时触发的事件
     handleRowSelect(isChecked, row) {
       this.selectedRecords.push({
         ...row,
@@ -252,14 +253,27 @@ export default {
         isNeed: false
       })
     },
-    // TODO 全选
+    // TODO
     getSelectedData(val) {
+      // console.log('【 getSelectedData 】-258', val)
       // this.records = val
       // this.formData.taskDetailInfoDtoList = val.map(item => {
       //   const { standardDetailId } = item
       //   // leader
       //   return { standardDetailId, leader: '6957613061678637056' }
       // })
+    },
+    // 全选
+    getAllSelectedData(newSelection) {
+      newSelection.forEach(item => {
+        this.selectedRecords.push({
+          ...item,
+          standardEntryName: item.entryName,
+          standardDetailName: item.detailName,
+          leader: '',
+          isNeed: false
+        })
+      })
     },
     // 关闭弹框
     close() {
@@ -278,23 +292,22 @@ export default {
           }
           this.createTime = this.$moment(this.formData.createTime).format('YYYY-MM-DD')
         }
-        // 详情数据回显
+        // 详情-列表数据回显
         if (this.type === 'detail') {
           this.selectedRecords = result.taskDetailInfoDtoList
         } else {
-          // 编辑数据回显
+          // 编辑-列表数据回显
           this.handleTaskTypeChange(this.formData.taskType, result.taskDetailInfoDtoList)
         }
       });
     },
     // 提交表单信息
     handleConfirm() {
-      const isTableFormValid = this.$refs.tableForm.validateTableForm()
+      const isTableFormValid = this.$refs.selectedTableForm.validateTableForm()
       this.formData.taskDetailInfoDtoList = this.selectedRecords.map(item => {
         const { standardDetailId, leader } = item
         return { standardDetailId, leader: leader.toString() }// : '6957613061678637056'
       })
-      // this.formData.executor = '6957613061678637056'
       if (!this.formData.taskDetailInfoDtoList.length) {
         this.$message.error('请选择任务');
         return false
@@ -314,9 +327,9 @@ export default {
 };
 </script>
 <style lang="scss">
-.staff-dialog {
+.staff-task-dialog {
   .form-wrap {
-    min-height: 400px;
+    min-height: 380px;
     margin-bottom: 20px;
     .input-width {
       width: 180px !important;

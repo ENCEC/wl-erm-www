@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-01 19:02:14
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-15 17:08:23
+ * @LastEditTime: 2022-08-18 17:38:12
  * @Description: 员工管理-员工管理
 -->
 
@@ -90,7 +90,6 @@ export default {
       operates: operates(this),
       // 弹框
       editData: {},
-      show: false,
       openType: '',
       dialogVisible: false,
       regularDialogVisible: false,

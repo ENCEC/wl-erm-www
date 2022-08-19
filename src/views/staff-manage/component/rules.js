@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-01 13:52:08
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-08 11:12:51
+ * @LastEditTime: 2022-08-18 17:19:37
  * @Description:
  */
 // 编辑
@@ -203,7 +203,7 @@ export const dissmissFormRules = {
     }
   ],
   // 辞退
-  dismissComments: [
+  dismissReason: [
     {
       required: true,
       message: '请输入辞退原因',

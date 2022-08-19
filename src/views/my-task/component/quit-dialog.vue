@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-08 18:45:59
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-17 14:00:14
+ * @LastEditTime: 2022-08-19 09:23:07
  * @Description:
 -->
 
@@ -56,7 +56,6 @@
           </el-col>
           <!-- 审批中 -->
           <el-col v-if="status === STATUS_TYPE.CHECK" :span="12">
-            <!-- TODO -->
             <el-form-item label="审批结果:">
               <el-input
                 v-model="formData.resultAccess"
@@ -395,7 +394,7 @@ export default {
   created() {},
   mounted() {},
   methods: {
-    // 撤回 TODO
+    // 撤回
     handleWithdraw() {
       deletedApplyByStaff({ taskInfoId: this.editData.taskInfoId }).then(res => {
         this.$message.success('撤回成功');
@@ -418,7 +417,7 @@ export default {
       // });
       queryLeaveInfoByLeader({
         // TODO
-        uemUserId: '6958664088091697152', // this.editData.dispatchers,
+        dispatchers: this.editData.dispatchers, // '6958664088091697152', //
         taskInfoId: this.editData.taskInfoId
       }).then(res => {
         // TODO
@@ -442,6 +441,7 @@ export default {
           const funcName = funcInfo[this.status]// this.editData.dispatchers ? updateTaskInfo : saveTaskInfo;
           funcName({
             ...this.formData,
+            // TODO
             uemUserId: '6958664088091697152' // this.editData.dispatchers,
           }).then(res => {
             this.$message.success('操作成功');

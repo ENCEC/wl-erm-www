@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-07-22 16:25:46
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-10 17:10:29
+ * @LastEditTime: 2022-08-18 16:54:11
  * @Description: 字典
  */
 // 用户类型
@@ -37,8 +37,8 @@ export const TASK_STATUS = {
 
 // 性别
 export const SEX = {
-  '0': '男',
-  '1': '女'
+  false: '男',
+  true: '女'
 }
 // 转正类型
 export const OFFER_TYPE = {

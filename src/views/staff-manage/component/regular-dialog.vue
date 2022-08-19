@@ -2,21 +2,22 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 21:05:06
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-18 10:55:08
+ * @LastEditTime: 2022-08-19 09:36:04
  * @Description: 员工转正
 -->
 
 <template>
   <el-dialog
-    :title="'员工'+dialogTitle"
+    center
     class="regular-dialog"
+    destroy-on-close
+    :title="'员工'+dialogTitle"
+    top="10vh"
     v-bind="$attrs"
     width="750px"
-    center
-    :close-on-click-modal="false"
-    top="10vh"
     z-index="10000"
     :append-to-body="true"
+    :close-on-click-modal="false"
     v-on="$listeners"
   >
     <el-form
@@ -26,7 +27,6 @@
       size="mini"
       label-width="100px"
       :inline="true"
-      destroy-on-close
     >
       <div class="form-wrap">
         <el-row>
@@ -54,7 +54,7 @@
               <el-date-picker
                 v-model="formData.entryDate"
                 format="yyyy-MM-dd"
-                value-format="yyyy-MM-dd hh:mm:ss"
+                value-format="yyyy-MM-dd"
                 class="input-width"
                 placeholder="请选择入职时间"
                 clearable
@@ -105,7 +105,7 @@
               <el-date-picker
                 v-model="formData.offerDate"
                 format="yyyy-MM-dd"
-                value-format="yyyy-MM-dd hh:mm:ss"
+                value-format="yyyy-MM-dd"
                 class="input-width"
                 placeholder="请选择转正日期"
                 clearable
@@ -202,7 +202,8 @@
   </el-dialog>
 </template>
 <script>
-import { queryStaffInfo, savePositiveInfo } from '@/api/staff-manage';
+import { savePositiveInfo } from '@/api/my-task';
+import { queryPositiveStaffInfo } from '@/api/staff-manage';
 import { regularFormRules } from './rules';
 // import StaffDuty from '@/components/CurrentSystem/StaffDuty.vue'
 import UserAssociate from '@/components/CurrentSystem/UserAssociate'
@@ -287,14 +288,15 @@ export default {
     },
     // 获取详情信息
     getDetailInfo() {
-      queryStaffInfo({
+      queryPositiveStaffInfo({
         uemUserId: this.editData.uemUserId
       }).then(result => {
         const res = result
         // 表单赋值
         for (const key in this.formData) {
           if (key === 'sex') {
-            this.formData[key] = res[key] || false
+            const sex = res[key]
+            this.formData[key] = sex === true ? true : (sex === false ? false : '')
           } else {
             this.formData[key] = res[key] || ''
           }
