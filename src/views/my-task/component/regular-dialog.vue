@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:15:03
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-19 14:02:34
+ * @LastEditTime: 2022-08-19 20:02:37
  * @Description:
 -->
 
@@ -327,7 +327,7 @@
 <script>
 import RegularTable from './regular-table'
 import UserAssociate from '@/components/CurrentSystem/UserAssociate'
-import { queryPositiveApply, savePositiveInfo, savePositiveInfoByLeader, deletedApplyByStaff } from '@/api/my-task';
+import { queryPositiveApply, queryTaskInfoByUser, savePositiveInfo, savePositiveInfoByLeader, deletedApplyByStaff } from '@/api/my-task';
 import { regularFormRules } from './rules';
 import { USER_TYPE } from '@/store/constant'
 import { downloadExternalFile } from '@/api/common';
@@ -381,7 +381,10 @@ export default {
         resultAccess: '', // 审批结果
         offerRemark: '', // 转正评语
         // 已完成
-        auditName: ''// 审核人
+        auditName: '', // 审核人
+        createTime: '',
+        creatorName: '',
+        resume: ''
       },
       positiveTypeOptions: this.$dict.getDictOptions('OFFER_TYPE'),
       inclinedAgreeOptions: this.$dict.getDictOptions('INCLINED_AGREE_TYPE'),
@@ -453,6 +456,13 @@ export default {
             this.formData[key] = _res[key] || ''
           }
         }
+      });
+      // console.log('【 this.editData 】-461', this.editData)
+      queryTaskInfoByUser({
+        taskInfoId: this.editData.taskInfoId,
+        dispatchers: this.editData.dispatchers
+      }).then(res => {
+        this.formData.resume = res[1].resume || ''
       });
     },
     // 撤回

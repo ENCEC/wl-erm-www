@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 21:05:06
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-18 16:49:16
+ * @LastEditTime: 2022-08-19 20:09:51
  * @Description:
 -->
 
@@ -10,7 +10,7 @@
   <el-dialog
     :title="dialogTitle"
     v-bind="$attrs"
-    width="750px"
+    width="800px"
     center
     :close-on-click-modal="false"
     top="10vh"

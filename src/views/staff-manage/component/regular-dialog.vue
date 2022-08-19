@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 21:05:06
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-19 17:47:01
+ * @LastEditTime: 2022-08-19 19:44:40
  * @Description: 员工转正
 -->
 
@@ -14,7 +14,7 @@
     :title="'员工'+dialogTitle"
     top="10vh"
     v-bind="$attrs"
-    width="750px"
+    width="800px"
     z-index="10000"
     :append-to-body="true"
     :close-on-click-modal="false"
@@ -137,7 +137,7 @@
           <el-col :span="12">
             <!-- TODO -->
             <el-form-item label="附件:">
-              <Upload :upload-data.sync="uploadData" :file-info="formData.resume" />
+              <Upload :upload-data.sync="uploadData" :file-info="formData.staffApplication" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -145,14 +145,19 @@
         <el-row>
           <el-col :span="24">
             <el-form-item label="面谈评语:" prop="interviewerId">
-              <UserAssociate v-model="formData.interviewerId" :init-label="formData.interviewerName" placeholder="请选择面谈人" class="input-width" />
+              <UserAssociate
+                v-model="formData.interviewerId"
+                :init-label="formData.interviewerName"
+                placeholder="请选择面谈人"
+                class="input-width"
+              />
             </el-form-item>
           </el-col>
         </el-row>
         <!-- 面谈评语 -->
         <el-row>
           <el-col :span="24">
-            <el-form-item label=" " prop="faceRemark" :hide-required-asterisk="false">
+            <el-form-item label=" " prop="faceRemark">
               <el-input
                 v-model="formData.faceRemark"
                 type="textarea"
@@ -165,15 +170,20 @@
         </el-row>
         <el-row>
           <el-col :span="24">
-            <el-form-item label="转正评语:" prop="positiveUid">
-              <UserAssociate v-model="formData.positiveUid" placeholder="请选择审批人" class="input-width" />
+            <el-form-item label="转正评语:" prop="approver">
+              <UserAssociate
+                v-model="formData.approver"
+                :init-label="formData.approverName"
+                placeholder="请选择审批人"
+                class="input-width"
+              />
             </el-form-item>
           </el-col>
         </el-row>
         <!-- 转正评语 -->
         <el-row>
           <el-col :span="24">
-            <el-form-item label=" " prop="offerRemark" :hide-required-asterisk="true">
+            <el-form-item label=" " prop="offerRemark">
               <el-input
                 v-model="formData.offerRemark"
                 type="textarea"
@@ -243,9 +253,10 @@ export default {
         interviewerId: '', // 面谈人
         interviewerName: '', // 面谈人名称
         faceRemark: '', // 面谈评语
-        positiveUid: '', // 审批人
+        approver: '', // 审批人
+        approverName: '', // 审批人姓名
         offerRemark: '', // 转正评语
-        resume: ''// 文件key
+        staffApplication: ''// 文件key
       },
       uploadData: {
         systemId: process.env.VUE_APP_SYSTEMID, // 写死
@@ -293,19 +304,19 @@ export default {
       }).then(result => {
         console.log('【 result 】-293', result)
         const arr = result
-        const baseInfo = arr.length < 2 ? arr[0] : arr[1]
         const regularInfo = arr.length < 2 ? {} : arr[0]
-        const { name, sex, entryDate, jobStatus, deptName, uemDeptId, staffDuty, staffDutyCode } = baseInfo
-        const { offerDate, offerType, faceScore, interviewerId, interviewerName, faceRemark, offerRemark, uemUserIds, resume } = regularInfo
+        const baseInfo = arr.length < 2 ? arr[0] : arr[1]
+        const { name, sex, entryDate, jobStatus, deptName, uemDeptId, staffDuty, staffDutyCode, staffApplication } = baseInfo
+        const { offerDate, offerType, faceScore, interviewerId, interviewerName, faceRemark, approver, approverName, offerRemark } = regularInfo
         const res = {
           //  第一条数据的字段
           name, sex, entryDate, jobStatus, deptName, uemDeptId, staffDuty, staffDutyCode,
           //  第二条数据的字段
           offerDate, offerType, faceScore,
           // 面谈
-          interviewerId: interviewerId || '', interviewerName, faceRemark,
+          interviewerId, interviewerName, faceRemark,
           // 转正
-          positiveUid: uemUserIds[1] || '', offerRemark, resume
+          approver, approverName, offerRemark, staffApplication
         }
         // 表单赋值
         for (const key in this.formData) {
@@ -323,15 +334,19 @@ export default {
     handleConfirm() {
       this.$refs['elForm'].validate(valid => {
         if (valid) {
-          const uemUserIds = [this.formData.interviewerId, this.formData.positiveUid]
+          const uemUserIds = [this.formData.interviewerId, this.formData.approver]
           savePositiveInfoByStaff({
             ...this.formData,
             uemUserIds,
             uemUserId: this.editData.uemUserId.toString()
           }).then(res => {
-            this.$message.success('操作成功');
-            this.$emit('getTableData', '');
-            this.close();
+            if (res.success) {
+              this.$message.success('操作成功');
+              this.$emit('getTableData', '');
+              this.close();
+            } else {
+              this.$message.error(res.errorMessages[0]);
+            }
           });
         }
       });
