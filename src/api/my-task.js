@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-08 10:55:42
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-12 13:41:29
+ * @LastEditTime: 2022-08-19 10:28:33
  * @Description: 员工管理-我的任务
  */
 
@@ -28,6 +28,14 @@ export function queryLeaderTaskInfo(data) {
 export function queryOrdinatorTaskInfo(data) {
   return request({
     url: prefix + '/taskInfo/queryOrdinatorTaskInfo',
+    method: 'post',
+    data
+  });
+}
+// 列表-项目经理/部门领导
+export function queryTaskInfoByPage(data) {
+  return request({
+    url: prefix + '/taskInfo/queryTaskInfoByPage',
     method: 'post',
     data
   });

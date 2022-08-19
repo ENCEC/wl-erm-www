@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 17:38:09
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-19 09:59:03
+ * @LastEditTime: 2022-08-19 10:29:10
  * @Description: 我的任务
 -->
 
@@ -61,9 +61,9 @@ import QuitDialog from './component/quit-dialog';
 import {
   queryStaffTaskInfo,
   queryLeaderTaskInfo,
-  queryOrdinatorTaskInfo
+  queryOrdinatorTaskInfo,
+  queryTaskInfoByPage
 } from '@/api/my-task';
-import { queryTaskInfoPage } from '@/api/staff-task';
 import tableMix from '@/mixins/table-mixin';
 import { USER_TYPE } from '@/store/constant'
 
@@ -125,8 +125,8 @@ export default {
         '1': queryStaffTaskInfo, // 员工
         '2': queryOrdinatorTaskInfo, // 统筹人
         '3': queryLeaderTaskInfo, // 负责人
-        '4': queryTaskInfoPage, // 项目经理
-        '5': queryTaskInfoPage// 部门领导
+        '4': queryTaskInfoByPage, // 项目经理
+        '5': queryTaskInfoByPage// 部门领导
       }
       const funcName = funcInfo[this.filterForm.userType]
       // this.listLoading = true;

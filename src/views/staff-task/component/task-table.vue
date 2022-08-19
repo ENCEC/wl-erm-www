@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-07-26 14:43:35
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-18 16:43:45
+ * @LastEditTime: 2022-08-19 14:08:39
  * @Description:
 -->
 <template>
@@ -18,6 +18,7 @@
         height="220px"
         style="width: 100%"
         border
+        stripe
         size="mini"
         @select="handleRowSelect"
         @selection-change="handleSelectionChange"

@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-01 19:02:14
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-19 09:50:17
+ * @LastEditTime: 2022-08-19 11:04:41
  * @Description:
  */
 
@@ -60,14 +60,14 @@ export function queryPositiveStaffInfo(query) {
     params: query
   });
 }
-// // 转正-提交
-// export function savePositiveInfo(data) {
-//   return request({
-//     url: wlTrainPrefix + '/taskInfo/savePositiveInfoByStaff',
-//     method: 'post',
-//     data
-//   });
-// }
+// 转正-提交
+export function savePositiveInfoByStaff(data) {
+  return request({
+    url: wlTrainPrefix + '/taskInfo/savePositiveInfoByStaff',
+    method: 'post',
+    data
+  });
+}
 
 // ===== 离职，辞退 =====
 // 查看---离职，辞退信息

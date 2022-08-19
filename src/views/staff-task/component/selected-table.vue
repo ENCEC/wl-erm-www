@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 09:22:23
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-18 16:45:00
+ * @LastEditTime: 2022-08-19 14:08:33
  * @Description:
 -->
 
@@ -18,6 +18,7 @@
         style="width: 100%"
         border
         size="mini"
+        stripe
       >
         <el-table-column type="index" label="序号" width="50" />
         <el-table-column prop="standardEntryName" label="规范条目" min-width="130" />

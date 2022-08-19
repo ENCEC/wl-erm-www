@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-04 17:34:53
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-18 11:23:02
+ * @LastEditTime: 2022-08-19 13:57:54
  * @Description: 所属部门-下拉
 -->
 
@@ -105,8 +105,13 @@ export default {
         systemId: process.env.VUE_APP_SYSTEMID, // 写死
         fileKey: file.fileKey.toString()// ''4312d611-9c3a-4f45-932e-a71e91b81863.txt''
       }).then(res => {
-        const fileName = res.fileName.substring(0, res.fileName.lastIndexOf('.'));
-        downloadFile(res.file, fileName)
+        if (res.success) {
+          const fileName = res.fileName.substring(0, res.fileName.lastIndexOf('.'));
+          downloadFile(res.file, fileName)
+        } else {
+          // TODO :错误提示
+          this.$message.error(res.errorMessages[0])
+        }
       })
     },
     // 确认删除前执行的操作
@@ -116,19 +121,19 @@ export default {
         return this.$confirm(`确定移除 ${file.name}？`);
       }
     },
-    // 确认删除后执行的操作
+    // TODO 确认删除后执行的操作
     handleRemove(file, fileList) {
       deleteFile({
         systemId: process.env.VUE_APP_SYSTEMID, // 写死
         fileKey: file.fileKey.toString()// ''4312d611-9c3a-4f45-932e-a71e91b81863.txt''
       }).then(res => {
-        this.$message.success('删除成功!');
+        if (res.success) {
+          this.$message.success('删除成功!');
+        } else {
+          this.$message.error(res.resultMsg)
+        }
       })
     }
-    // handleChange(value) {
-    //   this.$emit('input', this.selectVal);
-    //   this.$emit('getSelectVal', this.selectVal);
-    // }
   }
 };
 </script>

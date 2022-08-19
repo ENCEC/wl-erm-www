@@ -116,7 +116,6 @@
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <!-- TODO -->
                 <el-form-item label="政治面貌:" prop="politicalStatus">
                   <el-select
                     v-model="form.politicalStatus"
@@ -371,7 +370,6 @@ export default {
       staffDutyOptions: [], // 入职岗位
       projectTypeOptions: [], // 归属项目
       politicsOptions: [], // 政治面貌
-
       rules: {
         name: [{ required: true, message: '请输入名字', trigger: 'change' }],
         sex: [{ required: true, message: '请选择性别', trigger: 'change' }],
