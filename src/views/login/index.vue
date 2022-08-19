@@ -85,6 +85,8 @@ import { aesEncrypt } from '@/utils/util'
 // import LangSelect from '@/components/LangSelect'
 // import SocialSign from './components/SocialSignin'
 // import { login } from '@/api/login';
+import { getInfo, queryResource } from '@/api/user'
+import { removeToken } from '@/utils/auth'
 
 export default {
   name: 'Login',
@@ -177,10 +179,22 @@ export default {
               password: aesEncrypt(this.loginForm.password)
             }
           )
-            .then((res) => {
+            .then(async(res) => {
               if (res.success) {
-                console.log('【 登录成功 】-184', res)
-                this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
+                const userInfo = await getInfo()
+                const routerList = await queryResource({
+                  clientId: process.env.VUE_APP_CLIENT_ID,
+                  uemUserId: userInfo.data.uemUserId
+                })
+                // console.log('【 登录成功 】-184', res)
+                if (routerList.data.length) {
+                  this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
+                } else {
+                  this.$message.error('该用户没有权限，请联系管理员添加！')
+                  //  清除cookie
+                  removeToken()
+                }
+                // debugger
               } else {
                 this.$message.error('登录失败')
               }
