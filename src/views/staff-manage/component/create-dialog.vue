@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 21:05:06
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-18 10:37:33
+ * @LastEditTime: 2022-08-18 16:49:16
  * @Description:
 -->
 
@@ -385,7 +385,9 @@ export default {
         email: '',
         seniority: '', // 工作年限
         projectId: '', // 归属项目,
-        resume: ''
+        resume: '',
+        createTime: '',
+        creatorName: ''
       },
       // sexOptions: this.$dict.getDictOptions('SEX'),
       maritalStatusOptions: this.$dict.getDictOptions('MARITAL_STATUS'),
@@ -425,7 +427,8 @@ export default {
       }).then(res => {
         for (const key in this.formData) {
           if (key === 'sex') {
-            this.formData[key] = res[key] || false
+            const sex = res[key]
+            this.formData[key] = sex === true ? true : (sex === false ? false : '')
           } else {
             this.formData[key] = res[key] || ''
           }

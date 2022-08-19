@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-01 13:52:08
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-08 11:12:51
+ * @LastEditTime: 2022-08-19 11:33:55
  * @Description:
  */
 // 编辑
@@ -157,12 +157,12 @@ export const regularFormRules = {
       trigger: 'change'
     }
   ],
-  positiveType: [{
+  offerType: [{
     required: true,
     message: '请选择转正类型',
     trigger: 'change'
   }],
-  defenseScore: [
+  faceScore: [
     {
       required: true,
       message: '请输入转员工答辩成绩',
@@ -203,7 +203,7 @@ export const dissmissFormRules = {
     }
   ],
   // 辞退
-  dismissComments: [
+  dismissReason: [
     {
       required: true,
       message: '请输入辞退原因',

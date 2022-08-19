@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-09 16:19:33
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-11 11:10:25
+ * @LastEditTime: 2022-08-19 14:07:56
  * @Description:
 -->
 
@@ -17,12 +17,12 @@
       style="width: 590px"
       border
       size="mini"
+      stripe
     >
       <el-table-column type="index" label="序号" width="50" />
       <el-table-column prop="entryName" label="规范条目" width="130" />
       <el-table-column prop="detailName" label="程序名称" />
       <el-table-column prop="actionSerialNum" label="执行顺序" width="80" />
-      <!-- TODO：没字段 -->
       <!-- 员工才显示计划完成日期 -->
       <el-table-column v-if="userType == USER_TYPE.STAFF" prop="planEndDate" label="计划完成日期" width="120">
         <!-- <template slot-scope="scope">
@@ -42,11 +42,6 @@ export default {
   name: 'TaskTable',
   mixins: [tableMix],
   props: {
-    // 编辑信息
-    // records: {
-    //   type: Array,
-    //   default: () => []
-    // },
     // 弹窗类型
     type: {
       type: String,
@@ -73,19 +68,7 @@ export default {
     };
   },
   computed: {},
-  watch: {
-    // records: {
-    //   deep: true,
-    //   immediate: true,
-    //   handler(newVal) {
-    //     if (this.type === 'detail') {
-    //       // 详情的列表数据
-    //       // console.log('【 详情的列表数据 】-161', newVal)
-    //       this.tableForm.tableData = newVal
-    //     }
-    //   }
-    // }
-  },
+  watch: {},
   created() {
     this.getTableData()
   },
@@ -98,7 +81,6 @@ export default {
         pageSize: this.params.pageSize,
         taskType: this.taskType
       }).then(res => {
-        console.log('【 res 】-135', res)
         const _res = res.data
         this.tableForm.tableData = res.data;
         this.params.totalRecord = _res.totalRecord;
@@ -108,6 +90,4 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.table-wrap {
-}
 </style>

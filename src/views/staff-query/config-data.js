@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-01 13:52:08
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-18 11:51:45
+ * @LastEditTime: 2022-08-18 16:55:54
  * @Description:
  */
 
@@ -126,8 +126,8 @@ export const columns = _this => {
     {
       prop: 'sex',
       label: '性别',
-      formatter: (row) => {
-        return row.sex ? '女' : '男'
+      formatter: (row, column) => {
+        return _this.$dict.getDictNameByCode('SEX', row.sex)
       }
     },
     {

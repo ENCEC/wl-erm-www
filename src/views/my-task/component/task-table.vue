@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 17:38:09
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-16 14:07:25
+ * @LastEditTime: 2022-08-19 14:06:44
  * @Description: 我的任务-试用任务信息-弹框-表格
 -->
 
@@ -16,9 +16,10 @@
         height="320px"
         border
         size="mini"
+        stripe
       >
         <el-table-column type="index" label="序号" width="50" />
-        <el-table-column prop="standardEntryName" label="规范条目" />
+        <el-table-column prop="standardEntryName" label="规范条目" min-width="130" />
         <el-table-column prop="actionTime" label="执行时间" width="110">
           <template slot-scope="scope">
             {{ scope.row.actionTime && scope.row.actionTime.toString()?`入职后第${scope.row.actionTime}天`:'' }}
@@ -58,16 +59,17 @@
         </el-table-column>
         <!-- 统筹人 -->
         <el-table-column v-if="userType===USER_TYPE.ORDINATOR" prop="progress" label="完成进度(%)" min-width="100" />
+        <!-- 非负责人-完成结果-文本 -->
         <el-table-column v-if="userType!==USER_TYPE.CHARGE" prop="resultAccess" label="完成结果">
           <template slot-scope="scope">
             {{ $dict.getDictNameByCode('COMPLETION', scope.row.status) }}
           </template>
         </el-table-column>
-        <!-- 负责人-完成结果 -->
+        <!-- 负责人-完成结果-输入框 -->
         <el-table-column v-if="userType===USER_TYPE.CHARGE" prop="resultAccess" label="完成结果" min-width="130">
           <template slot-scope="scope">
             <el-form-item
-              v-if="(scope.$index >= 0) && (!scope.row.endDate)"
+              v-if="(scope.$index >= 0)"
               :prop="`tableData[${scope.$index}].resultAccess`"
               :rules="tableFormRules.resultAccess"
             >
@@ -85,22 +87,19 @@
                 />
               </el-select>
             </el-form-item>
-            <!-- TODO:显示条件判断确认 -->
-            <span v-if="scope.row.endDate && (scope.row.status == COMPLETION_EN.COMPLETED)">
-              {{ $dict.getDictNameByCode('COMPLETION', scope.row.status) }}
-            </span>
           </template>
         </el-table-column>
-        <!-- 负责人-完成情况 -->
+        <!-- 非负责人-完成情况-文本 -->
         <el-table-column v-if="userType!==USER_TYPE.CHARGE" prop="status" label="完成情况">
           <template slot-scope="scope">
             {{ $dict.getDictNameByCode('COMPLETION', scope.row.status) }}
           </template>
         </el-table-column>
+        <!-- 负责人-完成情况-输入框 -->
         <el-table-column v-if="userType===USER_TYPE.CHARGE" prop="status" label="完成情况" min-width="130">
           <template slot-scope="scope">
             <el-form-item
-              v-if="(scope.$index >= 0) && (!scope.row.endDate)"
+              v-if="(scope.$index >= 0)"
               :prop="`tableData[${scope.$index}].status`"
               :rules="tableFormRules.status"
             >
@@ -118,10 +117,6 @@
                 />
               </el-select>
             </el-form-item>
-            <!-- TODO:显示条件判断确认 -->
-            <span v-if="scope.row.endDate && (scope.row.status == COMPLETION_EN.COMPLETED)">
-              {{ $dict.getDictNameByCode('COMPLETION', scope.row.status) }}
-            </span>
           </template>
         </el-table-column>
         <el-table-column prop="endDate" label="完成时间" min-width="120" />
@@ -172,13 +167,13 @@ export default {
       },
       // 验证规则
       tableFormRules: {
-        progress: [{ required: true, message: '请选择完成进度', trigger: 'change' }],
-        resultAccess: [
-          { required: true, message: '请选择完成结果', trigger: 'change' }
-        ],
-        status: [
-          { required: true, message: '请选择完成情况', trigger: 'change' }
-        ]
+        // progress: [{ required: true, message: '请选择完成进度', trigger: 'change' }],
+        // resultAccess: [
+        //   { required: true, message: '请选择完成结果', trigger: 'change' }
+        // ],
+        // status: [
+        //   { required: true, message: '请选择完成情况', trigger: 'change' }
+        // ]
       },
       resultOptions: this.$dict.getDictOptions('COMPLETE_RESULT'), // 完成结果
       statusOptions: this.$dict.getDictOptions('COMPLETION').filter(item => item.value !== 0) // 完成情况
@@ -203,13 +198,12 @@ export default {
       deep: true,
       handler(newVal, oldVal) {
         this.oldPage = oldVal
-        // console.log('【 newVal, oldVal 】-193', newVal, oldVal)
       }
     }
   },
   created() {
     this.getTableData();
-    console.log('【 table-userType 】-81', this.userType)
+    // console.log('【 table-userType 】-81', this.userType)
   },
   mounted() {},
   methods: {
@@ -255,7 +249,6 @@ export default {
     },
     // 保存当前页数据
     saveCurPageData() {
-      // console.log('【 是否关闭弹框 】-255', isClose)
       return new Promise((resolve, reject) => {
         // 验证表单
         let isTableFormValid = false
@@ -285,13 +278,10 @@ export default {
           }
           funcName(tableFormData).then(res => {
             this.$message.success(res.data);
-            // this.$emit('getTableFormData', tableFormData)
             resolve()
-            console.log('【保存成功 reject 】-287')
           });
         } else {
           reject()
-          console.log('【保存失败 reject 】-287')
         }
         return isTableFormValid
       })

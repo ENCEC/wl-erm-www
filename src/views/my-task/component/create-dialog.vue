@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 17:38:09
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-16 14:08:33
+ * @LastEditTime: 2022-08-19 13:45:56
  * @Description: 我的任务-试用任务信息-弹框
 -->
 
@@ -98,13 +98,12 @@ export default {
   },
   watch: {},
   created() {
-    console.log('【 userType 】-81', this.userType)
+    // console.log('【 userType 】-81', this.userType)
   },
   mounted() {},
   methods: {
-    // 获取填写的数据 TODO
+    // 获取填写的数据
     // getTableFormData(val, isClose) {
-    //   // TODO:优化
     //   isClose && this.close();
     // },
     // 关闭弹框

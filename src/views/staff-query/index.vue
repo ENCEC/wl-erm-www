@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-01 19:02:14
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-05 16:25:33
+ * @LastEditTime: 2022-08-18 16:56:39
  * @Description: 员工管理-员工管理
 -->
 
@@ -83,9 +83,7 @@ export default {
         jobStatus: ''
       },
       // 表格
-      records: [{
-        uemUserId: '1'
-      }],
+      records: [],
       listLoading: false,
       tableConfig,
       columns: columns(this),

@@ -2,21 +2,22 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 21:05:06
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-18 10:55:08
+ * @LastEditTime: 2022-08-19 11:35:08
  * @Description: 员工转正
 -->
 
 <template>
   <el-dialog
-    :title="'员工'+dialogTitle"
+    center
     class="regular-dialog"
+    destroy-on-close
+    :title="'员工'+dialogTitle"
+    top="10vh"
     v-bind="$attrs"
     width="750px"
-    center
-    :close-on-click-modal="false"
-    top="10vh"
     z-index="10000"
     :append-to-body="true"
+    :close-on-click-modal="false"
     v-on="$listeners"
   >
     <el-form
@@ -26,7 +27,6 @@
       size="mini"
       label-width="100px"
       :inline="true"
-      destroy-on-close
     >
       <div class="form-wrap">
         <el-row>
@@ -54,7 +54,7 @@
               <el-date-picker
                 v-model="formData.entryDate"
                 format="yyyy-MM-dd"
-                value-format="yyyy-MM-dd hh:mm:ss"
+                value-format="yyyy-MM-dd"
                 class="input-width"
                 placeholder="请选择入职时间"
                 clearable
@@ -105,7 +105,7 @@
               <el-date-picker
                 v-model="formData.offerDate"
                 format="yyyy-MM-dd"
-                value-format="yyyy-MM-dd hh:mm:ss"
+                value-format="yyyy-MM-dd"
                 class="input-width"
                 placeholder="请选择转正日期"
                 clearable
@@ -113,11 +113,11 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="转正类型:" prop="positiveType">
-              <el-radio-group v-model="formData.positiveType">
+            <el-form-item label="转正类型:" prop="offerType">
+              <el-radio-group v-model="formData.offerType">
                 <el-radio
                   v-for="item in positiveTypeOptions"
-                  :key="'positiveType' + item.value"
+                  :key="'offerType' + item.value"
                   :label="item.value"
                 >{{ item.label }}</el-radio>
               </el-radio-group>
@@ -126,9 +126,9 @@
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="转员工答辩成绩:" prop="defenseScore" label-width="130px">
+            <el-form-item label="转员工答辩成绩:" prop="faceScore" label-width="130px">
               <el-input
-                v-model="formData.defenseScore"
+                v-model="formData.faceScore"
                 placeholder="请输入转员工答辩成绩"
                 clearable
               />
@@ -152,9 +152,9 @@
         <!-- 面谈评语 -->
         <el-row>
           <el-col :span="24">
-            <el-form-item label=" " prop="interviewComments" :hide-required-asterisk="false">
+            <el-form-item label=" " prop="faceRemark" :hide-required-asterisk="false">
               <el-input
-                v-model="formData.interviewComments"
+                v-model="formData.faceRemark"
                 type="textarea"
                 placeholder="输入评语"
                 clearable
@@ -173,9 +173,9 @@
         <!-- 转正评语 -->
         <el-row>
           <el-col :span="24">
-            <el-form-item label=" " prop="positiveComments" :hide-required-asterisk="true">
+            <el-form-item label=" " prop="offerRemark" :hide-required-asterisk="true">
               <el-input
-                v-model="formData.positiveComments"
+                v-model="formData.offerRemark"
                 type="textarea"
                 placeholder="输入评语"
                 clearable
@@ -202,7 +202,7 @@
   </el-dialog>
 </template>
 <script>
-import { queryStaffInfo, savePositiveInfo } from '@/api/staff-manage';
+import { queryPositiveStaffInfo, savePositiveInfoByStaff } from '@/api/staff-manage';
 import { regularFormRules } from './rules';
 // import StaffDuty from '@/components/CurrentSystem/StaffDuty.vue'
 import UserAssociate from '@/components/CurrentSystem/UserAssociate'
@@ -238,12 +238,12 @@ export default {
         staffDuty: '', // 岗位名称
         staffDutyCode: '', // 入职岗位
         offerDate: '', // 转正时间
-        positiveType: '', // 转正类型
-        defenseScore: '', // 转员工答辩成绩
+        offerType: '', // 转正类型
+        faceScore: '', // 转员工答辩成绩
         interviewUid: '', // 面谈人
-        interviewComments: '', // 面谈评语
+        faceRemark: '', // 面谈评语
         positiveUid: '', // 审批人
-        positiveComments: '', // 转正评语
+        offerRemark: '', // 转正评语
         resume: ''// 文件key
       },
       uploadData: {
@@ -287,14 +287,23 @@ export default {
     },
     // 获取详情信息
     getDetailInfo() {
-      queryStaffInfo({
+      queryPositiveStaffInfo({
         uemUserId: this.editData.uemUserId
       }).then(result => {
-        const res = result
+        const arr = result
+        const { name, sex, entryDate, jobStatus, deptName, uemDeptId, staffDuty, staffDutyCode } = arr[0]
+        const { offerDate, offerType, faceScore, interviewUid, faceRemark, positiveUid, offerRemark, resume } = arr[1]
+        const res = {
+          //  第一条数据的字段
+          name, sex, entryDate, jobStatus, deptName, uemDeptId, staffDuty, staffDutyCode,
+          //  第二条数据的字段
+          offerDate, offerType, faceScore, interviewUid, faceRemark, positiveUid, offerRemark, resume
+        }
         // 表单赋值
         for (const key in this.formData) {
           if (key === 'sex') {
-            this.formData[key] = res[key] || false
+            const sex = res[key]
+            this.formData[key] = sex === true ? true : (sex === false ? false : '')
           } else {
             this.formData[key] = res[key] || ''
           }
@@ -308,7 +317,7 @@ export default {
         if (valid) {
           // const uemUserIds = [this.editData.uemUserId, this.formData.interviewUid, this.formData.positiveUid]
           const uemUserIds = [this.formData.interviewUid, this.formData.positiveUid]
-          savePositiveInfo({
+          savePositiveInfoByStaff({
             ...this.formData,
             uemUserIds,
             uemUserId: this.editData.uemUserId.toString()

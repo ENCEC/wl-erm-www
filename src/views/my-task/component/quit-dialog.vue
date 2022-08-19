@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-08 18:45:59
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-17 14:00:14
+ * @LastEditTime: 2022-08-19 14:02:00
  * @Description:
 -->
 
@@ -56,7 +56,6 @@
           </el-col>
           <!-- 审批中 -->
           <el-col v-if="status === STATUS_TYPE.CHECK" :span="12">
-            <!-- TODO -->
             <el-form-item label="审批结果:">
               <el-input
                 v-model="formData.resultAccess"
@@ -365,7 +364,8 @@ export default {
     // 弹框标题
     dialogTitle() {
       this.getDetailInfo();
-      return this.formData.dispatchersName + '离职申请'
+      return this.editData.taskTitle// this.formData.dispatchersName + '转正申请'
+      // return this.formData.dispatchersName + '离职申请'
     },
     status() {
       const taskStatus = this.editData.status.toString()
@@ -387,7 +387,7 @@ export default {
       if (taskStatus === '2') {
         status = this.STATUS_TYPE.COMPLETED // 1
       }
-      console.log('【 status==== 】-396', this.userType, status)
+      // console.log('【 status==== 】-396', this.userType, status)
       return status
     }
   },
@@ -395,7 +395,7 @@ export default {
   created() {},
   mounted() {},
   methods: {
-    // 撤回 TODO
+    // 撤回
     handleWithdraw() {
       deletedApplyByStaff({ taskInfoId: this.editData.taskInfoId }).then(res => {
         this.$message.success('撤回成功');
@@ -417,17 +417,14 @@ export default {
       //   }
       // });
       queryLeaveInfoByLeader({
-        // TODO
-        uemUserId: '6958664088091697152', // this.editData.dispatchers,
+        dispatchers: this.editData.dispatchers, // '6958664088091697152', //
         taskInfoId: this.editData.taskInfoId
       }).then(res => {
-        // TODO
         const _res = res.data[0].data
         for (const key in this.formData) {
           this.formData[key] = _res[key] || ''
         }
         this.formData.leaveReason = res.data[1].data.leaveReason || ' '
-        // console.log('【 this.formData.leaveReason  】-429', this.formData.leaveReason)
       });
     },
     // 提交表单信息
@@ -442,6 +439,7 @@ export default {
           const funcName = funcInfo[this.status]// this.editData.dispatchers ? updateTaskInfo : saveTaskInfo;
           funcName({
             ...this.formData,
+            // TODO
             uemUserId: '6958664088091697152' // this.editData.dispatchers,
           }).then(res => {
             this.$message.success('操作成功');

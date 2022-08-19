@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 21:05:06
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-18 10:36:33
+ * @LastEditTime: 2022-08-18 17:24:39
  * @Description:
 -->
 
@@ -107,7 +107,7 @@
                   <el-date-picker
                     v-model="formData.leaveDate"
                     format="yyyy-MM-dd"
-                    value-format="yyyy-MM-dd hh:mm:ss"
+                    value-format="yyyy-MM-dd"
                     class="input-width"
                     placeholder="请选择离职日期"
                     clearable
@@ -138,7 +138,7 @@
                   <el-date-picker
                     v-model="formData.dismissDate"
                     format="yyyy-MM-dd"
-                    value-format="yyyy-MM-dd hh:mm:ss"
+                    value-format="yyyy-MM-dd"
                     class="input-width"
                     placeholder="请选择辞退日期"
                     clearable
@@ -148,9 +148,9 @@
             </el-row>
             <el-row>
               <el-col :span="24">
-                <el-form-item label="辞退原因：" prop="dismissComments" :hide-required-asterisk="false">
+                <el-form-item label="辞退原因：" prop="dismissReason">
                   <el-input
-                    v-model="formData.dismissComments"
+                    v-model="formData.dismissReason"
                     type="textarea"
                     placeholder="输入辞退原因"
                     clearable
@@ -217,20 +217,21 @@ export default {
       },
       rules: dissmissFormRules, // 验证规则
       formData: {
+        uemUserId: '',
         name: '',
         sex: '',
-        entryDate: '', // 2022-05-20 00:00:00入职时间
+        entryDate: '', // 入职时间
         jobStatus: '', // 在职状态（0：试用员工 1：正式员工 2：离职员工）
         deptName: '', // 部门名称
         uemDeptId: '', // 入职部门
         staffDuty: '', // 岗位名称
         staffDutyCode: '', // 入职岗位
         // 离职
-        leaveDate: '', // 2022-05-20 00:00:00辞退时间
+        leaveDate: '', // 离职时间
         leaveReason: '',
         // 辞退
-        dismissDate: '', // 2022-05-20 00:00:00辞退时间
-        dismissComments: '',
+        dismissDate: '', // 辞退时间
+        dismissReason: '',
         resume: ''// 文件key
       }
     };
@@ -272,7 +273,8 @@ export default {
         const res = result
         for (const key in this.formData) {
           if (key === 'sex') {
-            this.formData[key] = res[key] || false
+            const sex = res[key]
+            this.formData[key] = sex // === true ? true : (sex === false ? false : '')
           } else {
             this.formData[key] = res[key] || ''
           }

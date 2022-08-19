@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:15:03
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-17 13:59:25
+ * @LastEditTime: 2022-08-19 14:02:34
  * @Description:
 -->
 
@@ -60,17 +60,17 @@
                 <el-radio
                   v-for="item in positiveTypeOptions"
                   :key="'offerType' + item.label"
-                  :label="item.label"
+                  :label="item.value"
                 >{{ item.label }}</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
           <!-- 进行中-->
           <el-col v-if="status === STATUS_TYPE.ON_MANAGER || status === STATUS_TYPE.ON_LEADER" :span="12">
-            <el-form-item label="附件:">
+            <el-form-item label="附件:" class="file-wrap">
               <!-- TODO： -->
-              <a>个人简历</a>
-              <a>个人简历2</a>
+              <a v-if="formData.resume" @click="handleDownloadFile(formData.resume)">个人简历</a>
+              <!-- <a>试用期调查表</a> -->
             </el-form-item>
           </el-col>
         </el-row>
@@ -99,6 +99,7 @@
                 placeholder="请输入审核人"
                 clearable
                 class="input-width"
+                disabled
               />
             </el-form-item>
           </el-col>
@@ -109,6 +110,7 @@
                 placeholder="请输入审批人"
                 clearable
                 class="input-width"
+                disabled
               />
             </el-form-item>
           </el-col>
@@ -328,6 +330,8 @@ import UserAssociate from '@/components/CurrentSystem/UserAssociate'
 import { queryPositiveApply, savePositiveInfo, savePositiveInfoByLeader, deletedApplyByStaff } from '@/api/my-task';
 import { regularFormRules } from './rules';
 import { USER_TYPE } from '@/store/constant'
+import { downloadExternalFile } from '@/api/common';
+import { downloadFile } from '@/utils/util'
 
 export default {
   components: { UserAssociate, RegularTable },
@@ -352,7 +356,7 @@ export default {
     return {
       USER_TYPE,
       STATUS_TYPE: {
-        CHECK: 1, // 审批中
+        CHECK: 1, // 审批中（撤回）
         ON_MANAGER: 2, // 进行中(项目经理)
         ON_LEADER: 4, // 进行中(部门领导)
         COMPLETED: 3 // 已完成
@@ -365,9 +369,8 @@ export default {
         applyDate: '', // 申请日期
         offerType: '', // 转正类型
         progress: '', // TODO 申请进度
-        uemUserId: '', // TODO 审批人id（面谈人）
-        approverName: '', // TODO 审批人姓名
-        interviewerName: '', // TODO  面谈姓名
+        uemUserId: '', // 审批人id（面谈人）
+        approverName: '', //  审批人姓名
         // 进行中（项目经理）
         faceTime: '', // 面谈时间
         faceResult: '', // 面谈结果
@@ -375,7 +378,7 @@ export default {
         faceRemark: '', // 面谈评语
         // 进行中（部门领导）
         approvalDate: '', // 审批时间
-        resultAccess: '', // TODO 审批结果
+        resultAccess: '', // 审批结果
         offerRemark: '', // 转正评语
         // 已完成
         auditName: ''// 审核人
@@ -389,11 +392,10 @@ export default {
     // 弹框标题
     dialogTitle() {
       this.editData.taskInfoId && this.getDetailInfo();
-      return this.formData.dispatchersName + '转正申请'
+      return this.editData.taskTitle// this.formData.dispatchersName + '转正申请'
     },
     status() {
       const taskStatus = this.editData.status.toString()
-      console.log('【 taskStatus 】-403', taskStatus)
       let status = 0
       // 审批中
       if (taskStatus === '0') {
@@ -408,11 +410,14 @@ export default {
           status = this.STATUS_TYPE.ON_LEADER// 4
         }
       }
+      // if (this.userType.toString() === this.USER_TYPE.PROJECT_MANAGER.toString()) {
+      //   status = this.STATUS_TYPE.ON_MANAGER// 2
+      // }
       // 已完成
       if (taskStatus === '2') {
-        status = this.STATUS_TYPE.COMPLETED // 1
+        status = this.STATUS_TYPE.COMPLETED // 3
       }
-      console.log('【 status==== 】-396', this.userType, status)
+      // console.log('【 status==== 】-396', this.userType, status)
       return status
     }
   },
@@ -420,6 +425,17 @@ export default {
   created() {},
   mounted() {},
   methods: {
+    // 点击文件下载
+    handleDownloadFile(fileKey) {
+      // console.log(fileKey);
+      downloadExternalFile({
+        systemId: process.env.VUE_APP_SYSTEMID, // 写死
+        fileKey: fileKey.toString()
+      }).then(res => {
+        const fileName = '个人简历'// res.fileName.substring(0, res.fileName.lastIndexOf('.'));
+        downloadFile(res.file, fileName)
+      })
+    },
     // 关闭弹框
     close() {
       this.$emit('getTableData', '');
@@ -469,6 +485,12 @@ export default {
 .my-regular-dialog {
   .form-wrap {
     min-height: 280px;
+    .file-wrap{
+      a{
+        color:#1658D5;
+        text-decoration: underline;
+      }
+    }
     .flex-wrap{
       display: flex;
       flex-wrap: wrap;
