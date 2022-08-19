@@ -24,10 +24,10 @@
         type="primary"
       >上传</el-button>
     </div>
-    <div v-for="(item, index) in list" :key="index" class="sys-file-list-item">
+    <div v-for="(item, index) in list" :key="index" v-loading="buttonLoading" class="sys-file-list-item">
       <i class="el-icon-s-order" order />
       <span class="file-name" @click="handleDownload">
-        {{ userName + "个人简历" }}
+        {{ userName + type }}
       </span>
       <i class="el-icon-close close" @click="handleDelete" />
       <i class="el-icon-check check" />
@@ -77,10 +77,8 @@ export default {
     resume: {
       handler(newVal) {
         if (newVal) {
-          debugger
-          this.list.splice(0, 1, { name: this.userName + '个人简历', fileKey: newVal });
+          this.list.splice(0, 1, { name: this.userName + this.type, fileKey: newVal });
         } else {
-          debugger
           this.list = [].concat([])
         }
       }
@@ -124,7 +122,6 @@ export default {
           window.URL.revokeObjectURL(url);
         })
         .catch((err) => {
-          debugger;
           console.log(err);
         });
     },
@@ -148,7 +145,7 @@ export default {
       this.formdata.append('fileType', params.fileType);
       this.formdata.append('fileName', params.fileName);
       this.formdata.append('systemId', 'YYDM200013');
-      this.formdata.append('file', uploadObject.file);
+      this.formdata.append('file', params.file);
       this.formdata.append('uemUserId', this.userId);
       this.formdata.append('type', this.type);
       uploadExternalFile(this.formdata)
@@ -166,47 +163,37 @@ export default {
     sysUploadFile() {
 
     },
-    handleSuccess(res, file) {
-      debugger;
+    handleSuccess() {
     },
     handleRemove(file, fileList) {
-      debugger;
       console.log(file, fileList);
     },
     handlePreview(file) {
-      debugger;
-
       console.log(file);
     },
-    handleExceed(files, fileList) {
-      debugger;
+    handleExceed() {
     },
     beforeUpload(file) {
-      this.list.push(file);
-      this.$refs.uploadFile.fileList = [];
-
+      debugger
+      // this.list.push(file);
       // this.$refs.uploadFile.fileList = [];
-      // const isPDF = file.type === 'application/pdf';
-      // const isLtNM = file.size / 1024 / 1024 < this.fileSize;
-      // if (!isPDF) {
-      //   this.$message.error('上传文件只能是 PDF 格式!');
-      // }
-      // if (!isLtNM) {
-      //   this.$message.error(`文件大小不能超过2MB!`);
-      // }
-      // if (isPDF && isLtNM) {
-      //   const fileName = file.name
-      //   this.uploadData.fileName = fileName.substring(0, fileName.lastIndexOf('.'))
-      //   this.uploadData.fileType = fileName.substring(fileName.lastIndexOf('.') + 1)
-      // }
-      // if(isPDF && isLtNM){
-      //   this.list.push(file);
-      // }
-      // return isPDF && isLtNM
+
+      this.$refs.uploadFile.fileList = [];
+      const isPDF = file.type === 'application/pdf';
+      const isLtNM = file.size / 1024 / 1024 < 2;
+      if (!isPDF) {
+        this.$message.error('上传文件只能是 PDF 格式!');
+      }
+      if (!isLtNM) {
+        this.$message.error('文件大小不能超过2MB!');
+      }
+      if (isPDF && isLtNM) {
+        this.list.push(file);
+      }
+      return isPDF && isLtNM
     },
     beforeRemove(file) {
-      debugger;
-      return this.$confirm(`确定移除 ${file.name}？`);
+      // return this.$confirm(`确定移除 ${file.name}？`);
     },
     handleDelete() {
       this.$confirm(

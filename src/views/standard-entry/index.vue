@@ -155,6 +155,8 @@ export default {
             type: 'input',
             prop: 'entryName',
             // width: "200px",
+            clearable: true,
+
             label: '条目名称',
             placeholder: '请输入条目名称'
           },
@@ -163,6 +165,8 @@ export default {
             class: 'filter-item',
             prop: 'itemType',
             // width: "200px",
+            clearable: true,
+
             label: '条目类型',
             placeholder: '请选择条目类型',
             optionLabel: 'display_name',
@@ -207,6 +211,7 @@ export default {
             class: 'filter-item',
             prop: 'actionRoleId',
             // width: "200px",
+            clearable: true,
             label: '执行角色',
             placeholder: '请选择执行角色',
             optionLabel: 'display_name',
@@ -266,19 +271,18 @@ export default {
             columns: ordinatorColumns,
             multiple: true,
             clearable: true,
-            queryMethod: this.ordinatorQueryMethod
-            // changeSelect: () => {
+            queryMethod: this.ordinatorQueryMethod,
+            changeSelect: () => {
+              debugger
+              // this.temp.ordinatorId=optionVal
+            },
+            // blur: () => {
             //   debugger;
             //   //   this.listQuery.status=optionVal
             // },
-            // // blur: () => {
-            // //   debugger;
-            // //   //   this.listQuery.status=optionVal
-            // // },
-            // // focus: () => {
-            // //   debugger;
-            // //   //   this.listQuery.status=optionVal
-            // // }
+            focus: () => {
+              debugger;
+            }
           },
           {
             type: 'textarea',
@@ -310,9 +314,9 @@ export default {
           {
             type: 'input',
             label: '条目名称',
+            clearable: true,
             prop: 'entryName',
             width: '200px',
-            clearable: false,
             placeholder: '请输入条目名称'
             // col: 8,
           },
@@ -320,13 +324,14 @@ export default {
             type: 'associate',
             label: '适用岗位',
             prop: 'applyPostId',
+            clearable: true,
+
             width: '200px',
             valueProp: 'postId',
             labelProp: 'postName',
             displayInit: 'postName',
             columns: postColumns,
             multiple: false,
-            clearable: true,
             queryMethod: this.postQueryMethod,
             changeSelect: () => {
               //   this.listQuery.status=optionVal
@@ -337,6 +342,7 @@ export default {
             class: 'filter-item',
             prop: 'actionRoleId',
             width: '200px',
+            clearable: true,
             label: '执行角色',
             placeholder: '请选择执行角色',
             optionLabel: 'display_name',
@@ -539,6 +545,9 @@ export default {
       rules: {
         entryName: [
           { required: true, message: '请输入条目名称', trigger: 'change' }
+        ],
+        itemType: [
+          { required: true, message: '请选择条目类型', trigger: 'change' }
         ],
         actionRoleId: [
           { required: true, message: '请选择执行角色', trigger: 'change' }

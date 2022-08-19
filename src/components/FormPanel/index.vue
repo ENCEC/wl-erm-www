@@ -140,7 +140,8 @@
             :multiple="item.multiple"
             :query-method="item.queryMethod"
             :style="{ width: item.width ? item.width : '100%' }"
-            @change="item.changeSelect ? item.changeSelect(row, selectedRows) : ''"
+            @change="(row,selectedRows)=>{item.changeSelect ? item.changeSelect(row, selectedRows) : ''}"
+            @focus="(event)=>{item.focus ? item.focus(event) : ''}"
           />
           <!-- cascader -->
           <el-cascader
@@ -287,16 +288,23 @@ export default {
   computed: {},
   mounted() {
     this.setDefaultValue();
-    // this.triggerAssociate();
+    this.triggerAssociate();
   },
   methods: {
     triggerAssociate() {
-      if (Array.isArray(this.$refs.associate)) {
-        const arr = this.$refs.associate
-        arr.forEach((item) => {
-          item.focus()
-        })
-      }
+      // if (Array.isArray(this.$refs.associate)) {
+      //   const arr = this.$refs.associate
+      //   arr.forEach((item) => {
+      //     var write=item.value
+      //     item.value=''
+      //     item.value=write
+      //   })
+      // }
+      var write = this.value.applyPostId
+      this.value.applyPostId = ''
+      this.$nextTick(() => {
+        this.value.applyPostId = write
+      })
     },
     setDefaultValue() {
       const formData = { ...this.value };

@@ -247,17 +247,17 @@
           </el-row>
           <el-row :gutter="100">
             <el-col :span="12">
-              <el-form-item label="入职岗位:" prop="staffDutyCode">
-                <!-- <StaffDuty v-model="form.staffDutyCode" class="input-width" /> -->
+              <el-form-item label="入职岗位:" prop="staffDutyId">
+                <!-- <StaffDuty v-model="form.staffDutyId" class="input-width" /> -->
                 <el-select
-                  v-model="form.staffDutyCode"
+                  v-model="form.staffDutyId"
                   placeholder="请选择入职岗位"
                   clearable
                   class="input-width"
                 >
                   <el-option
                     v-for="(item, index) in staffDutyOptions"
-                    :key="'staffDutyCode' + item.postId + index"
+                    :key="'staffDutyId' + item.postId + index"
                     :label="item.postName"
                     :value="item.postId"
                   />
@@ -292,9 +292,9 @@
                 >
                   <el-option
                     v-for="(item, index) in projectTypeOptions"
-                    :key="'projectId' + index + item.projectId"
+                    :key="'projectId' + index + item.uemProjectId"
                     :label="item.projectName"
-                    :value="item.projectId"
+                    :value="item.uemProjectId"
                   />
                 </el-select>
               </el-form-item>
@@ -374,7 +374,7 @@ export default {
         speciality: '', // 在校专业
         entryDate: '', // 入职时间
         uemDeptId: '', // 入职部门
-        staffDutyCode: '', // 入职岗位
+        staffDutyId: '', // 入职岗位
         technicalTitleId: '', // 岗位职称
         email: '',
         seniority: '', // 工作年限
@@ -462,7 +462,7 @@ export default {
         technicalTitleId: [
           { required: true, message: '请选择岗位职称', trigger: 'change' }
         ],
-        staffDutyCode: [
+        staffDutyId: [
           { required: true, message: '请选择入职岗位', trigger: 'change' }
         ],
         projectId: [
@@ -527,7 +527,7 @@ export default {
       this.$refs.staffInfoForm.validate((valid) => {
         if (valid) {
           this.$refs.sysUploadFile.sysUploadFile()
-          preservationUemUser()
+          preservationUemUser(this.form)
             .then(() => {
               this.$message.success('保存成功');
               this.buttonLoading = false;

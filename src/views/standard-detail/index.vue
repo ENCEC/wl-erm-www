@@ -76,6 +76,8 @@ export default {
   components: { tableComponent, filterPanel, formPanel },
   data() {
     return {
+      // 规范条目下拉框加载状态
+      entryLoading: false,
       // 弹窗表格的加载状态
       dialogButtonLoading: false,
       formConfig: {
@@ -92,6 +94,8 @@ export default {
             // width: "200px",
             label: '条目类型',
             placeholder: '请选择条目类型',
+            clearable: true,
+
             optionLabel: 'display_name',
             optionValue: 'key',
             optionKey: 'key',
@@ -106,10 +110,13 @@ export default {
             prop: 'entryName',
             // width: "200px",
             label: '规范条目',
+            clearable: true,
+
             placeholder: '请选择规范条目',
             optionLabel: 'display_name',
             optionValue: 'key',
             optionKey: 'key',
+            selectLoading: this.entryLoading,
             options: entryOptions,
             changeSelect: () => {
               if (!this.temp.itemType) {
@@ -122,6 +129,8 @@ export default {
             type: 'textarea',
             prop: 'detailName',
             col: 24,
+            clearable: true,
+
             label: '细则名称',
             autoSize: { minRows: 2, maxRows: 4 },
             placeholder: '请输入细则名称'
@@ -150,7 +159,7 @@ export default {
             label: '细则名称',
             prop: 'detailName',
             width: '200px',
-            clearable: false,
+            clearable: true,
             placeholder: '请输入细则名称'
             // col: 8,
           },
@@ -161,6 +170,8 @@ export default {
             prop: 'entryName',
             width: '200px',
             label: '规范条目',
+            clearable: true,
+
             placeholder: '请选择规范条目',
             optionLabel: 'display_name',
             optionValue: 'key',
@@ -189,6 +200,8 @@ export default {
             class: 'filter-item',
             prop: 'itemType',
             width: '200px',
+            clearable: true,
+
             label: '条目类型',
             placeholder: '请选择条目类型',
             optionLabel: 'display_name',
@@ -245,7 +258,13 @@ export default {
         {
           prop: 'itemType',
           label: '条目类型',
-          align: 'center'
+          align: 'center',
+          formatter: (row) => {
+            const find = this.entryTypeOptions.find((item) => {
+              return item.key === row.itemType
+            })
+            return find ? find.display_name : ''
+          }
         },
         {
           prop: 'entryName',
@@ -358,6 +377,9 @@ export default {
         detailName: [
           { required: true, message: '请输入细则名称', trigger: 'change' }
         ],
+        itemType: [
+          { required: true, message: '请选择条目类型', trigger: 'change' }
+        ],
         entryName: [
           { required: true, message: '请选择规范条目', trigger: 'change' }
         ]
@@ -389,6 +411,7 @@ export default {
         });
     },
     async handleEntryTypeChange(entryType) {
+      this.entryLoading = true
       const arr = this.entryOptions.filter((item) => {
         return item.itemType === entryType;
       });
@@ -414,7 +437,9 @@ export default {
           });
           console.log(this.entryOptions);
           if (arr) {
+            debugger
             this.formConfig.formItemList[1].options = arr;
+            this.entryLoading = false
           } else {
             this.formConfig.formItemList[1].options = this.entryOptions;
           }
