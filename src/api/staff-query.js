@@ -38,6 +38,17 @@ export function uploadExternalFile(data) {
   });
 }
 
+// 8082端口删除文件
+export function deleteResume(uemUserId) {
+  return request({
+    url: shareAuthPrefix + '/uemUserManage/deleteResume',
+    method: 'get',
+    params: {
+      uemUserId
+    }
+  });
+}
+
 // 查看转正评语
 export function queryOfferInfo({ dispatchers, name }) {
   return request({

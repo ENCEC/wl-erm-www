@@ -47,8 +47,8 @@ export const filterConfig = _this => {
         placeholder: '请选择入职岗位',
         col: 8,
         optionLabel: 'postName',
-        optionValue: 'postCode',
-        optionKey: 'postCode',
+        optionValue: 'postId',
+        optionKey: 'postId',
         options: []
       },
       // 岗位职称
@@ -150,7 +150,7 @@ export const columns = _this => {
       prop: 'jobStatus',
       label: '在职状态',
       width: '100',
-      formatter: (row, column) => {
+      formatter: (row) => {
         return _this.$dict.getDictNameByCode('JOB_STATUS', row.jobStatus)
       }
     }

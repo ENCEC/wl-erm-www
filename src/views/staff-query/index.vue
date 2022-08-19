@@ -115,7 +115,7 @@ export default {
     },
     // 获取表格数据
     getTableData() {
-      // this.listLoading = true;
+      this.listLoading = true;
       queryStaffByPage({
         pageNo: this.params.currentPage,
         pageSize: this.params.pageSize,
@@ -124,7 +124,10 @@ export default {
         this.records = res.records;
         this.params.totalRecord = res.totalRecord;
         this.listLoading = false;
-      });
+      }).catch(() => {
+        this.$message.error('加载员工数据失败')
+        this.listLoading = false;
+      })
     },
     // 关闭弹框
     handleClose() {

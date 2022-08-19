@@ -58,7 +58,7 @@ export function queryRoleByPage(data) {
 // 查询条目类型
 export function querySysDictType(data) {
   return request({
-    url: prefix + '/standardEntry/sysDictType/querySysDictType',
+    url: prefix + '/standardEntry/sysDictType/querySysDictCodeByDictType',
     method: 'post',
     data
   })

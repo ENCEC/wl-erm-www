@@ -42,7 +42,7 @@
         </el-col>
         <el-col :span="24">
           <el-form-item label="转正程序:">
-            <el-table :data="tableData" style="width: 100%">
+            <el-table stripe :data="tableData" style="width: 100%">
               <el-table-column prop="count" label="序号" />
               <el-table-column prop="entryName" label="规范条目" />
               <el-table-column prop="detailName" label="程序名称" />
@@ -56,7 +56,7 @@
               type="primary"
               @click="handleDownload"
             >申请表下载</el-button>
-            <upload-file accept=".pdf" :resume="form.resume" type="转正申请表" :user-id="userId" :user-name="name" />
+            <upload-file accept=".pdf" :resume="form.staffApplication" type="转正申请表" :user-id="userId" :user-name="name" />
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -174,45 +174,10 @@ export default {
         });
       });
     },
-    createFile(urlData) {
-      const data = urlData.split(',')[1];
-      var bytes = window.atob(data);
-      // var bytes=window.atob(urlData),//如果是不带前缀的base64则直接执行此行代码即可
-      var n = bytes.length;
-      var u8arr = new Uint8Array(n);
-      while (n--) {
-        u8arr[n] = bytes.charCodeAt(n);
-      }
-      return u8arr;
-    },
-    Blob_down(erjinzhi) {
-      const text = erjinzhi;
-      let blob;
-      const result = document.getElementById('result');
-      console.log(window.Blob);
-      if (!window.Blob) result.innerHTML = '不支持';
-      else blob = new Blob([text]);
-      if (window.URL) {
-        // 最好自定义文件名且带上后缀，这样下载的文件比较好找且加上文件后缀不用选择打开的工具即可走默认的打开文件的软件
-        result.innerHTML =
-          '<a download=' +
-          'name.xls' +
-          ' href="' +
-          window.URL.createObjectURL(blob) +
-          '" target="_blank">文件下载</a>';
-      }
-      // var read=new FileReader();
-      // 创建读取器对象FileReader
-      // read.readAsText(blob);
-      // read.οnlοad=function () {//数据读完会触发onload事件
-      //     console.log(read.result);//read有个result属性存放这结果，从result获取到数据
-      //     result.innerHTML = read.result
-      // }
-    },
-
     handleDownload() {
       const params = {
         systemId: 'YYDM200013',
+        // fileKey:''
         fileKey: '120df0ff-8d74-4868-a5b9-bcb34333df0e.pdf'
       };
       downloadExternalFile(params)
@@ -306,5 +271,5 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
 </style>

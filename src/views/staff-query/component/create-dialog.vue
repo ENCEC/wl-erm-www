@@ -146,10 +146,10 @@
                   class="input-width"
                 >
                   <el-option
-                    v-for="(item,index) in projectTypeOptions"
-                    :key="'politicalStatus'+index+item.projectId"
-                    :label="item.projectName"
-                    :value="item.projectId"
+                    v-for="(item,index) in politicsOptions"
+                    :key="'politicalStatus' + index"
+                    :label="politicsOptions[index].label"
+                    :value="item.value"
                   />
                 </el-select>
               </el-form-item>
@@ -288,9 +288,11 @@
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item label="个人简历:">
-                <el-button type="text">个人简历</el-button>
-              </el-form-item>
+              <el-form :model="form" label-width="100px" label-position="right">
+                <el-form-item label="个人简历:">
+                  <el-button v-if="form.resume" class="btn-attachment" type="text" @click="handleLookResume">{{ form.name }}个人简历</el-button>
+                </el-form-item>
+              </el-form>
             </el-col>
           </el-row>
           <el-row>
@@ -400,11 +402,11 @@
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item label="转正类型:" prop="positiveType">
-                <el-radio-group v-model="form.positiveType">
+              <el-form-item label="转正类型:" prop="offerType">
+                <el-radio-group v-model="form.offerType">
                   <el-radio
-                    v-for="item in positiveTypeOptions"
-                    :key="'positiveType' + item.value"
+                    v-for="item in offerTypeOptions"
+                    :key="'offerType' + item.value"
                     :label="item.value"
                   >{{ item.label }}</el-radio>
                 </el-radio-group>
@@ -420,10 +422,12 @@
               </el-form-item>
             </el-col>
             <el-col :span="11.5">
-              <el-form-item label="附件:" prop="interviewerName" label-width="80px">
-                <el-button class="btn-attachment" type="text" @click="handleLookResume">个人简历</el-button>
-                <el-button class="btn-attachment" type="text" @click="handleLookQuestionnaire">试用期调查表</el-button>
-              </el-form-item>
+              <el-form :model="form" label-width="80px" label-position="right">
+                <el-form-item label="附件:" prop="interviewerName" label-width="80px">
+                  <el-button v-if="form.resume" class="btn-attachment" type="text" @click="handleLookResume">{{ form.name }}个人简历</el-button>
+                  <el-button v-if="form.staffApplication" class="btn-attachment" type="text" @click="handleLookQuestionnaire">试用期调查表</el-button>
+                </el-form-item>
+              </el-form>
             </el-col>
             <el-col :span="12.5">
               <el-form-item label="面谈评语:" prop="interviewerName" label-width="140px">
@@ -504,7 +508,7 @@
 </template>
 <script>
 import { queryStaffById, updateStaff } from '@/api/staff-manage';
-import { queryOfferInfo } from '@/api/staff-query';
+import { queryOfferInfo, downloadExternalFile } from '@/api/staff-query';
 // import { preservationUemUser } from '@/api/staff-query.js';
 import { queryTechnicalNameBySelect, queryProjectNameBySelect } from '@/api/select-02';
 import { formRules } from './rules';
@@ -549,11 +553,12 @@ export default {
         uemDeptId: '', // 入职部门
         staffDutyCode: '', // 入职岗位
         technicalTitleId: '', // 岗位职称
-        email: '',
+        email: '', // 邮箱地址
+        resume: '', // 简历fileKey
         seniority: '', // 工作年限
         projectId: '', // 归属项目,
         offerDate: '', // 转正日期
-        positiveType: '', // 转正类型
+        offerType: '', // 转正类型
         faceScore: '', // 答辩成绩
         interviewerName: '',
         faceRemark: '', // 面谈评语
@@ -561,12 +566,13 @@ export default {
         offerRemark: '', // 转正评语
         creatorName: '', // 创建人
         createTime: ''// 创建时间
-        // offerDate，positiveType，faceScore，interviewerName,faceRemark,approverName,offerRemark
+        // offerDate，offerType，faceScore，interviewerName,faceRemark,approverName,offerRemark
       },
       // sexOptions: this.$dict.getDictOptions('SEX'),
       maritalStatusOptions: this.$dict.getDictOptions('MARITAL_STATUS'),
       educationOptions: this.$dict.getDictOptions('EDUCATION'),
-      positiveTypeOptions: this.$dict.getDictOptions('OFFER_TYPE'),
+      offerTypeOptions: this.$dict.getDictOptions('OFFER_TYPE'),
+      politicsOptions: this.$dict.getDictOptions('POLITICAL_STATUS'), // 政治面貌
       technicalOptions: [], // 岗位职称
       projectTypeOptions: []
     };
@@ -590,9 +596,81 @@ export default {
   methods: {
     // 查看个人’简历‘
     handleLookResume() {
+      const params = {
+        systemId: 'YYDM200013',
+        fileKey: this.form.resume
+      };
+      downloadExternalFile(params)
+        .then((res) => {
+          const fileName = res.file.substring(0, res.file.lastIndexOf('.'));
+          console.log(res);
+          const base = res.file; // 你要传入的base64数据
+          const bstr = window.atob(base);
+          let n = bstr.length;
+          const u8arr = new Uint8Array(n);
+          while (n--) {
+            u8arr[n] = bstr.charCodeAt(n);
+          }
+          // 确定解析格式，可能可以变成img，没有深入研究
+          const blob = new Blob([u8arr], {
+            type: 'application/pdf;chartset=UTF-8'
+          });
+          const url = window.URL.createObjectURL(blob);
+          // 在新窗口打开该pdf用这个
+          window.open(url);
+          // 下载dpf用这个
+          const a = document.createElement('a');
+          a.setAttribute('href', url);
+          a.setAttribute('download', fileName + '.pdf');
+          a.setAttribute('target', '_blank'); // 打开一个新的窗口
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          // 删除url绑定
+          window.URL.revokeObjectURL(url);
+        })
+        .catch(() => {
+          this.$message.error('下载文件失败')
+        });
     },
     // 查看个人’试用期调查表‘
     handleLookQuestionnaire() {
+      const params = {
+        systemId: 'YYDM200013',
+        fileKey: this.form.staffApplication
+      };
+      downloadExternalFile(params)
+        .then((res) => {
+          const fileName = res.file.substring(0, res.file.lastIndexOf('.'));
+          console.log(res);
+          const base = res.file; // 你要传入的base64数据
+          const bstr = window.atob(base);
+          let n = bstr.length;
+          const u8arr = new Uint8Array(n);
+          while (n--) {
+            u8arr[n] = bstr.charCodeAt(n);
+          }
+          // 确定解析格式，可能可以变成img，没有深入研究
+          const blob = new Blob([u8arr], {
+            type: 'application/pdf;chartset=UTF-8'
+          });
+          const url = window.URL.createObjectURL(blob);
+          // 在新窗口打开该pdf用这个
+          window.open(url);
+          // 下载dpf用这个
+          const a = document.createElement('a');
+          a.setAttribute('href', url);
+          a.setAttribute('download', fileName + '.pdf');
+          a.setAttribute('target', '_blank'); // 打开一个新的窗口
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          // 删除url绑定
+          window.URL.revokeObjectURL(url);
+        })
+        .catch(() => {
+          this.$message.error('下载文件失败')
+        });
     },
     // 点击‘基本信息’按钮
     handleLookBasic() {
@@ -609,7 +687,7 @@ export default {
       this.$refs['elForm'].resetFields();
     },
     getOfferInfo() {
-      const arr = ['offerDate', 'createTime', 'positiveType', 'faceScore', 'interviewerName', 'faceRemark', 'approverName', 'offerRemark']
+      const arr = ['offerDate', 'createTime', 'offerType', 'faceScore', 'interviewerName', 'faceRemark', 'approverName', 'offerRemark']
       const params = {
         dispatchers: this.editData.uemUserId,
         name: this.form.name
@@ -682,10 +760,11 @@ export default {
       width: 180px !important;
     }
   }
+
+}
   .btn-attachment{
-    &>span{
+    span{
       text-decoration: underline;
     }
   }
-}
 </style>

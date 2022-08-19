@@ -2,6 +2,7 @@
   <div class="app-container">
     <el-form
       ref="staffInfoForm"
+      v-loading="formLoading"
       :model="form"
       label-position="right"
       label-width="100px"
@@ -126,7 +127,7 @@
                     <el-option
                       v-for="(item, index) in politicsOptions"
                       :key="'politicalStatus' + index"
-                      :label="item.lable"
+                      :label="politicsOptions[index].label"
                       :value="item.value"
                     />
                   </el-select>
@@ -245,26 +246,35 @@
           </el-row>
           <el-row :gutter="100">
             <el-col :span="12">
-              <el-form-item label="入职岗位:" prop="staffDutyCode">
-                <!-- <StaffDuty v-model="form.staffDutyCode" class="input-width" /> -->
+              <el-form-item label="入职岗位:" prop="staffDutyId">
+                <!-- <StaffDuty v-model="form.staffDutyId" class="input-width" /> -->
                 <el-select
-                  v-model="form.staffDutyCode"
+                  v-model="form.staffDutyId"
                   placeholder="请选择入职岗位"
                   clearable
                   class="input-width"
                 >
                   <el-option
                     v-for="(item, index) in staffDutyOptions"
-                    :key="'staffDutyCode' + item.postCode + index"
+                    :key="'staffDutyId' + item.postId + index"
                     :label="item.postName"
-                    :value="item.postCode"
+                    :value="item.postId"
                   />
                 </el-select>
               </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item label="个人简历:">
-                <upload-file accept=".pdf" :resume="form.resume" type="个人简历" :user-id="form.uemUserId" :user-name="form.name" @resumeChange="handleResumeChange" />
+                <upload-file
+                  ref="sysUploadFile"
+                  accept=".pdf"
+                  :resume="form.resume"
+                  type="个人简历"
+                  :user-id="form.uemUserId"
+                  :user-name="form.name"
+                  @resumeChange="handleResumeChange"
+                  @deleteResume="handleDeleteChange"
+                />
               </el-form-item>
             </el-col>
           </el-row>
@@ -280,9 +290,9 @@
                 >
                   <el-option
                     v-for="(item, index) in projectTypeOptions"
-                    :key="'projectId' + index + item.projectId"
+                    :key="'projectId' + index + item.uemProjectId"
                     :label="item.projectName"
-                    :value="item.projectId"
+                    :value="item.uemProjectId"
                   />
                 </el-select>
               </el-form-item>
@@ -290,15 +300,19 @@
           </el-row>
         </div>
         <div class="operate-button">
-          <el-button type="primary" @click="handleSave">保存</el-button>
           <el-button
-            v-if="form.jobStatus==='0'"
+            type="primary"
+            :loading="buttonLoading"
+            @click="handleSave"
+          >保存</el-button>
+          <el-button
+            v-if="form.jobStatus === '0'"
             class="regular-btn"
             type="primary"
             @click="handleRegular"
           >转正申请</el-button>
           <el-button
-            v-if="form.jobStatus==='1'"
+            v-if="form.jobStatus === '1'"
             class="dismiss-btn"
             type="primary"
             @click="handleDismiss"
@@ -334,6 +348,10 @@ export default {
 
   data() {
     return {
+      // 表单加载状态
+      formLoading: false,
+      // 保存按钮加载状态
+      buttonLoading: false,
       form: {
         uemUserId: '',
         account: '',
@@ -354,7 +372,7 @@ export default {
         speciality: '', // 在校专业
         entryDate: '', // 入职时间
         uemDeptId: '', // 入职部门
-        staffDutyCode: '', // 入职岗位
+        staffDutyId: '', // 入职岗位
         technicalTitleId: '', // 岗位职称
         email: '',
         seniority: '', // 工作年限
@@ -364,11 +382,11 @@ export default {
       maritalStatusOptions: this.$dict.getDictOptions('MARITAL_STATUS'), // 婚姻状况
       educationOptions: this.$dict.getDictOptions('EDUCATION'), // 学历
       jobStatusOptions: this.$dict.getDictOptions('JOB_STATUS'), // 在职状态
+      politicsOptions: this.$dict.getDictOptions('POLITICAL_STATUS'), // 政治面貌
 
       technicalOptions: [], // 岗位职称
       staffDutyOptions: [], // 入职岗位
       projectTypeOptions: [], // 归属项目
-      politicsOptions: [], // 政治面貌
       rules: {
         name: [{ required: true, message: '请输入名字', trigger: 'change' }],
         sex: [{ required: true, message: '请选择性别', trigger: 'change' }],
@@ -441,7 +459,7 @@ export default {
         technicalTitleId: [
           { required: true, message: '请选择岗位职称', trigger: 'change' }
         ],
-        staffDutyCode: [
+        staffDutyId: [
           { required: true, message: '请选择入职岗位', trigger: 'change' }
         ],
         projectId: [
@@ -460,9 +478,15 @@ export default {
   methods: {
     // 文件上传后
     handleResumeChange(resume) {
-      debugger
-      this.form.resume = resume || ''
+      debugger;
+      this.form.resume = resume || '';
     },
+    // 文件删除后
+    handleDeleteChange() {
+      debugger;
+      this.form.resume = '';
+    },
+
     // 获取下拉信息
     async getSelectOptions() {
       this.technicalOptions = await queryTechnicalNameBySelect();
@@ -476,27 +500,39 @@ export default {
       this.$refs.dialogDismiss.open();
     },
     getStaffInfo() {
+      this.formLoading = true;
       queryStaffById({
         uemUserId: this.userId
-      }).then((res) => {
-        for (const key in this.form) {
-          if (key === 'sex') {
-            this.form[key] = res[key] || false;
-          } else {
-            this.form[key] = res[key] || '';
+      })
+        .then((res) => {
+          for (const key in this.form) {
+            if (key === 'sex') {
+              this.form[key] = res[key] || false;
+            } else {
+              this.form[key] = res[key] || '';
+            }
           }
-        }
-      });
+          this.formLoading = false;
+        })
+        .catch(() => {
+          this.$message.error('获取员工信息失败');
+          this.formLoading = false;
+        });
     },
     handleSave() {
+      this.buttonLoading = true;
       this.$refs.staffInfoForm.validate((valid) => {
-        debugger;
         if (valid) {
-          preservationUemUser(this.form).then(() => {
-            this.$message.success('保存成功')
-          }).catch(() => {
-            this.$message.error('保存失败')
-          })
+          this.$refs.sysUploadFile.sysUploadFile()
+          preservationUemUser(this.form)
+            .then(() => {
+              this.$message.success('保存成功');
+              this.buttonLoading = false;
+            })
+            .catch(() => {
+              this.$message.error('保存失败');
+              this.buttonLoading = false;
+            });
         }
       });
     },
@@ -536,9 +572,9 @@ export default {
 
 <style lang="scss">
 .staff-info-wrap {
-  .staff-info-module-title{
+  .staff-info-module-title {
     font-weight: bold;
-    &.margin{
+    &.margin {
       margin-top: 30px;
     }
   }
@@ -553,9 +589,9 @@ export default {
       border-color: #797979;
     }
   }
-  .el-divider{
-    margin: 5px 0px 15px 0px!important;
-    background-color: #AAAAAA;
+  .el-divider {
+    margin: 5px 0px 15px 0px !important;
+    background-color: #aaaaaa;
   }
 }
 </style>
