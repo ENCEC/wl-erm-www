@@ -135,6 +135,7 @@
             class="el-associate"
             :value-prop="item.valueProp"
             :label-prop="item.labelProp"
+            :display-init="item.displayInit"
             :columns="item.columns"
             :clearable="item.clearable"
             :multiple="item.multiple"

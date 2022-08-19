@@ -58,6 +58,7 @@ import {
   deleteStandardEntry,
   updateStatus
 } from '@/api/standard-entry.js';
+import { queryViewDetailById } from '@/api/sys-project.js';
 import tableComponent from '@/components/TableComponent';
 import filterPanel from '@/components/FilterPanel';
 import formPanel from '@/components/FormPanel';
@@ -71,6 +72,8 @@ const statusTypeOptions = [
 const entryTypeOptions = [];
 // 适用岗位
 const postOptions = [];
+// 适用岗位职称
+const technicalOptions = [];
 // 统筹人
 const userOptions = [];
 // 执行角色
@@ -178,6 +181,7 @@ export default {
             type: 'associate',
             label: '适用岗位',
             prop: 'applyPostId',
+            displayInit: '',
             // width: "200px",
             col: 24,
             valueProp: 'postId',
@@ -405,7 +409,8 @@ export default {
         loading: false, // 是否添加表格loading加载动画
         highlightCurrentRow: true, // 是否支持当前行高亮显示
         mutiSelect: false, // 是否支持列表项选中功能
-        pagination: true
+        pagination: true,
+        height: '340px'
       }, // table 的参数
 
       columns: [
@@ -507,7 +512,7 @@ export default {
       listLoading: false,
       listQuery: {
         currentPage: 1,
-        pageSize: 20,
+        pageSize: 10,
         totalRecord: 0,
         entryName: '',
         applyPostId: '',
@@ -517,6 +522,7 @@ export default {
       statusTypeOptions,
       entryTypeOptions,
       postOptions,
+      technicalOptions,
       userOptions,
       roleOptions,
       postColumns,
@@ -577,8 +583,26 @@ export default {
     this.initUserOptions();
     this.initRoleSelect();
     this.initEntryTypeSelect();
+    this.initTechnicalSelect();
   },
   methods: {
+    getDisplayInit(id) {
+      this.$nextTick(() => {
+        console.log(this.temp);
+        debugger
+        if (this.temp[id]) {
+          debugger
+          const nameArr = [];
+          queryViewDetailById(this.temp[id]).then((res) => {
+            res.data.forEach((item) => {
+              nameArr.push(item.name);
+            });
+            return nameArr.join(',');
+          });
+        }
+        return ''
+      })
+    },
     initEntryTypeSelect() {
       const params = {
         dictTypeCode: 'TASK_TYPE'
@@ -617,8 +641,7 @@ export default {
     initPostSelect() {
       const params = {
         pageSize: 1000,
-        currentPage: 1,
-        status: '0'
+        currentPage: 1
       };
       querySysPost(params)
         .then((res) => {
@@ -626,6 +649,24 @@ export default {
             this.postOptions.push({
               key: item.postId,
               display_name: item.postName
+            });
+          });
+        })
+        .catch(() => {
+          this.$message.error('初始化岗位失败');
+        });
+    },
+    initTechnicalSelect() {
+      const params = {
+        pageSize: 1000,
+        currentPage: 1
+      };
+      queryByTechnicalTitleName(params)
+        .then((res) => {
+          res.data.records.forEach((item) => {
+            this.technicalOptions.push({
+              key: item.technicalTitleId,
+              display_name: item.technicalName
             });
           });
         })
@@ -708,7 +749,7 @@ export default {
     resetListQuery() {
       this.listQuery = {
         currentPage: 1,
-        pageSize: 20,
+        pageSize: 10,
         totalRecord: 0,
         entryName: '',
         applyPostId: '',
@@ -742,6 +783,17 @@ export default {
     },
     handleUpdate(row) {
       this.temp = Object.assign({}, row); // copy obj
+
+      this.formConfig.formItemList.find((item) => {
+        return item.prop === 'applyPostId'
+      }).displayInit = this.getApplyPostName(row.applyPostId).split(',')
+      this.formConfig.formItemList.find((item) => {
+        return item.prop === 'ordinatorId'
+      }).displayInit = this.getOrdinatorName(row.ordinatorId).split(',')
+      this.formConfig.formItemList.find((item) => {
+        return item.prop === 'applyProfessorId'
+      }).displayInit = this.getTechnicalName(row.applyProfessorId).split(',')
+
       this.dialogStatus = 'update';
       this.dialogFormVisible = true;
       this.$nextTick(() => {
@@ -914,6 +966,17 @@ export default {
     getApplyPostName(ids) {
       const result = [];
       this.postOptions.forEach((item) => {
+        ids.forEach((id) => {
+          if (id === item.key) {
+            result.push(item.display_name);
+          }
+        });
+      });
+      return result.join(',');
+    },
+    getTechnicalName(ids) {
+      const result = [];
+      this.technicalOptions.forEach((item) => {
         ids.forEach((id) => {
           if (id === item.key) {
             result.push(item.display_name);
