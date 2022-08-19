@@ -109,8 +109,8 @@ export default {
     }
     return {
       loginForm: {
-        username: 'admin',
-        password: '654321',
+        username: '',
+        password: '',
         clientId: process.env.VUE_APP_CLIENT_ID,
         checkMoveId: ' ',
         xWidth: 0
