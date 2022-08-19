@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 21:05:06
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-19 11:35:08
+ * @LastEditTime: 2022-08-19 17:47:01
  * @Description: 员工转正
 -->
 
@@ -144,8 +144,8 @@
         <el-row />
         <el-row>
           <el-col :span="24">
-            <el-form-item label="面谈评语:" prop="interviewUid">
-              <UserAssociate v-model="formData.interviewUid" placeholder="请选择面谈人" class="input-width" />
+            <el-form-item label="面谈评语:" prop="interviewerId">
+              <UserAssociate v-model="formData.interviewerId" :init-label="formData.interviewerName" placeholder="请选择面谈人" class="input-width" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -240,7 +240,8 @@ export default {
         offerDate: '', // 转正时间
         offerType: '', // 转正类型
         faceScore: '', // 转员工答辩成绩
-        interviewUid: '', // 面谈人
+        interviewerId: '', // 面谈人
+        interviewerName: '', // 面谈人名称
         faceRemark: '', // 面谈评语
         positiveUid: '', // 审批人
         offerRemark: '', // 转正评语
@@ -290,14 +291,21 @@ export default {
       queryPositiveStaffInfo({
         uemUserId: this.editData.uemUserId
       }).then(result => {
+        console.log('【 result 】-293', result)
         const arr = result
-        const { name, sex, entryDate, jobStatus, deptName, uemDeptId, staffDuty, staffDutyCode } = arr[0]
-        const { offerDate, offerType, faceScore, interviewUid, faceRemark, positiveUid, offerRemark, resume } = arr[1]
+        const baseInfo = arr.length < 2 ? arr[0] : arr[1]
+        const regularInfo = arr.length < 2 ? {} : arr[0]
+        const { name, sex, entryDate, jobStatus, deptName, uemDeptId, staffDuty, staffDutyCode } = baseInfo
+        const { offerDate, offerType, faceScore, interviewerId, interviewerName, faceRemark, offerRemark, uemUserIds, resume } = regularInfo
         const res = {
           //  第一条数据的字段
           name, sex, entryDate, jobStatus, deptName, uemDeptId, staffDuty, staffDutyCode,
           //  第二条数据的字段
-          offerDate, offerType, faceScore, interviewUid, faceRemark, positiveUid, offerRemark, resume
+          offerDate, offerType, faceScore,
+          // 面谈
+          interviewerId: interviewerId || '', interviewerName, faceRemark,
+          // 转正
+          positiveUid: uemUserIds[1] || '', offerRemark, resume
         }
         // 表单赋值
         for (const key in this.formData) {
@@ -315,8 +323,7 @@ export default {
     handleConfirm() {
       this.$refs['elForm'].validate(valid => {
         if (valid) {
-          // const uemUserIds = [this.editData.uemUserId, this.formData.interviewUid, this.formData.positiveUid]
-          const uemUserIds = [this.formData.interviewUid, this.formData.positiveUid]
+          const uemUserIds = [this.formData.interviewerId, this.formData.positiveUid]
           savePositiveInfoByStaff({
             ...this.formData,
             uemUserIds,

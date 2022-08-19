@@ -1,3 +1,10 @@
+<!--
+ * @Author: Hongzf
+ * @Date: 2022-08-05 17:38:09
+ * @LastEditors: Hongzf
+ * @LastEditTime: 2022-08-19 17:30:22
+ * @Descripti
+-->
 <template>
   <div class="errPage-container">
     <el-button icon="el-icon-arrow-left" class="pan-back-btn" @click="back">
@@ -8,15 +15,15 @@
         <h1 class="text-jumbo text-ginormous">
           Oops!
         </h1>
-        <h2>你没有权限去该页面</h2>
-        <ul class="list-unstyled">
+        <h2>你没有该系统权限，请联系管理员添加</h2>
+        <!-- <ul class="list-unstyled">
           <li>或者你可以去:</li>
           <li class="link-type">
             <router-link to="/dashboard">
               回首页
             </router-link>
           </li>
-        </ul>
+        </ul> -->
       </el-col>
       <el-col :span="12">
         <img :src="errGif" width="313" height="428" alt="Girl has dropped her ice cream.">

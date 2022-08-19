@@ -123,6 +123,8 @@ const actions = {
     return new Promise(resolve => {
       commit('SET_TOKEN', '')
       commit('SET_ROLES', [])
+      commit('SET_USERID', '')
+      commit('SET_USERINFO', {})
       removeToken()
       resolve()
     })

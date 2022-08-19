@@ -271,7 +271,6 @@
 
           <el-row :gutter="100">
             <el-col :span="12">
-              <!-- TODO 联想控件 -->
               <el-form-item label="归属项目:" prop="projectId">
                 <el-select
                   v-model="form.projectId"

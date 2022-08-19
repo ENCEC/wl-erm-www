@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:15:04
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-09 14:27:06
+ * @LastEditTime: 2022-08-19 16:05:09
  * @Description:
  */
 
@@ -145,7 +145,6 @@ export const columns = _this => {
         return _this.$dict.getDictNameByCode('TASK_STATUS', row.status)
       }
     },
-    // TODO
     {
       prop: 'endDate',
       label: '完成时间',
