@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 17:38:09
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-16 14:07:25
+ * @LastEditTime: 2022-08-19 10:01:54
  * @Description: 我的任务-试用任务信息-弹框-表格
 -->
 
@@ -172,13 +172,13 @@ export default {
       },
       // 验证规则
       tableFormRules: {
-        progress: [{ required: true, message: '请选择完成进度', trigger: 'change' }],
-        resultAccess: [
-          { required: true, message: '请选择完成结果', trigger: 'change' }
-        ],
-        status: [
-          { required: true, message: '请选择完成情况', trigger: 'change' }
-        ]
+        // progress: [{ required: true, message: '请选择完成进度', trigger: 'change' }],
+        // resultAccess: [
+        //   { required: true, message: '请选择完成结果', trigger: 'change' }
+        // ],
+        // status: [
+        //   { required: true, message: '请选择完成情况', trigger: 'change' }
+        // ]
       },
       resultOptions: this.$dict.getDictOptions('COMPLETE_RESULT'), // 完成结果
       statusOptions: this.$dict.getDictOptions('COMPLETION').filter(item => item.value !== 0) // 完成情况

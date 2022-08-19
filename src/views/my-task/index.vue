@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 17:38:09
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-12 14:29:08
+ * @LastEditTime: 2022-08-19 09:59:03
  * @Description: 我的任务
 -->
 
@@ -150,12 +150,12 @@ export default {
       //   taskTitle: item.taskTitle
       // };
       const TASK_TYPE = {
-        TEST: '试用任务',
+        // TEST: '试用任务',
         POSITIVE: '员工转正',
         QUIT: '员工离职'
       }
-      // 试用任务
-      if (item.taskType === TASK_TYPE.TEST) {
+      // '培训任务', '学习任务', '其他任务', '试用任务'
+      if (['培训任务', '学习任务', '其他任务', '试用任务'].includes(item.taskType)) {
         this.dialogVisible = true;
       }
       // 转正

@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-07-26 14:43:35
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-18 11:49:40
+ * @LastEditTime: 2022-08-18 16:43:45
  * @Description:
 -->
 <template>
@@ -21,27 +21,19 @@
         size="mini"
         @select="handleRowSelect"
         @selection-change="handleSelectionChange"
+        @select-all="handleSelectAll"
       >
-        <!--  v-if="type!=='detail'"  -->
         <el-table-column type="selection" width="40" />
-        <el-table-column prop="entryName" label="规范条目" width="120" />
-        <!--  v-if="type!=='detail'" -->
+        <el-table-column prop="entryName" label="规范条目" min-width="140" />
         <el-table-column prop="actionTime" label="执行时间" width="110">
           <template slot-scope="scope">
             <!-- {{ scope.row.standardEntryId }} -->
             {{ scope.row.actionTime && scope.row.actionTime.toString()?`入职后第${scope.row.actionTime}天`:'' }}
           </template>
         </el-table-column>
-        <!-- v-if="type!=='detail'"  -->
         <el-table-column prop="actionPeriod" label="执行周期(工时)" width="105" />
-        <!-- TODO:字段 -->
         <el-table-column prop="detailName" label="任务名称" min-width="120" />
         <el-table-column prop="actionSerialNum" label="执行顺序" />
-        <el-table-column prop="planEndDate" label="计划完成日期" min-width="120">
-          <template slot-scope="scope">
-            {{ scope.row.planEndDate? $moment(scope.row.planEndDate).format('YYYY-MM-DD') : '' }}
-          </template>
-        </el-table-column>
       </el-table>
       <!-- 表格 End -->
       <!-- 分页 -->
@@ -68,7 +60,7 @@ export default {
   // components: { UserAssociate },
   mixins: [tableMix],
   props: {
-    // 编辑信息
+    // 已勾选的数据
     records: {
       type: Array,
       default: () => []
@@ -186,10 +178,19 @@ export default {
       }
     },
     // 当选择项发生变化时会触发该事件
-    handleSelectionChange(val) {
-      this.multipleSelection = val;
-      this.$emit('getSelectedData', val)
-      // this.$emit('update:selectedList', val)
+    handleSelectionChange() {},
+    // 全选
+    handleSelectAll(allSelection) {
+      console.log('【 val 】-190', allSelection)
+      // 过滤出新的数据
+      const newSelection = allSelection.filter(multipleItem => {
+        const isExit = this.records.some((item) => {
+          return multipleItem.standardDetailId === item.standardDetailId
+        })
+        return !isExit// 过滤出新的不存在的数据
+      })
+      console.log('【 newSelection 】-192', newSelection)
+      this.$emit('handleSelectAll', newSelection)
     }
   }
 };
