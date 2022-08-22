@@ -199,6 +199,7 @@ export default {
             label: '适用岗位职称',
             prop: 'applyProfessorId',
             col: 24,
+            displayInit: '',
             // width: "200px",
             valueProp: 'technicalTitleId',
             labelProp: 'technicalName',
@@ -269,6 +270,7 @@ export default {
             type: 'associate',
             label: '统筹人',
             prop: 'ordinatorId',
+            displayInit: '',
             // width: "200px",
             valueProp: 'uemUserId',
             labelProp: 'name',
@@ -329,11 +331,9 @@ export default {
             label: '适用岗位',
             prop: 'applyPostId',
             clearable: true,
-
             width: '200px',
             valueProp: 'postId',
             labelProp: 'postName',
-            displayInit: 'postName',
             columns: postColumns,
             multiple: false,
             queryMethod: this.postQueryMethod,
@@ -787,9 +787,11 @@ export default {
       this.formConfig.formItemList.find((item) => {
         return item.prop === 'applyPostId'
       }).displayInit = this.getApplyPostName(row.applyPostId).split(',')
+
       this.formConfig.formItemList.find((item) => {
         return item.prop === 'ordinatorId'
       }).displayInit = this.getOrdinatorName(row.ordinatorId).split(',')
+
       this.formConfig.formItemList.find((item) => {
         return item.prop === 'applyProfessorId'
       }).displayInit = this.getTechnicalName(row.applyProfessorId).split(',')
