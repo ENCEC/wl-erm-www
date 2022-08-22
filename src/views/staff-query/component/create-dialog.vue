@@ -17,10 +17,11 @@
         <el-button type="primary" @click="handleLookBasic">基本信息</el-button>
         <el-button v-if="form.offerRemark" type="primary" @click="handleLookRegular">转正评语</el-button>
         <el-button v-if="form.leaveReason" type="primary" @click="handleLookLeave">离职原因</el-button>
-        <el-button v-if="form.dismissComments" type="primary" @click="handleLookDismiss">辞退原因</el-button>
+        <el-button v-if="form.dismissReason" type="primary" @click="handleLookDismiss">辞退原因</el-button>
       </div>
       <el-form
         ref="elForm"
+        v-loading="formLoading"
         :model="form"
         :rules="rules"
         :inline="false"
@@ -432,9 +433,9 @@
                 </el-form-item>
               </el-col>
               <el-col :span="24">
-                <el-form-item label="辞退原因：" prop="dismissComments" :hide-required-asterisk="false">
+                <el-form-item label="辞退原因：" prop="dismissReason" :hide-required-asterisk="false">
                   <el-input
-                    v-model="form.dismissComments"
+                    v-model="form.dismissReason"
                     type="textarea"
                     placeholder="请输入辞退原因"
                     clearable
@@ -587,6 +588,7 @@ export default {
   },
   data() {
     return {
+      formLoading: false,
       lookType: 'basic', // basic查看基本信息，regular查看转正评语
       rules: formRules, // 验证规则
       form: {
@@ -622,8 +624,14 @@ export default {
         approverName: '',
         offerRemark: '', // 转正评语
         creatorName: '', // 创建人
-        createTime: ''// 创建时间
+        createTime: '', // 创建时间
         // offerDate，offerType，faceScore，interviewerName,faceRemark,approverName,offerRemark
+
+        dismissDate: '',
+        dismissReason: '',
+        leaveDate: '',
+        leaveReason: ''
+
       },
       // sexOptions: this.$dict.getDictOptions('SEX'),
       maritalStatusOptions: this.$dict.getDictOptions('MARITAL_STATUS'),
@@ -642,7 +650,7 @@ export default {
     },
     // 在职状态 （0：试用员工 1：正式员工 2：离职员工）
     jobStatusOptions() {
-      return this.$dict.getDictOptions('JOB_STATUS').filter(item => item.value.toString() === '0' || item.value.toString() === '1')
+      return this.$dict.getDictOptions('JOB_STATUS')
     }
   },
   watch: {},
@@ -770,6 +778,7 @@ export default {
     },
     // 获取用户信息
     getDetailInfo() {
+      this.formLoading = true
       queryStaffById({
         uemUserId: this.editData.uemUserId
       }).then(res => {
@@ -780,6 +789,7 @@ export default {
             this.form[key] = res[key] || ''
           }
         }
+        this.formLoading = false
         // this.form = {
         //   ...this.form,
         //   ...res,
@@ -790,7 +800,10 @@ export default {
         //   technicalTitleId: res.technicalTitleId || '',
         //   projectId: res.projectId || ''
         // };
-      });
+      }).catch(() => {
+        this.$$message.error('获取员工信息失败')
+        this.formLoading = false
+      })
     },
     // 获取下拉信息
     async getSelectOptions() {
@@ -814,9 +827,7 @@ export default {
 </script>
 <style lang="scss">
 .staff-dialog {
-  .btn-exchange{
-    margin-bottom: 10px;
-  }
+
   .form-wrap {
     min-height:480px;
     margin-bottom: 20px;
@@ -830,5 +841,8 @@ export default {
     span{
       text-decoration: underline;
     }
+  }
+    .btn-exchange{
+    margin-bottom: 10px;
   }
 </style>
