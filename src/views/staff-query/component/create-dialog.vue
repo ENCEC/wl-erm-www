@@ -15,7 +15,7 @@
     >
       <div class="btn-exchange">
         <el-button type="primary" @click="handleLookBasic">基本信息</el-button>
-        <el-button v-if="form.offerRemark" type="primary" @click="handleLookRegular">转正评语</el-button>
+        <el-button v-if="form.jobStatus==='1'" type="primary" @click="handleLookRegular">转正评语</el-button>
         <el-button v-if="form.leaveReason" type="primary" @click="handleLookLeave">离职原因</el-button>
         <el-button v-if="form.dismissReason" type="primary" @click="handleLookDismiss">辞退原因</el-button>
       </div>
@@ -760,7 +760,7 @@ export default {
       this.$refs['elForm'].resetFields();
     },
     getOfferInfo() {
-      const arr = ['offerDate', 'createTime', 'offerType', 'faceScore', 'interviewerName', 'faceRemark', 'approverName', 'offerRemark']
+      const arr = ['offerDate', 'createTime', 'creatorName', 'offerType', 'faceScore', 'interviewerName', 'faceRemark', 'approverName', 'offerRemark']
       const params = {
         dispatchers: this.editData.uemUserId,
         name: this.form.name
