@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 21:05:06
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-19 19:44:40
+ * @LastEditTime: 2022-08-22 14:45:01
  * @Description: 员工转正
 -->
 
@@ -94,7 +94,7 @@
                 clearable
                 disabled
               />
-              <!-- <StaffDuty v-model="formData.staffDutyCode" placeholder="请选择入职岗位" class="input-width" disabled /> -->
+              <!-- <StaffDuty v-model="formData.staffDutyId" placeholder="请选择入职岗位" class="input-width" disabled /> -->
             </el-form-item>
           </el-col>
         </el-row>
@@ -246,17 +246,18 @@ export default {
         deptName: '', // 部门名称
         uemDeptId: '', // 入职部门
         staffDuty: '', // 岗位名称
-        staffDutyCode: '', // 入职岗位
+        staffDutyId: '', // 入职岗位
         offerDate: '', // 转正时间
-        offerType: '', // 转正类型
-        faceScore: '', // 转员工答辩成绩
-        interviewerId: '', // 面谈人
-        interviewerName: '', // 面谈人名称
-        faceRemark: '', // 面谈评语
-        approver: '', // 审批人
-        approverName: '', // 审批人姓名
-        offerRemark: '', // 转正评语
-        staffApplication: ''// 文件key
+        offerType: '' // 转正类型
+        // 不回显
+        // faceScore: '', // 转员工答辩成绩
+        // interviewerId: '', // 面谈人
+        // interviewerName: '' // 面谈人名称
+        // faceRemark: '', // 面谈评语
+        // approver: '', // 审批人
+        // approverName: '', // 审批人姓名
+        // offerRemark: '', // 转正评语
+        // staffApplication: ''// 文件key
       },
       uploadData: {
         systemId: process.env.VUE_APP_SYSTEMID, // 写死
@@ -306,11 +307,11 @@ export default {
         const arr = result
         const regularInfo = arr.length < 2 ? {} : arr[0]
         const baseInfo = arr.length < 2 ? arr[0] : arr[1]
-        const { name, sex, entryDate, jobStatus, deptName, uemDeptId, staffDuty, staffDutyCode, staffApplication } = baseInfo
+        const { name, sex, entryDate, jobStatus, deptName, uemDeptId, staffDuty, staffDutyId, staffApplication } = baseInfo
         const { offerDate, offerType, faceScore, interviewerId, interviewerName, faceRemark, approver, approverName, offerRemark } = regularInfo
         const res = {
           //  第一条数据的字段
-          name, sex, entryDate, jobStatus, deptName, uemDeptId, staffDuty, staffDutyCode,
+          name, sex, entryDate, jobStatus, deptName, uemDeptId, staffDuty, staffDutyId,
           //  第二条数据的字段
           offerDate, offerType, faceScore,
           // 面谈

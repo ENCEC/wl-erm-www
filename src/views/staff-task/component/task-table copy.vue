@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-07-26 14:43:35
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-22 14:02:38
+ * @LastEditTime: 2022-08-22 14:48:05
  * @Description:
 -->
 <template>
@@ -152,6 +152,34 @@ export default {
     // })
   },
   methods: {
+    // 分页触发
+    handleCurrentChange(curPage) {
+      this.params.currentPage = this.oldPage
+      // if (this.userType !== USER_TYPE.ORDINATOR) {
+      this.$confirm(
+        '是否保存当前页的数据？',
+        '提示',
+        {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }
+      ).then(async() => {
+        await this.saveCurPageData(false)// 保存当前页数据
+        this.params.currentPage = curPage// 切换到下一页
+        // console.log('【 保存成功，切换到下一页 】-227')
+        this.getTableData();
+        // console.log('【 保存 1】-196', this.params.currentPage, curPage)
+      }).catch(() => {
+        this.params.currentPage = curPage
+        this.getTableData();
+        // console.log('【 不保存 1】-196', this.params.currentPage, curPage)
+      });
+      // } else {
+      //   this.params.currentPage = curPage
+      //   this.getTableData();
+      // }
+    },
     rowKey(row) {
       return row.standardEntryId
     },

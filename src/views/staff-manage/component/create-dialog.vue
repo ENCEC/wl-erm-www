@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 21:05:06
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-19 20:09:51
+ * @LastEditTime: 2022-08-22 16:27:31
  * @Description:
 -->
 
@@ -227,8 +227,8 @@
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="入职岗位:" prop="staffDutyCode">
-              <StaffDuty v-model="formData.staffDutyCode" class="input-width" />
+            <el-form-item label="入职岗位:" prop="staffDutyId">
+              <StaffDuty v-model="formData.staffDutyId" class="input-width" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -380,7 +380,7 @@ export default {
         speciality: '', // 在校专业
         entryDate: '', // 入职时间
         uemDeptId: '', // 入职部门
-        staffDutyCode: '', // 入职岗位
+        staffDutyId: '', // 入职岗位
         technicalTitleId: '', // 岗位职称
         email: '',
         seniority: '', // 工作年限
@@ -425,6 +425,7 @@ export default {
       queryStaffById({
         uemUserId: this.editData.uemUserId
       }).then(res => {
+        // console.log('【 res .projectId===】-428', typeof res.projectId)
         for (const key in this.formData) {
           if (key === 'sex') {
             const sex = res[key]

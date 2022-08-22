@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-15 14:54:15
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-15 17:07:53
+ * @LastEditTime: 2022-08-22 15:02:13
  * @Description: 归属项目-下拉
 -->
 
@@ -19,7 +19,7 @@
       v-for="(item, index) in optionsList"
       :key="'uemProjectId' + index + item.uemProjectId"
       :label="item.projectName"
-      :value="item.uemProjectId"
+      :value="item.uemProjectId.toString()"
     />
   </el-select>
 </template>
@@ -28,7 +28,12 @@ import {
   queryProjectNameBySelect
 } from '@/api/common';
 export default {
-  props: {},
+  props: {
+    value: {
+      type: String, // 传入的值
+      require: true
+    }
+  },
   data() {
     return {
       selectVal: this.value || '', // 选择的值
