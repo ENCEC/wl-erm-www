@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 21:05:06
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-22 14:45:01
+ * @LastEditTime: 2022-08-22 17:12:13
  * @Description: 员工转正
 -->
 
@@ -246,10 +246,10 @@ export default {
         deptName: '', // 部门名称
         uemDeptId: '', // 入职部门
         staffDuty: '', // 岗位名称
-        staffDutyId: '', // 入职岗位
-        offerDate: '', // 转正时间
-        offerType: '' // 转正类型
+        staffDutyId: '' // 入职岗位
         // 不回显
+        // offerDate: '', // 转正时间
+        // offerType: '' // 转正类型
         // faceScore: '', // 转员工答辩成绩
         // interviewerId: '', // 面谈人
         // interviewerName: '' // 面谈人名称
