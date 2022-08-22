@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-04 17:34:53
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-19 19:56:38
+ * @LastEditTime: 2022-08-22 14:50:25
  * @Description: 所属部门-下拉
 -->
 
@@ -122,9 +122,13 @@ export default {
         systemId: process.env.VUE_APP_SYSTEMID, // 写死
         fileKey: this.fileKey// file.fileKey.toString()// ''4312d611-9c3a-4f45-932e-a71e91b81863.txt''
       }).then(res => {
+        // TODO :错误提示
+        if (!res.success) {
+          this.$message.error(res.errorMessages[0] || res.resultMsg)
+          return false
+        }
         const fileName = res.fileName.substring(0, res.fileName.lastIndexOf('.'));
         downloadFile(res.file, fileName)
-        // TODO :错误提示
       })
     },
     // 确认删除前执行的操作
@@ -189,7 +193,7 @@ export default {
     &:hover{
       background-color: #f5f7fa;
       .file-name{
-        padding-right: 20px;
+        // padding-right: 20px;
         color: #0050AC;
         cursor: pointer;
       }

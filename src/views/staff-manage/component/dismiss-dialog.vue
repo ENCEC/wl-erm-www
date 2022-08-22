@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 21:05:06
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-19 20:08:20
+ * @LastEditTime: 2022-08-22 14:23:15
  * @Description:
 -->
 
@@ -95,7 +95,7 @@
                   clearable
                   disabled
                 />
-                <!-- <StaffDuty v-model="formData.staffDutyCode" placeholder="请选择入职岗位" class="input-width" disabled /> -->
+                <!-- <StaffDuty v-model="formData.staffDutyId" placeholder="请选择入职岗位" class="input-width" disabled /> -->
               </el-form-item>
             </el-col>
           </el-row>
@@ -226,14 +226,14 @@ export default {
         deptName: '', // 部门名称
         uemDeptId: '', // 入职部门
         staffDuty: '', // 岗位名称
-        staffDutyCode: '', // 入职岗位
+        staffDutyId: '' // 入职岗位
         // 离职
-        leaveDate: '', // 离职时间
-        leaveReason: '',
+        // leaveDate: '', // 离职时间
+        // leaveReason: ''
         // 辞退
-        dismissDate: '', // 辞退时间
-        dismissReason: '',
-        dismissApplication: ''// 文件key
+        // dismissDate: '', // 辞退时间
+        // dismissReason: '',
+        // dismissApplication: ''// 文件key
       }
     };
   },

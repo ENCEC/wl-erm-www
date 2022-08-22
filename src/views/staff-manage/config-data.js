@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-01 13:52:08
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-22 11:29:46
+ * @LastEditTime: 2022-08-22 14:44:11
  * @Description:
  */
 
@@ -188,12 +188,11 @@ export const operates = _this => {
         id: 'regular',
         label: '转正',
         type: 'text',
-        show: (row, index) => {
-          return row.status.toString() !== '1' // 正式员工不展示
+        show: (index, row) => {
+          return row.jobStatus === '0' // 试用员工共才展示
         },
         disabled: false,
         method: (row, index) => {
-          console.log('【 index 】-163', index)
           _this.handleOpen(row, 'regular');
         }
       },
@@ -201,12 +200,11 @@ export const operates = _this => {
         id: 'quit',
         label: '离职',
         type: 'text',
-        show: (row, index) => {
-          return row.status.toString() !== '2'// 离职员工不展示
+        show: (index, row) => {
+          return row.jobStatus !== '2' // 离职员工不展示
         },
         disabled: false,
         method: (row, index) => {
-          console.log('【 index 】-163', index)
           _this.handleOpen(row, 'quit');
         }
       },
@@ -214,12 +212,11 @@ export const operates = _this => {
         id: 'dismiss',
         label: '辞退',
         type: 'text',
-        show: (row, index) => {
-          return row.status.toString() !== '2' // 离职员工不展示
+        show: (index, row) => {
+          return row.jobStatus !== '2' // 离职员工不展示
         },
         disabled: false,
         method: (row, index) => {
-          console.log('【 index 】-163', index)
           _this.handleOpen(row, 'dismiss');
         }
       },
