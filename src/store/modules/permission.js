@@ -26,7 +26,8 @@ function hasPermission(roles, route) {
 export function filterAsyncRoutes(routes, level = 1) {
   const res = []
   // TODO:小图标
-  const icon = level === 1 ? 'icon_staff' : ''// 图标
+  const iconUrl = require('@/assets/menu-icon/icon_staff.png')
+  const icon = level === 1 ? iconUrl : ''// 图标
   routes.forEach(routeItem => {
     let tmp = {}
     // 父级菜单没有子菜单

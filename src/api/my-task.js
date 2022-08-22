@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-08 10:55:42
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-19 10:28:33
+ * @LastEditTime: 2022-08-19 19:33:32
  * @Description: 员工管理-我的任务
  */
 
@@ -71,6 +71,15 @@ export function updateTaskDetailStatus(data) {
 export function queryPositiveApply(query) {
   return request({
     url: prefix + '/taskInfo/queryPositiveApply',
+    method: 'get',
+    params: query
+  });
+}
+//
+// 根据任务id查询该申请人的转正申请以及简历
+export function queryTaskInfoByUser(query) {
+  return request({
+    url: prefix + '/taskInfo/queryTaskInfoByUser',
     method: 'get',
     params: query
   });

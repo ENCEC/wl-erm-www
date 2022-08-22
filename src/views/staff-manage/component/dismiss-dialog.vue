@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 21:05:06
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-18 17:24:39
+ * @LastEditTime: 2022-08-19 20:08:20
  * @Description:
 -->
 
@@ -162,7 +162,8 @@
             <el-row>
               <!-- TODO -->
               <el-form-item label="附件:">
-                <Upload :upload-data.sync="uploadData" :file-info="formData.resume" />
+                <Upload :upload-data.sync="uploadData" :file-info="formData.dismissApplication" />
+                <!-- <Upload :upload-data.sync="uploadData" :file-info="formData.resume" /> -->
               </el-form-item>
             </el-row>
           </div>
@@ -213,7 +214,7 @@ export default {
         fileName: '',
         fileType: '',
         uemUserId: '',
-        type: '转正申请表'
+        type: '辞退申请表'
       },
       rules: dissmissFormRules, // 验证规则
       formData: {
@@ -232,7 +233,7 @@ export default {
         // 辞退
         dismissDate: '', // 辞退时间
         dismissReason: '',
-        resume: ''// 文件key
+        dismissApplication: ''// 文件key
       }
     };
   },

@@ -2,28 +2,40 @@
  * @Author: Hongzf
  * @Date: 2022-08-04 17:34:53
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-19 13:57:54
+ * @LastEditTime: 2022-08-19 19:56:38
  * @Description: 所属部门-下拉
 -->
 
 <template>
-  <el-upload
-    :action="uploadUrl"
-    :data="uploadData"
-    :on-preview="handlePreview"
-    :on-remove="handleRemove"
-    :before-remove="beforeRemove"
-    :limit="1"
-    :on-exceed="handleExceed"
-    :file-list="fileList"
-    :before-upload="beforeUpload"
-    :on-success="handleSuccess"
-    size="mini"
-    class="upload-demo"
-  >
-    <el-button size="small" type="primary">上传</el-button>
+  <div>
+    <el-upload
+      :action="uploadUrl"
+      :data="uploadData"
+      :limit="1"
+      :show-file-list="false"
+      :on-success="handleSuccess"
+      :on-preview="handlePreview"
+      :before-remove="beforeRemove"
+      :on-remove="handleRemove"
+      :on-exceed="handleExceed"
+      :file-list="fileList"
+      :before-upload="beforeUpload"
+      size="mini"
+      class="upload-demo"
+    >
+      <el-button size="small" type="primary">上传</el-button>
     <!-- <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div> -->
-  </el-upload>
+    </el-upload>
+    <div v-for="(item, index) in fileList" :key="index" v-loading="buttonLoading" class="sys-file-list-item">
+      <i class="el-icon-s-order" order />
+      <span class="file-name" @click="handlePreview">
+        {{ item.name }}
+      </span>
+      <i class="el-icon-close close" @click="handleRemove" />
+      <i class="el-icon-check check" />
+    </div>
+    <div slot="tip" class="el-upload__tip">只能上传pdf文件，且不超过2MB</div>
+  </div>
 </template>
 <script>
 import {
@@ -48,12 +60,15 @@ export default {
     return {
       uploadUrl: process.env.VUE_APP_SHARE_AUTH_PREFIX + '/uemUserManage/uploadExternalFile',
       fileSize: 2,
-      fileList: []
+      fileList: [],
+      fileKey: '',
+      buttonLoading: false
       // fileList: [{ name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100' }, { name: 'food2.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100' }]
     };
   },
   watch: {
     fileInfo(val) {
+      this.fileKey = val
       this.fileList.push({
         name: val,
         fileKey: val
@@ -88,30 +103,28 @@ export default {
     // 上传成功
     handleSuccess(response, file, fileList) {
       console.log('【handleSuccess- response, file, fileList 】-87', response.data, file, fileList)
-      // const obj = response.data
       // this.fileList = []
-      // for (const key in obj) {
-      //   this.fileList = [{
-      //     name: obj[key],
-      //     fileKey: key
-      //   }]
-      // }
-      console.log('【 this.fileList 】-92', this.fileList)
+      if (response.success) {
+        this.$message.success('上传成功');
+        const fileKey = response.data
+        this.fileList = [{
+          name: file.name,
+          fileKey
+        }]
+        this.fileKey = fileKey
+        console.log('【 this.fileKey 】-106', this.fileKey)
+      }
     },
     // 点击文件下载
     handlePreview(file) {
       console.log(file);
       downloadExternalFile({
         systemId: process.env.VUE_APP_SYSTEMID, // 写死
-        fileKey: file.fileKey.toString()// ''4312d611-9c3a-4f45-932e-a71e91b81863.txt''
+        fileKey: this.fileKey// file.fileKey.toString()// ''4312d611-9c3a-4f45-932e-a71e91b81863.txt''
       }).then(res => {
-        if (res.success) {
-          const fileName = res.fileName.substring(0, res.fileName.lastIndexOf('.'));
-          downloadFile(res.file, fileName)
-        } else {
-          // TODO :错误提示
-          this.$message.error(res.errorMessages[0])
-        }
+        const fileName = res.fileName.substring(0, res.fileName.lastIndexOf('.'));
+        downloadFile(res.file, fileName)
+        // TODO :错误提示
       })
     },
     // 确认删除前执行的操作
@@ -123,16 +136,23 @@ export default {
     },
     // TODO 确认删除后执行的操作
     handleRemove(file, fileList) {
-      deleteFile({
-        systemId: process.env.VUE_APP_SYSTEMID, // 写死
-        fileKey: file.fileKey.toString()// ''4312d611-9c3a-4f45-932e-a71e91b81863.txt''
-      }).then(res => {
-        if (res.success) {
-          this.$message.success('删除成功!');
-        } else {
-          this.$message.error(res.resultMsg)
-        }
-      })
+      console.log('【 file, fileList 】-130', file, fileList)
+      this.$confirm('确定移除该文件吗', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        deleteFile({
+          systemId: process.env.VUE_APP_SYSTEMID, // 写死
+          fileKey: this.fileKey// file.fileKey.toString()// ''4312d611-9c3a-4f45-932e-a71e91b81863.txt''
+        }).then(res => {
+          if (res.success) {
+            this.$message.success('删除成功!');
+          } else {
+            this.$message.error(res.resultMsg)
+          }
+        })
+      });
     }
   }
 };
@@ -150,4 +170,47 @@ export default {
     white-space: nowrap;
     width: 170px;
 }
+.sys-file-list-item{
+    position: relative;
+    display: flex;
+    align-items: center;
+    .file-name{
+        color: #606266;
+        display: inline-block;
+        margin-right: 40px;
+        overflow: hidden;
+        padding-left: 4px;
+        text-overflow: ellipsis;
+        -webkit-transition: color .3s;
+        transition: color .3s;
+        white-space: nowrap;
+        width: 170px;
+    }
+    &:hover{
+      background-color: #f5f7fa;
+      .file-name{
+        padding-right: 20px;
+        color: #0050AC;
+        cursor: pointer;
+      }
+      .check{
+        display: none;
+      }
+      .close{
+        display: inline-block;
+        cursor: pointer;
+        &:hover{
+          color: #0050AC;
+        }
+      }
+    }
+    .check,.close{
+      position: absolute;
+      top: 11px;
+      right: 5px;
+    }
+    .close{
+      display: none;
+    }
+  }
 </style>

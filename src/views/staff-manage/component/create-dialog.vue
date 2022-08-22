@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 21:05:06
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-18 16:49:16
+ * @LastEditTime: 2022-08-19 20:09:51
  * @Description:
 -->
 
@@ -10,7 +10,7 @@
   <el-dialog
     :title="dialogTitle"
     v-bind="$attrs"
-    width="750px"
+    width="800px"
     center
     :close-on-click-modal="false"
     top="10vh"
@@ -281,7 +281,7 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row>
+        <!-- <el-row>
           <el-col :span="12">
             <el-form-item
               v-if="type === 'detail'"
@@ -310,7 +310,7 @@
               />
             </el-form-item>
           </el-col>
-        </el-row>
+        </el-row> -->
       </div>
     </el-form>
     <div slot="footer" class="dialog-footer">

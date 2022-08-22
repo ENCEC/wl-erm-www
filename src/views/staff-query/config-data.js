@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-01 13:52:08
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-18 16:55:54
+ * @LastEditTime: 2022-08-22 11:41:28
  * @Description:
  */
 
@@ -134,9 +134,10 @@ export const columns = _this => {
       prop: 'mobile',
       label: '联系电话'
     },
+    // TODO
     {
-      prop: 'deptName',
-      label: '入职部门'
+      prop: 'address2',
+      label: '归属地'
     },
     {
       prop: 'staffDuty',
@@ -153,6 +154,26 @@ export const columns = _this => {
       formatter: (row) => {
         return _this.$dict.getDictNameByCode('JOB_STATUS', row.jobStatus)
       }
+    },
+    {
+      prop: 'entryDate',
+      label: '入职时间'
+    },
+    {
+      prop: 'leaveDate',
+      label: '离职时间',
+      formatter: (row, column) => {
+        return row.jobStatus === '2' ? row.leaveDate : '-'
+      }
+    },
+    {
+      prop: 'projectName',
+      label: '归属项目'
+    },
+    // TODO
+    {
+      prop: 'technicalName',
+      label: '人员标签'
     }
   ];
 };
