@@ -199,6 +199,7 @@ export default {
             label: '适用岗位职称',
             prop: 'applyProfessorId',
             col: 24,
+            displayInit: '',
             // width: "200px",
             valueProp: 'technicalTitleId',
             labelProp: 'technicalName',
@@ -269,6 +270,7 @@ export default {
             type: 'associate',
             label: '统筹人',
             prop: 'ordinatorId',
+            displayInit: '',
             // width: "200px",
             valueProp: 'uemUserId',
             labelProp: 'name',
@@ -277,15 +279,12 @@ export default {
             clearable: true,
             queryMethod: this.ordinatorQueryMethod,
             changeSelect: () => {
-              debugger
               // this.temp.ordinatorId=optionVal
             },
             // blur: () => {
-            //   debugger;
             //   //   this.listQuery.status=optionVal
             // },
             focus: () => {
-              debugger;
             }
           },
           {
@@ -329,11 +328,9 @@ export default {
             label: '适用岗位',
             prop: 'applyPostId',
             clearable: true,
-
             width: '200px',
             valueProp: 'postId',
             labelProp: 'postName',
-            displayInit: 'postName',
             columns: postColumns,
             multiple: false,
             queryMethod: this.postQueryMethod,
@@ -589,9 +586,7 @@ export default {
     getDisplayInit(id) {
       this.$nextTick(() => {
         console.log(this.temp);
-        debugger
         if (this.temp[id]) {
-          debugger
           const nameArr = [];
           queryViewDetailById(this.temp[id]).then((res) => {
             res.data.forEach((item) => {
@@ -611,7 +606,7 @@ export default {
         .then((res) => {
           res.data.forEach((item) => {
             this.entryTypeOptions.push({
-              key: item.dictCode,
+              key: item.dictName,
               display_name: item.dictName
             });
           });
@@ -787,9 +782,11 @@ export default {
       this.formConfig.formItemList.find((item) => {
         return item.prop === 'applyPostId'
       }).displayInit = this.getApplyPostName(row.applyPostId).split(',')
+
       this.formConfig.formItemList.find((item) => {
         return item.prop === 'ordinatorId'
       }).displayInit = this.getOrdinatorName(row.ordinatorId).split(',')
+
       this.formConfig.formItemList.find((item) => {
         return item.prop === 'applyProfessorId'
       }).displayInit = this.getTechnicalName(row.applyProfessorId).split(',')

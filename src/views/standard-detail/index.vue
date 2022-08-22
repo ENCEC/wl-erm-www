@@ -402,7 +402,7 @@ export default {
         .then((res) => {
           res.data.forEach((item) => {
             this.entryTypeOptions.push({
-              key: item.dictCode,
+              key: item.dictName,
               display_name: item.dictName
             });
           });
@@ -438,7 +438,6 @@ export default {
           });
           console.log(this.entryOptions);
           if (arr) {
-            debugger
             this.formConfig.formItemList[1].options = arr;
             this.entryLoading = false
           } else {

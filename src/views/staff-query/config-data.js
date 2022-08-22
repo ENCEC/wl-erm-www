@@ -77,7 +77,7 @@ export const filterConfig = _this => {
         optionLabel: 'label',
         optionValue: 'value',
         optionKey: 'value',
-        options: [{ value: '', label: '全部' }, ..._this.$dict.getDictOptions('JOB_STATUS').filter(item => item.value.toString() === '0' || item.value.toString() === '1')],
+        options: [{ value: '', label: '全部' }, ..._this.$dict.getDictOptions('JOB_STATUS')],
         changeSelect: (optionVal) => {
           _this.filterForm.jobStatus = optionVal
         } }
@@ -119,6 +119,7 @@ export const tableConfig = {
 // 表格列
 export const columns = _this => {
   return [
+
     {
       prop: 'name',
       label: '姓名'
@@ -126,7 +127,7 @@ export const columns = _this => {
     {
       prop: 'sex',
       label: '性别',
-      formatter: (row, column) => {
+      formatter: (row) => {
         return _this.$dict.getDictNameByCode('SEX', row.sex)
       }
     },
@@ -134,10 +135,9 @@ export const columns = _this => {
       prop: 'mobile',
       label: '联系电话'
     },
-    // TODO
     {
-      prop: 'address2',
-      label: '归属地'
+      prop: 'deptName',
+      label: '入职部门'
     },
     {
       prop: 'staffDuty',
@@ -154,27 +154,64 @@ export const columns = _this => {
       formatter: (row) => {
         return _this.$dict.getDictNameByCode('JOB_STATUS', row.jobStatus)
       }
-    },
-    {
-      prop: 'entryDate',
-      label: '入职时间'
-    },
-    {
-      prop: 'leaveDate',
-      label: '离职时间',
-      formatter: (row, column) => {
-        return row.jobStatus === '2' ? row.leaveDate : '-'
-      }
-    },
-    {
-      prop: 'projectName',
-      label: '归属项目'
-    },
-    // TODO
-    {
-      prop: 'technicalName',
-      label: '人员标签'
     }
+
+    // {
+    //   prop: 'name',
+    //   label: '姓名'
+    // },
+    // {
+    //   prop: 'sex',
+    //   label: '性别',
+    //   formatter: (row, column) => {
+    //     return _this.$dict.getDictNameByCode('SEX', row.sex)
+    //   }
+    // },
+    // {
+    //   prop: 'mobile',
+    //   label: '联系电话'
+    // },
+    // // TODO
+    // // {
+    // //   prop: 'address2',
+    // //   label: '归属地'
+    // // },
+    // {
+    //   prop: 'staffDuty',
+    //   label: '入职岗位'
+    // },
+    // {
+    //   prop: 'technicalName',
+    //   label: '岗位职称'
+    // },
+    // {
+    //   prop: 'jobStatus',
+    //   label: '在职状态',
+    //   width: '100',
+    //   formatter: (row) => {
+    //     return _this.$dict.getDictNameByCode('JOB_STATUS', row.jobStatus)
+    //   }
+    // },
+    // {
+    //   prop: 'entryDate',
+    //   label: '入职时间'
+    // },
+    // {
+    //   prop: 'leaveDate',
+    //   label: '离职时间',
+    //   formatter: (row, column) => {
+    //     return row.jobStatus === '2' ? row.leaveDate : '-'
+    //   }
+    // },
+    // {
+    //   prop: 'projectName',
+    //   label: '归属项目'
+    // },
+    // // TODO
+    // {
+    //   prop: 'technicalName',
+    //   label: '人员标签'
+    // }
   ];
 };
 
@@ -202,7 +239,7 @@ export const operates = _this => {
         method: (row) => {
           _this.handleOpen(row, 'detail');
         }
-      },
+      }
       // {
       //   id: 'regular',
       //   label: '转正',
@@ -217,30 +254,30 @@ export const operates = _this => {
       //     _this.handleOpen(row, 'regular');
       //   }
       // },
-      {
-        id: 'quit',
-        label: '离职',
-        type: 'text',
-        show: (index, row) => {
-          return row.jobStatus === '2'
-        },
-        disabled: false,
-        method: (row, index) => {
-          console.log('【 index 】-163', index)
-          _this.handleOpen(row, 'quit');
-        }
-      },
-      {
-        id: 'dismiss',
-        label: '辞退',
-        type: 'text',
-        show: true,
-        disabled: false,
-        method: (row, index) => {
-          console.log('【 index 】-163', index)
-          _this.handleOpen(row, 'dismiss');
-        }
-      }
+      // {
+      //   id: 'quit',
+      //   label: '离职',
+      //   type: 'text',
+      //   show: (index, row) => {
+      //     return row.jobStatus === '2'
+      //   },
+      //   disabled: false,
+      //   method: (row, index) => {
+      //     console.log('【 index 】-163', index)
+      //     _this.handleOpen(row, 'quit');
+      //   }
+      // },
+      // {
+      //   id: 'dismiss',
+      //   label: '辞退',
+      //   type: 'text',
+      //   show: true,
+      //   disabled: false,
+      //   method: (row, index) => {
+      //     console.log('【 index 】-163', index)
+      //     _this.handleOpen(row, 'dismiss');
+      //   }
+      // }
       // {
       //   id: 'delete',
       //   label: '删除',

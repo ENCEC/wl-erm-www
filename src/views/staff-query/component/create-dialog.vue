@@ -15,10 +15,13 @@
     >
       <div class="btn-exchange">
         <el-button type="primary" @click="handleLookBasic">基本信息</el-button>
-        <el-button type="primary" @click="handleLookRegular">转正评语</el-button>
+        <el-button v-if="form.jobStatus==='1'" type="primary" @click="handleLookRegular">转正评语</el-button>
+        <el-button v-if="form.leaveReason" type="primary" @click="handleLookLeave">离职原因</el-button>
+        <el-button v-if="form.dismissReason" type="primary" @click="handleLookDismiss">辞退原因</el-button>
       </div>
       <el-form
         ref="elForm"
+        v-loading="formLoading"
         :model="form"
         :rules="rules"
         :inline="false"
@@ -326,7 +329,9 @@
             </el-col>
           </el-row>
         </div>
-        <div v-if="lookType === 'regular'" class="form-wrap">
+
+        <!--  -->
+        <div v-if="lookType === 'regular'||lookType === 'leave'||lookType === 'dismiss'" class="form-wrap">
           <el-row>
             <el-col :span="12">
               <el-form-item label="姓名:" prop="name">
@@ -389,108 +394,160 @@
                 <StaffDuty v-model="form.staffDutyId" class="input-width" />
               </el-form-item>
             </el-col>
-            <el-col :span="12">
-              <el-form-item label="转正日期:" prop="offerDate">
-                <el-date-picker
-                  v-model="form.offerDate"
-                  format="yyyy-MM-dd"
-                  value-format="yyyy-MM-dd hh:mm:ss"
-                  class="input-width"
-                  placeholder="请选择转正日期"
-                  clearable
-                />
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item label="转正类型:" prop="offerType">
-                <el-radio-group v-model="form.offerType">
-                  <el-radio
-                    v-for="item in offerTypeOptions"
-                    :key="'offerType' + item.value"
-                    :label="item.value"
-                  >{{ item.label }}</el-radio>
-                </el-radio-group>
-              </el-form-item>
-            </el-col>
-            <el-col :span="12.5">
-              <el-form-item label="转员工答辩成绩:" prop="faceScore" label-width="140px">
-                <el-input
-                  v-model="form.faceScore"
-                  clearable
-                  placeholder="请输入转员工答辩成绩"
-                />
-              </el-form-item>
-            </el-col>
-            <el-col :span="11.5">
-              <el-form :model="form" label-width="80px" label-position="right">
-                <el-form-item label="附件:" prop="interviewerName" label-width="80px">
-                  <el-button v-if="form.resume" class="btn-attachment" type="text" @click="handleLookResume">{{ form.name }}个人简历</el-button>
-                  <el-button v-if="form.staffApplication" class="btn-attachment" type="text" @click="handleLookQuestionnaire">试用期调查表</el-button>
+            <template v-if="lookType === 'leave'">
+              <el-col :span="12">
+                <el-form-item label="离职日期:" prop="leaveDate">
+                  <el-date-picker
+                    v-model="form.leaveDate"
+                    format="yyyy-MM-dd"
+                    value-format="yyyy-MM-dd hh:mm:ss"
+                    class="input-width"
+                    placeholder="请选择离职日期"
+                    clearable
+                  />
                 </el-form-item>
-              </el-form>
-            </el-col>
-            <el-col :span="12.5">
-              <el-form-item label="面谈评语:" prop="interviewerName" label-width="140px">
-                <el-input
-                  v-model="form.interviewerName"
-                  clearable
-                  placeholder="请输入面谈评语"
-                />
-              </el-form-item>
-            </el-col>
-            <el-col :span="24">
-              <el-form-item label="" prop="faceRemark" label-width="140px">
-                <el-input
-                  v-model="form.faceRemark"
-                  clearable
-                  type="textarea"
-                  :rows="3"
-                  placeholder=""
-                />
-              </el-form-item>
-            </el-col>
-            <el-col :span="12.5">
-              <el-form-item label="转正评语:" prop="approverName" label-width="140px">
-                <el-input
-                  v-model="form.approverName"
-                  clearable
-                  placeholder=""
-                />
-              </el-form-item>
-            </el-col>
-            <el-col :span="24">
-              <el-form-item label="" prop="offerRemark" label-width="140px">
-                <el-input
-                  v-model="form.offerRemark"
-                  clearable
-                  type="textarea"
-                  :rows="3"
-                  placeholder=""
-                />
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item v-if="type === 'detail'" label="创建时间:">
-                <el-input
-                  v-model="form.createTime"
-                  placeholder="请输入创建时间"
-                  clearable
-                  class="input-width"
-                  disabled
-                />
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item v-if="type === 'detail'" label="创建人:">
-                <el-input
-                  v-model="form.creatorName"
-                  placeholder="请输入创建人"
-                  clearable
-                  class="input-width"
-                  disabled
-                />
-              </el-form-item>
-            </el-col>
+              </el-col>
+              <el-col :span="24">
+                <el-form-item label="离职原因：" prop="leaveReason" :hide-required-asterisk="false">
+                  <el-input
+                    v-model="form.leaveReason"
+                    type="textarea"
+                    placeholder="请输入离职原因"
+                    clearable
+                    style="width:500px"
+                  />
+                </el-form-item>
+              </el-col>
+            </template>
+            <template v-if="lookType === 'dismiss'">
+              <el-col :span="12">
+                <el-form-item label="辞退日期:" prop="dismissDate">
+                  <el-date-picker
+                    v-model="form.dismissDate"
+                    format="yyyy-MM-dd"
+                    value-format="yyyy-MM-dd hh:mm:ss"
+                    class="input-width"
+                    placeholder="请选择辞退日期"
+                    clearable
+                  />
+                </el-form-item>
+              </el-col>
+              <el-col :span="24">
+                <el-form-item label="辞退原因：" prop="dismissReason" :hide-required-asterisk="false">
+                  <el-input
+                    v-model="form.dismissReason"
+                    type="textarea"
+                    placeholder="请输入辞退原因"
+                    clearable
+                    style="width:500px"
+                  />
+                </el-form-item>
+              </el-col>
+            </template>
+            <template v-if="lookType === 'regular'">
+              <el-col :span="12">
+                <el-form-item label="转正日期:" prop="offerDate">
+                  <el-date-picker
+                    v-model="form.offerDate"
+                    format="yyyy-MM-dd"
+                    value-format="yyyy-MM-dd hh:mm:ss"
+                    class="input-width"
+                    placeholder="请选择转正日期"
+                    clearable
+                  />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="转正类型:" prop="offerType">
+                  <el-radio-group v-model="form.offerType">
+                    <el-radio
+                      v-for="item in offerTypeOptions"
+                      :key="'offerType' + item.value"
+                      :label="item.value"
+                    >{{ item.label }}</el-radio>
+                  </el-radio-group>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12.5">
+                <el-form-item label="转员工答辩成绩:" prop="faceScore" label-width="140px">
+                  <el-input
+                    v-model="form.faceScore"
+                    clearable
+                    placeholder="请输入转员工答辩成绩"
+                  />
+                </el-form-item>
+              </el-col>
+              <el-col :span="11.5">
+                <el-form :model="form" label-width="80px" label-position="right">
+                  <el-form-item label="附件:" prop="interviewerName" label-width="80px">
+                    <el-button v-if="form.resume" class="btn-attachment" type="text" @click="handleLookResume">{{ form.name }}个人简历</el-button>
+                    <el-button v-if="form.staffApplication" class="btn-attachment" type="text" @click="handleLookQuestionnaire">{{ form.name }}转正申请表</el-button>
+                  </el-form-item>
+                </el-form>
+              </el-col>
+              <el-col :span="12.5">
+                <el-form-item label="面谈评语:" prop="interviewerName" label-width="140px">
+                  <el-input
+                    v-model="form.interviewerName"
+                    clearable
+                    placeholder="请输入面谈评语"
+                  />
+                </el-form-item>
+              </el-col>
+              <el-col :span="24">
+                <el-form-item label="" prop="faceRemark" label-width="140px">
+                  <el-input
+                    v-model="form.faceRemark"
+                    clearable
+                    type="textarea"
+                    :rows="3"
+                    placeholder=""
+                  />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12.5">
+                <el-form-item label="转正评语:" prop="approverName" label-width="140px">
+                  <el-input
+                    v-model="form.approverName"
+                    clearable
+                    placeholder=""
+                  />
+                </el-form-item>
+              </el-col>
+              <el-col :span="24">
+                <el-form-item label="" prop="offerRemark" label-width="140px">
+                  <el-input
+                    v-model="form.offerRemark"
+                    clearable
+                    type="textarea"
+                    :rows="3"
+                    placeholder=""
+                  />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item v-if="type === 'detail'" label="创建时间:">
+                  <el-input
+                    v-model="form.createTime"
+                    placeholder="请输入创建时间"
+                    clearable
+                    class="input-width"
+                    disabled
+                  />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item v-if="type === 'detail'" label="创建人:">
+                  <el-input
+                    v-model="form.creatorName"
+                    placeholder="请输入创建人"
+                    clearable
+                    class="input-width"
+                    disabled
+                  />
+                </el-form-item>
+              </el-col>
+            </template>
           </el-row>
         </div>
       </el-form>
@@ -531,6 +588,7 @@ export default {
   },
   data() {
     return {
+      formLoading: false,
       lookType: 'basic', // basic查看基本信息，regular查看转正评语
       rules: formRules, // 验证规则
       form: {
@@ -555,6 +613,7 @@ export default {
         technicalTitleId: '', // 岗位职称
         email: '', // 邮箱地址
         resume: '', // 简历fileKey
+        dismissApplication: '', // 辞退fileKey
         seniority: '', // 工作年限
         projectId: '', // 归属项目,
         offerDate: '', // 转正日期
@@ -565,8 +624,14 @@ export default {
         approverName: '',
         offerRemark: '', // 转正评语
         creatorName: '', // 创建人
-        createTime: ''// 创建时间
+        createTime: '', // 创建时间
         // offerDate，offerType，faceScore，interviewerName,faceRemark,approverName,offerRemark
+
+        dismissDate: '',
+        dismissReason: '',
+        leaveDate: '',
+        leaveReason: ''
+
       },
       // sexOptions: this.$dict.getDictOptions('SEX'),
       maritalStatusOptions: this.$dict.getDictOptions('MARITAL_STATUS'),
@@ -585,7 +650,7 @@ export default {
     },
     // 在职状态 （0：试用员工 1：正式员工 2：离职员工）
     jobStatusOptions() {
-      return this.$dict.getDictOptions('JOB_STATUS').filter(item => item.value.toString() === '0' || item.value.toString() === '1')
+      return this.$dict.getDictOptions('JOB_STATUS')
     }
   },
   watch: {},
@@ -681,19 +746,26 @@ export default {
       await this.getOfferInfo()
       this.lookType = 'regular'
     },
+    // 点击‘离职原因’按钮
+    handleLookLeave() {
+      this.lookType = 'leave'
+    },
+    // 点击‘辞退原因’按钮
+    handleLookDismiss() {
+      this.lookType = 'dismiss'
+    },
     // 关闭弹框
     close() {
       this.$emit('update:visible', false);
       this.$refs['elForm'].resetFields();
     },
     getOfferInfo() {
-      const arr = ['offerDate', 'createTime', 'offerType', 'faceScore', 'interviewerName', 'faceRemark', 'approverName', 'offerRemark']
+      const arr = ['offerDate', 'createTime', 'creatorName', 'offerType', 'faceScore', 'interviewerName', 'faceRemark', 'approverName', 'offerRemark']
       const params = {
         dispatchers: this.editData.uemUserId,
         name: this.form.name
       }
       queryOfferInfo(params).then((res) => {
-        debugger
         const data = Object.assign({}, res[1], res[0])
         for (const key of arr) {
           this.form[key] = data[key] || ''
@@ -706,6 +778,7 @@ export default {
     },
     // 获取用户信息
     getDetailInfo() {
+      this.formLoading = true
       queryStaffById({
         uemUserId: this.editData.uemUserId
       }).then(res => {
@@ -716,6 +789,7 @@ export default {
             this.form[key] = res[key] || ''
           }
         }
+        this.formLoading = false
         // this.form = {
         //   ...this.form,
         //   ...res,
@@ -726,7 +800,10 @@ export default {
         //   technicalTitleId: res.technicalTitleId || '',
         //   projectId: res.projectId || ''
         // };
-      });
+      }).catch(() => {
+        this.$$message.error('获取员工信息失败')
+        this.formLoading = false
+      })
     },
     // 获取下拉信息
     async getSelectOptions() {
@@ -750,9 +827,7 @@ export default {
 </script>
 <style lang="scss">
 .staff-dialog {
-  .btn-exchange{
-    margin-bottom: 10px;
-  }
+
   .form-wrap {
     min-height:480px;
     margin-bottom: 20px;
@@ -766,5 +841,8 @@ export default {
     span{
       text-decoration: underline;
     }
+  }
+    .btn-exchange{
+    margin-bottom: 10px;
   }
 </style>

@@ -2,8 +2,8 @@
  * @Author: Hongzf
  * @Date: 2022-08-04 17:34:53
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-22 14:50:25
- * @Description: 所属部门-下拉
+ * @LastEditTime: 2022-08-22 17:24:00
+ * @Description: 上传
 -->
 
 <template>
@@ -66,19 +66,23 @@ export default {
       // fileList: [{ name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100' }, { name: 'food2.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100' }]
     };
   },
+  computed: {
+    fileName() {
+      return this.uploadData.type + '.pdf'
+    }
+  },
   watch: {
     fileInfo(val) {
       this.fileKey = val
       this.fileList.push({
-        name: val,
+        name: this.fileName, // val,
         fileKey: val
       })
       // console.log('【 val 】-53', val)
     }
   },
   created() {},
-  mounted() {},
-  methods: {
+  mounted() {}, methods: {
     // 上传个数限制
     handleExceed(files, fileList) {
       this.$message.error('最多只能上传1个文件');
@@ -95,8 +99,10 @@ export default {
       }
       if (isPDF && isLtNM) {
         const fileName = file.name
-        this.uploadData.fileName = fileName.substring(0, fileName.lastIndexOf('.'))
-        this.uploadData.fileType = fileName.substring(fileName.lastIndexOf('.') + 1)
+        if (fileName) {
+          this.uploadData.fileName = fileName.substring(0, fileName.lastIndexOf('.'))
+          this.uploadData.fileType = fileName.substring(fileName.lastIndexOf('.') + 1)
+        }
       }
       return isPDF && isLtNM;
     },
@@ -106,13 +112,15 @@ export default {
       // this.fileList = []
       if (response.success) {
         this.$message.success('上传成功');
-        const fileKey = response.data
+        const obj = response.data
+        for (const key in obj) {
+          this.fileKey = key
+        }
         this.fileList = [{
-          name: file.name,
-          fileKey
+          name: this.fileName, // file.name,
+          fileKey: this.fileKey
         }]
-        this.fileKey = fileKey
-        console.log('【 this.fileKey 】-106', this.fileKey)
+        // console.log('【 this.fileKey 】-106', this.fileKey)
       }
     },
     // 点击文件下载
@@ -123,11 +131,11 @@ export default {
         fileKey: this.fileKey// file.fileKey.toString()// ''4312d611-9c3a-4f45-932e-a71e91b81863.txt''
       }).then(res => {
         // TODO :错误提示
-        if (!res.success) {
+        if (res.success === false) {
           this.$message.error(res.errorMessages[0] || res.resultMsg)
           return false
         }
-        const fileName = res.fileName.substring(0, res.fileName.lastIndexOf('.'));
+        const fileName = this.uploadData.type// res.fileName.substring(0, res.fileName.lastIndexOf('.'));
         downloadFile(res.file, fileName)
       })
     },
