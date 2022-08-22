@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-03 09:55:18
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-05 10:57:53
+ * @LastEditTime: 2022-08-22 17:59:33
  * @Description: 入职岗位-下拉
 -->
 
@@ -18,7 +18,7 @@
   >
     <el-option
       v-for="(item, index) in optionsList"
-      :key="'staffDutyCode' + index + item.postCode"
+      :key="'staffDutyId' + index + item.postCode"
       :label="item.postName"
       :value="item.postCode"
     />

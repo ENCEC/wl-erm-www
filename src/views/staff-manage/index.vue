@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-01 19:02:14
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-18 17:38:12
+ * @LastEditTime: 2022-08-22 18:00:07
  * @Description: 员工管理-员工管理
 -->
 
@@ -78,7 +78,7 @@ export default {
       filterForm: {
         name: '',
         deptCode: '', // 入职部门
-        staffDutyCode: '', // 入职岗位
+        staffDutyId: '', // 入职岗位
         technicalName: '', // 岗位职称
         jobStatus: ''
       },

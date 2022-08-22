@@ -2,12 +2,12 @@
  * @Author: Hongzf
  * @Date: 2022-07-26 14:43:35
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-22 14:02:38
+ * @LastEditTime: 2022-08-22 18:06:57
  * @Description:
 -->
 <template>
   <div class="table-wrap">
-    <el-form ref="tableFormRef" :model="tableForm" class="tableform-wrap" size="mini" label-width="auto" :rules="tableFormRules">
+    <el-form ref="taskFormRef" :model="tableForm" class="tableform-wrap" size="mini" label-width="auto" :rules="tableFormRules">
       <!-- 表格 Start -->
       <el-table
         ref="multipleTable"
@@ -15,7 +15,7 @@
         :data="tableForm.tableData"
         :row-key="rowKey"
         :reserve-selection="true"
-        height="250px"
+        height="220px"
         style="width: 100%"
         border
         stripe
@@ -35,22 +35,6 @@
         <el-table-column prop="actionPeriod" label="执行周期(工时)" width="105" />
         <el-table-column prop="detailName" label="任务名称" min-width="120" />
         <el-table-column prop="actionSerialNum" label="执行顺序" />
-        <el-table-column v-if="type==='detail'" prop="leaderName" label="负责人" />
-        <el-table-column v-if="type!=='detail'" prop="leader" label="负责人" min-width="130">
-          <template slot-scope="scope">
-            <el-form-item
-              v-if="type!=='detail' && scope.$index >= 0"
-              :prop="`tableData[${scope.$index}].leader`"
-              :rules="tableFormRules.leader"
-            >
-              <!-- [
-              { required: scope.row.required && !scope.row.checked, message: '请选择', trigger: ['blur','change'] }
-              ] -->
-              <UserAssociate v-model="scope.row.leader" :init-label="scope.row.leaderName" />
-            </el-form-item>
-          </template>
-        </el-table-column>
-        <el-table-column prop="planEndDate" label="计划完成日期" width="100" />
       </el-table>
       <!-- 表格 End -->
       <!-- 分页 -->
@@ -70,23 +54,17 @@
 <script>
 import { queryNotNeedStandardFullDetailByTaskType } from '@/api/staff-task';
 import tableMix from '@/mixins/table-mixin';
-import { tempdata } from './rules';
-import UserAssociate from '@/components/CurrentSystem/UserAssociate'
+// import { tempdata } from './rules';
 
 export default {
   name: 'TaskTable',
-  components: { UserAssociate },
+  // components: { UserAssociate },
   mixins: [tableMix],
   props: {
     // 已勾选的数据
     records: {
       type: Array,
       default: () => []
-    },
-    // 弹窗类型
-    type: {
-      type: String,
-      default: ''
     },
     // 任务类型
     taskType: {
@@ -96,17 +74,13 @@ export default {
   },
   data() {
     return {
-      tempdata,
+      // tempdata,
       // 表单数据
       tableForm: {
         tableData: []
       },
       // 验证规则
-      tableFormRules: {
-        leader: [
-          { required: true, message: '请选择负责人', trigger: 'change' }
-        ]
-      }
+      tableFormRules: {}
     };
   },
   computed: {},
@@ -178,10 +152,9 @@ export default {
         pageSize: this.params.pageSize,
         taskType: this.taskType
       }).then(res => {
-        // const _res = res.data
-        // this.tableForm.tableData = _res.records;
-        this.tableForm.tableData = this.tempdata
-        // this.params.totalRecord = _res.totalRecord;
+        const _res = res.data
+        this.tableForm.tableData = _res.records;
+        this.params.totalRecord = _res.totalRecord;
       });
     },
     // 勾选数据行的 Checkbox 时触发的事件
@@ -219,14 +192,6 @@ export default {
       })
       console.log('【 newSelection 】-192', newSelection)
       this.$emit('handleSelectAll', newSelection)
-    },
-    // 验证表格
-    validateTableForm() {
-      let isTableFormValid = false
-      this.$refs.tableFormRef.validate(valid => {
-        isTableFormValid = valid
-      })
-      return isTableFormValid
     }
   }
 };

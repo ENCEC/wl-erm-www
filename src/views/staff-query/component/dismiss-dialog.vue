@@ -76,8 +76,8 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="入职岗位:" prop="staffDutyCode">
-              <StaffDuty v-model="formData.staffDutyCode" placeholder="请选择入职岗位" class="input-width" disabled />
+            <el-form-item label="入职岗位:" prop="staffDutyId">
+              <StaffDuty v-model="formData.staffDutyId" placeholder="请选择入职岗位" class="input-width" disabled />
             </el-form-item>
           </el-col>
         </el-row>
@@ -190,8 +190,8 @@ export default {
         sex: '',
         entryDate: '', // 2022-05-20 00:00:00入职时间
         jobStatus: '', // 在职状态（0：试用员工 1：正式员工 2：离职员工）
-        uemDeptId: '4', // 入职部门
-        staffDutyCode: '2', // 入职岗位
+        uemDeptId: '', // 入职部门
+        staffDutyId: '', // 入职岗位
         // 离职
         leaveDate: '', // 2022-05-20 00:00:00辞退时间
         leaveReason: '',

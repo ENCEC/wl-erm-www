@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 21:05:06
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-16 13:58:20
+ * @LastEditTime: 2022-08-22 18:04:22
  * @Description: 员工转正
 -->
 
@@ -94,7 +94,7 @@
                   clearable
                   disabled
                 />
-                <!-- <StaffDuty v-model="formData.staffDutyCode" placeholder="请选择入职岗位" class="input-width" disabled /> -->
+                <!-- <StaffDuty v-model="formData.staffDutyId" placeholder="请选择入职岗位" class="input-width" disabled /> -->
               </el-form-item>
             </el-col>
           </el-row>
@@ -236,7 +236,7 @@ export default {
         deptName: '', // 部门名称
         uemDeptId: '', // 入职部门
         staffDuty: '', // 岗位名称
-        staffDutyCode: '', // 入职岗位
+        staffDutyId: '', // 入职岗位
         offerDate: '', // 转正时间
         positiveType: '', // 转正类型
         defenseScore: '', // 转员工答辩成绩

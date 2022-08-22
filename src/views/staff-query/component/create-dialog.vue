@@ -226,8 +226,8 @@
           </el-row>
           <el-row>
             <el-col :span="12">
-              <el-form-item label="入职岗位:" prop="staffDutyCode">
-                <StaffDuty v-model="form.staffDutyCode" class="input-width" />
+              <el-form-item label="入职岗位:" prop="staffDutyId">
+                <StaffDuty v-model="form.staffDutyId" class="input-width" />
               </el-form-item>
             </el-col>
             <el-col :span="12">
@@ -385,8 +385,8 @@
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item label="入职岗位:" prop="staffDutyCode">
-                <StaffDuty v-model="form.staffDutyCode" class="input-width" />
+              <el-form-item label="入职岗位:" prop="staffDutyId">
+                <StaffDuty v-model="form.staffDutyId" class="input-width" />
               </el-form-item>
             </el-col>
             <el-col :span="12">
@@ -551,7 +551,7 @@ export default {
         speciality: '', // 在校专业
         entryDate: '', // 入职时间
         uemDeptId: '', // 入职部门
-        staffDutyCode: '', // 入职岗位
+        staffDutyId: '', // 入职岗位
         technicalTitleId: '', // 岗位职称
         email: '', // 邮箱地址
         resume: '', // 简历fileKey
@@ -722,7 +722,7 @@ export default {
         //   jobStatus: res.jobStatus || '',
         //   entryDate: res.entryDate || '',
         //   uemDeptId: res.uemDeptId || '',
-        //   staffDutyCode: res.staffDutyCode || '',
+        //   staffDutyId: res.staffDutyId || '',
         //   technicalTitleId: res.technicalTitleId || '',
         //   projectId: res.projectId || ''
         // };
