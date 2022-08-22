@@ -15,7 +15,9 @@
     >
       <div class="btn-exchange">
         <el-button type="primary" @click="handleLookBasic">基本信息</el-button>
-        <el-button type="primary" @click="handleLookRegular">转正评语</el-button>
+        <el-button v-if="form.offerRemark" type="primary" @click="handleLookRegular">转正评语</el-button>
+        <el-button v-if="form.leaveReason" type="primary" @click="handleLookLeave">离职原因</el-button>
+        <el-button v-if="form.dismissComments" type="primary" @click="handleLookDismiss">辞退原因</el-button>
       </div>
       <el-form
         ref="elForm"
@@ -326,7 +328,9 @@
             </el-col>
           </el-row>
         </div>
-        <div v-if="lookType === 'regular'" class="form-wrap">
+
+        <!--  -->
+        <div v-if="lookType === 'regular'||lookType === 'leave'||lookType === 'dismiss'" class="form-wrap">
           <el-row>
             <el-col :span="12">
               <el-form-item label="姓名:" prop="name">
@@ -389,108 +393,160 @@
                 <StaffDuty v-model="form.staffDutyCode" class="input-width" />
               </el-form-item>
             </el-col>
-            <el-col :span="12">
-              <el-form-item label="转正日期:" prop="offerDate">
-                <el-date-picker
-                  v-model="form.offerDate"
-                  format="yyyy-MM-dd"
-                  value-format="yyyy-MM-dd hh:mm:ss"
-                  class="input-width"
-                  placeholder="请选择转正日期"
-                  clearable
-                />
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item label="转正类型:" prop="offerType">
-                <el-radio-group v-model="form.offerType">
-                  <el-radio
-                    v-for="item in offerTypeOptions"
-                    :key="'offerType' + item.value"
-                    :label="item.value"
-                  >{{ item.label }}</el-radio>
-                </el-radio-group>
-              </el-form-item>
-            </el-col>
-            <el-col :span="12.5">
-              <el-form-item label="转员工答辩成绩:" prop="faceScore" label-width="140px">
-                <el-input
-                  v-model="form.faceScore"
-                  clearable
-                  placeholder="请输入转员工答辩成绩"
-                />
-              </el-form-item>
-            </el-col>
-            <el-col :span="11.5">
-              <el-form :model="form" label-width="80px" label-position="right">
-                <el-form-item label="附件:" prop="interviewerName" label-width="80px">
-                  <el-button v-if="form.resume" class="btn-attachment" type="text" @click="handleLookResume">{{ form.name }}个人简历</el-button>
-                  <el-button v-if="form.staffApplication" class="btn-attachment" type="text" @click="handleLookQuestionnaire">试用期调查表</el-button>
+            <template v-if="lookType === 'leave'">
+              <el-col :span="12">
+                <el-form-item label="离职日期:" prop="leaveDate">
+                  <el-date-picker
+                    v-model="form.leaveDate"
+                    format="yyyy-MM-dd"
+                    value-format="yyyy-MM-dd hh:mm:ss"
+                    class="input-width"
+                    placeholder="请选择离职日期"
+                    clearable
+                  />
                 </el-form-item>
-              </el-form>
-            </el-col>
-            <el-col :span="12.5">
-              <el-form-item label="面谈评语:" prop="interviewerName" label-width="140px">
-                <el-input
-                  v-model="form.interviewerName"
-                  clearable
-                  placeholder="请输入面谈评语"
-                />
-              </el-form-item>
-            </el-col>
-            <el-col :span="24">
-              <el-form-item label="" prop="faceRemark" label-width="140px">
-                <el-input
-                  v-model="form.faceRemark"
-                  clearable
-                  type="textarea"
-                  :rows="3"
-                  placeholder=""
-                />
-              </el-form-item>
-            </el-col>
-            <el-col :span="12.5">
-              <el-form-item label="转正评语:" prop="approverName" label-width="140px">
-                <el-input
-                  v-model="form.approverName"
-                  clearable
-                  placeholder=""
-                />
-              </el-form-item>
-            </el-col>
-            <el-col :span="24">
-              <el-form-item label="" prop="offerRemark" label-width="140px">
-                <el-input
-                  v-model="form.offerRemark"
-                  clearable
-                  type="textarea"
-                  :rows="3"
-                  placeholder=""
-                />
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item v-if="type === 'detail'" label="创建时间:">
-                <el-input
-                  v-model="form.createTime"
-                  placeholder="请输入创建时间"
-                  clearable
-                  class="input-width"
-                  disabled
-                />
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item v-if="type === 'detail'" label="创建人:">
-                <el-input
-                  v-model="form.creatorName"
-                  placeholder="请输入创建人"
-                  clearable
-                  class="input-width"
-                  disabled
-                />
-              </el-form-item>
-            </el-col>
+              </el-col>
+              <el-col :span="24">
+                <el-form-item label="离职原因：" prop="leaveReason" :hide-required-asterisk="false">
+                  <el-input
+                    v-model="form.leaveReason"
+                    type="textarea"
+                    placeholder="请输入离职原因"
+                    clearable
+                    style="width:500px"
+                  />
+                </el-form-item>
+              </el-col>
+            </template>
+            <template v-if="lookType === 'dismiss'">
+              <el-col :span="12">
+                <el-form-item label="辞退日期:" prop="dismissDate">
+                  <el-date-picker
+                    v-model="form.dismissDate"
+                    format="yyyy-MM-dd"
+                    value-format="yyyy-MM-dd hh:mm:ss"
+                    class="input-width"
+                    placeholder="请选择辞退日期"
+                    clearable
+                  />
+                </el-form-item>
+              </el-col>
+              <el-col :span="24">
+                <el-form-item label="辞退原因：" prop="dismissComments" :hide-required-asterisk="false">
+                  <el-input
+                    v-model="form.dismissComments"
+                    type="textarea"
+                    placeholder="请输入辞退原因"
+                    clearable
+                    style="width:500px"
+                  />
+                </el-form-item>
+              </el-col>
+            </template>
+            <template v-if="lookType === 'regular'">
+              <el-col :span="12">
+                <el-form-item label="转正日期:" prop="offerDate">
+                  <el-date-picker
+                    v-model="form.offerDate"
+                    format="yyyy-MM-dd"
+                    value-format="yyyy-MM-dd hh:mm:ss"
+                    class="input-width"
+                    placeholder="请选择转正日期"
+                    clearable
+                  />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="转正类型:" prop="offerType">
+                  <el-radio-group v-model="form.offerType">
+                    <el-radio
+                      v-for="item in offerTypeOptions"
+                      :key="'offerType' + item.value"
+                      :label="item.value"
+                    >{{ item.label }}</el-radio>
+                  </el-radio-group>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12.5">
+                <el-form-item label="转员工答辩成绩:" prop="faceScore" label-width="140px">
+                  <el-input
+                    v-model="form.faceScore"
+                    clearable
+                    placeholder="请输入转员工答辩成绩"
+                  />
+                </el-form-item>
+              </el-col>
+              <el-col :span="11.5">
+                <el-form :model="form" label-width="80px" label-position="right">
+                  <el-form-item label="附件:" prop="interviewerName" label-width="80px">
+                    <el-button v-if="form.resume" class="btn-attachment" type="text" @click="handleLookResume">{{ form.name }}个人简历</el-button>
+                    <el-button v-if="form.staffApplication" class="btn-attachment" type="text" @click="handleLookQuestionnaire">{{ form.name }}转正申请表</el-button>
+                  </el-form-item>
+                </el-form>
+              </el-col>
+              <el-col :span="12.5">
+                <el-form-item label="面谈评语:" prop="interviewerName" label-width="140px">
+                  <el-input
+                    v-model="form.interviewerName"
+                    clearable
+                    placeholder="请输入面谈评语"
+                  />
+                </el-form-item>
+              </el-col>
+              <el-col :span="24">
+                <el-form-item label="" prop="faceRemark" label-width="140px">
+                  <el-input
+                    v-model="form.faceRemark"
+                    clearable
+                    type="textarea"
+                    :rows="3"
+                    placeholder=""
+                  />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12.5">
+                <el-form-item label="转正评语:" prop="approverName" label-width="140px">
+                  <el-input
+                    v-model="form.approverName"
+                    clearable
+                    placeholder=""
+                  />
+                </el-form-item>
+              </el-col>
+              <el-col :span="24">
+                <el-form-item label="" prop="offerRemark" label-width="140px">
+                  <el-input
+                    v-model="form.offerRemark"
+                    clearable
+                    type="textarea"
+                    :rows="3"
+                    placeholder=""
+                  />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item v-if="type === 'detail'" label="创建时间:">
+                  <el-input
+                    v-model="form.createTime"
+                    placeholder="请输入创建时间"
+                    clearable
+                    class="input-width"
+                    disabled
+                  />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item v-if="type === 'detail'" label="创建人:">
+                  <el-input
+                    v-model="form.creatorName"
+                    placeholder="请输入创建人"
+                    clearable
+                    class="input-width"
+                    disabled
+                  />
+                </el-form-item>
+              </el-col>
+            </template>
           </el-row>
         </div>
       </el-form>
@@ -555,6 +611,7 @@ export default {
         technicalTitleId: '', // 岗位职称
         email: '', // 邮箱地址
         resume: '', // 简历fileKey
+        dismissApplication: '', // 辞退fileKey
         seniority: '', // 工作年限
         projectId: '', // 归属项目,
         offerDate: '', // 转正日期
@@ -681,6 +738,14 @@ export default {
       await this.getOfferInfo()
       this.lookType = 'regular'
     },
+    // 点击‘离职原因’按钮
+    handleLookLeave() {
+      this.lookType = 'leave'
+    },
+    // 点击‘辞退原因’按钮
+    handleLookDismiss() {
+      this.lookType = 'dismiss'
+    },
     // 关闭弹框
     close() {
       this.$emit('update:visible', false);
@@ -693,7 +758,6 @@ export default {
         name: this.form.name
       }
       queryOfferInfo(params).then((res) => {
-        debugger
         const data = Object.assign({}, res[1], res[0])
         for (const key of arr) {
           this.form[key] = data[key] || ''

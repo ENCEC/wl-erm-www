@@ -313,7 +313,7 @@
             @click="handleRegular"
           >转正申请</el-button>
           <el-button
-            v-if="form.jobStatus === '1'"
+            v-if="form.jobStatus === '0'||form.jobStatus === '1'"
             class="dismiss-btn"
             type="primary"
             @click="handleDismiss"
@@ -479,20 +479,18 @@ export default {
   methods: {
     // 文件上传后
     handleResumeChange(resume) {
-      debugger;
       this.form.resume = resume || '';
     },
     // 文件删除后
     handleDeleteChange() {
-      debugger;
       this.form.resume = '';
     },
 
     // 获取下拉信息
     async getSelectOptions() {
       this.technicalOptions = await queryTechnicalNameBySelect();
-      this.projectTypeOptions = await queryProjectNameBySelect();
       this.staffDutyOptions = await queryStaffDutyBySelect();
+      this.projectTypeOptions = await queryProjectNameBySelect();
     },
     handleRegular() {
       this.$refs.dialogRegular.open();
@@ -521,9 +519,9 @@ export default {
         });
     },
     handleSave() {
-      this.buttonLoading = true;
       this.$refs.staffInfoForm.validate((valid) => {
         if (valid) {
+          this.buttonLoading = true;
           this.$refs.sysUploadFile.sysUploadFile()
           preservationUemUser(this.form)
             .then(() => {

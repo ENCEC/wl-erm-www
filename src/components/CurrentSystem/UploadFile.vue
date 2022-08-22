@@ -156,8 +156,9 @@ export default {
           this.buttonLoading = false
         })
         .catch(() => {
-          this.$message.error('上传失败');
+          this.list = []
           this.buttonLoading = false
+          this.$message.error('上传失败');
         });
     },
     sysUploadFile() {
@@ -174,7 +175,6 @@ export default {
     handleExceed() {
     },
     beforeUpload(file) {
-      debugger
       // this.list.push(file);
       // this.$refs.uploadFile.fileList = [];
 
@@ -192,7 +192,7 @@ export default {
       }
       return isPDF && isLtNM
     },
-    beforeRemove(file) {
+    beforeRemove() {
       // return this.$confirm(`确定移除 ${file.name}？`);
     },
     handleDelete() {

@@ -279,15 +279,12 @@ export default {
             clearable: true,
             queryMethod: this.ordinatorQueryMethod,
             changeSelect: () => {
-              debugger
               // this.temp.ordinatorId=optionVal
             },
             // blur: () => {
-            //   debugger;
             //   //   this.listQuery.status=optionVal
             // },
             focus: () => {
-              debugger;
             }
           },
           {
@@ -589,9 +586,7 @@ export default {
     getDisplayInit(id) {
       this.$nextTick(() => {
         console.log(this.temp);
-        debugger
         if (this.temp[id]) {
-          debugger
           const nameArr = [];
           queryViewDetailById(this.temp[id]).then((res) => {
             res.data.forEach((item) => {
@@ -611,7 +606,7 @@ export default {
         .then((res) => {
           res.data.forEach((item) => {
             this.entryTypeOptions.push({
-              key: item.dictCode,
+              key: item.dictName,
               display_name: item.dictName
             });
           });
