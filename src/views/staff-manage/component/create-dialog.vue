@@ -281,7 +281,7 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row>
+        <!-- <el-row>
           <el-col :span="12">
             <el-form-item
               v-if="type === 'detail'"
@@ -310,7 +310,7 @@
               />
             </el-form-item>
           </el-col>
-        </el-row>
+        </el-row> -->
       </div>
     </el-form>
     <div slot="footer" class="dialog-footer">

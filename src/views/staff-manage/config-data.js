@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-01 13:52:08
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-18 16:54:43
+ * @LastEditTime: 2022-08-22 11:29:46
  * @Description:
  */
 
@@ -183,14 +183,14 @@ export const operates = _this => {
           _this.handleOpen(row, 'detail');
         }
       },
+      // 在职状态 （0：试用员工 1：正式员工 2：离职员工）
       {
         id: 'regular',
         label: '转正',
         type: 'text',
-        show: true,
-        //   // show: (row, index) => {
-        //   //   return row.status !== 'draft'
-        //   // },
+        show: (row, index) => {
+          return row.status.toString() !== '1' // 正式员工不展示
+        },
         disabled: false,
         method: (row, index) => {
           console.log('【 index 】-163', index)
@@ -201,7 +201,9 @@ export const operates = _this => {
         id: 'quit',
         label: '离职',
         type: 'text',
-        show: true,
+        show: (row, index) => {
+          return row.status.toString() !== '2'// 离职员工不展示
+        },
         disabled: false,
         method: (row, index) => {
           console.log('【 index 】-163', index)
@@ -212,7 +214,9 @@ export const operates = _this => {
         id: 'dismiss',
         label: '辞退',
         type: 'text',
-        show: true,
+        show: (row, index) => {
+          return row.status.toString() !== '2' // 离职员工不展示
+        },
         disabled: false,
         method: (row, index) => {
           console.log('【 index 】-163', index)
