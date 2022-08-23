@@ -767,7 +767,7 @@ export default {
         name: this.form.name
       }
       queryOfferInfo(params).then((res) => {
-        const data = Object.assign({}, res[1], res[0])
+        const data = Object.assign({}, res.data[1], res.data[0])
         for (const key of arr) {
           this.form[key] = data[key] || ''
         }
