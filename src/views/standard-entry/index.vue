@@ -165,7 +165,6 @@ export default {
           },
           {
             type: 'select',
-            class: 'filter-item',
             prop: 'itemType',
             // width: "200px",
             clearable: true,
@@ -610,6 +609,7 @@ export default {
               display_name: item.dictName
             });
           });
+          this.entryTypeOptions = Array.from(new Set(this.entryTypeOptions))
         })
         .catch(() => {
           this.$message.error('初始化条目类型失败');
@@ -961,7 +961,7 @@ export default {
       this.$refs['formPanel'].$refs['dataForm'].clearValidate();
     },
     getApplyPostName(ids) {
-      const result = [];
+      let result = [];
       this.postOptions.forEach((item) => {
         ids.forEach((id) => {
           if (id === item.key) {
@@ -969,6 +969,7 @@ export default {
           }
         });
       });
+      result = Array.from(new Set(result))
       return result.join(',');
     },
     getTechnicalName(ids) {
@@ -992,7 +993,7 @@ export default {
       return '';
     },
     getOrdinatorName(ids) {
-      const result = [];
+      let result = [];
       this.userOptions.forEach((item) => {
         ids.forEach((id) => {
           if (id === item.key) {
@@ -1000,6 +1001,7 @@ export default {
           }
         });
       });
+      result = Array.from(new Set(result))
       return result.join(',');
     },
     postQueryMethod({ keyword, pageSize, currentPage }) {

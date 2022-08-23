@@ -210,7 +210,6 @@ export default {
           window.URL.revokeObjectURL(url);
         })
         .catch((err) => {
-          debugger;
           console.log(err);
         });
     },

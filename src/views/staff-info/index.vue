@@ -48,7 +48,7 @@
               <el-col :span="12">
                 <!-- 在职状态（0：试用员工 1：正式员工 2：离职员工） -->
                 <el-form-item label="在职状态:" prop="jobStatus">
-                  <el-radio-group v-model="form.jobStatus">
+                  <el-radio-group v-model="form.jobStatus" disabled>
                     <el-radio
                       v-for="item in jobStatusOptions"
                       :key="'jobStatus' + item.value"
@@ -233,6 +233,7 @@
                   placeholder="请选择岗位职称"
                   clearable
                   class="input-width"
+                  @change="handleTechnicalChange"
                 >
                   <el-option
                     v-for="(item, index) in technicalOptions"
@@ -253,6 +254,7 @@
                   placeholder="请选择入职岗位"
                   clearable
                   class="input-width"
+                  @change="handlePostChange"
                 >
                   <el-option
                     v-for="(item, index) in staffDutyOptions"
@@ -476,6 +478,22 @@ export default {
     this.getSelectOptions();
   },
   methods: {
+    // 岗位职称下拉框选中值改变
+    handleTechnicalChange(technicalTitleId) {
+      if (!(this.form.staffDutyId)) {
+        this.form.technicalTitleId = ''
+        this.$message.error('请先选择入职岗位')
+      }
+    },
+    // 入职岗位下拉框选中值改变
+    async handlePostChange(staffDutyId) {
+      this.form.technicalTitleId = ''
+      this.technicalOptions = await queryTechnicalNameBySelect();
+      console.log(this.technicalOptions);
+      this.technicalOptions = this.technicalOptions.filter((item) => {
+        return item.postId === staffDutyId
+      })
+    },
     // 文件上传后
     handleResumeChange(resume) {
       this.form.resume = resume || '';
