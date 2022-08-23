@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-01 13:52:08
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-22 18:00:38
+ * @LastEditTime: 2022-08-23 13:34:15
  * @Description:
  */
 
@@ -121,7 +121,8 @@ export const columns = _this => {
   return [
     {
       prop: 'name',
-      label: '姓名'
+      label: '姓名',
+      width: '100px'
     },
     {
       prop: 'sex',
@@ -137,7 +138,8 @@ export const columns = _this => {
     },
     {
       prop: 'deptName',
-      label: '入职部门'
+      label: '入职部门',
+      width: '120px'
     },
     {
       prop: 'staffDuty',

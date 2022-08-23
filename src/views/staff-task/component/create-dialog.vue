@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:15:03
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-22 18:05:28
+ * @LastEditTime: 2022-08-23 13:43:48
  * @Description:
 -->
 
@@ -66,7 +66,7 @@
                 placeholder="请选择任务类型"
                 clearable
                 class="input-width"
-                @change="handleTaskTypeChange(formData.taskType,selectedRecords)"
+                @change="handleTaskTypeChange(formData.taskType,[])"
               >
                 <el-option
                   v-for="(item) in taskTypeOptions"
@@ -241,6 +241,9 @@ export default {
           }
         })
         this.selectedRecords = selectedRecords
+        this.$nextTick(() => {
+          this.$refs.selectedTableForm && this.$refs.selectedTableForm.clearValidateTableForm()
+        })
       });
     },
     // 单选-勾选数据行的 Checkbox 时触发的事件

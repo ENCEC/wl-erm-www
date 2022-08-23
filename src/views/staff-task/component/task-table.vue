@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-07-26 14:43:35
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-22 18:06:57
+ * @LastEditTime: 2022-08-23 13:38:06
  * @Description:
 -->
 <template>
@@ -133,7 +133,7 @@ export default {
     handleToggleRowSelection() {
       const tableRef = this.$refs.multipleTable
       // this.$nextTick(() => {
-      console.log('【tableRef】', tableRef)
+      // console.log('【tableRef】', tableRef)
       this.tableForm.tableData.forEach((tableItem) => {
         this.records.forEach((selectedItem) => {
           // console.log('【selectedItem】', selectedItem)
@@ -182,7 +182,7 @@ export default {
     handleSelectionChange() {},
     // 全选
     handleSelectAll(allSelection) {
-      console.log('【 val 】-190', allSelection)
+      // console.log('【 val 】-190', allSelection)
       // 过滤出新的数据
       const newSelection = allSelection.filter(multipleItem => {
         const isExit = this.records.some((item) => {
@@ -190,7 +190,7 @@ export default {
         })
         return !isExit// 过滤出新的不存在的数据
       })
-      console.log('【 newSelection 】-192', newSelection)
+      // console.log('【 newSelection 】-192', newSelection)
       this.$emit('handleSelectAll', newSelection)
     }
   }

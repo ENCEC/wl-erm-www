@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 09:22:23
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-19 14:08:33
+ * @LastEditTime: 2022-08-23 13:45:55
  * @Description:
 -->
 
@@ -118,7 +118,7 @@ export default {
       handler(newVal) {
         // if (this.type === 'detail') {
         //   // 详情的列表数据
-        console.log('【 详情的列表数据 】-161', newVal)
+        // console.log('【 详情的列表数据 】-161', newVal)
         this.tableForm.tableData = newVal
       }
     }
@@ -138,6 +138,11 @@ export default {
           // this.$emit('getSelectedData', this.tableForm.tableData)
         }
       })
+    },
+    // 清空验证
+    clearValidateTableForm() {
+      // console.log('【 清空验证 】-143')
+      this.$refs.tableFormRef.clearValidate()
     },
     // 验证表格
     validateTableForm() {

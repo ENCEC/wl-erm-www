@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 21:05:06
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-22 16:27:31
+ * @LastEditTime: 2022-08-23 13:33:01
  * @Description:
 -->
 
@@ -10,7 +10,7 @@
   <el-dialog
     :title="dialogTitle"
     v-bind="$attrs"
-    width="800px"
+    width="810px"
     center
     :close-on-click-modal="false"
     top="10vh"
@@ -31,7 +31,7 @@
     >
       <div class="form-wrap">
         <el-row>
-          <el-col :span="12">
+          <el-col :span="11">
             <el-form-item label="姓名:" prop="name">
               <el-input
                 v-model="formData.name"
@@ -40,7 +40,7 @@
               />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="13">
             <!-- 性别（0男，1女） -->
             <el-form-item label="性别:" prop="sex">
               <el-radio-group v-model="formData.sex">
@@ -56,7 +56,7 @@
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="12">
+          <el-col :span="11">
             <el-form-item label="出生日期:" prop="birthday">
               <el-date-picker
                 v-model="formData.birthday"
@@ -67,10 +67,10 @@
               />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="13">
             <!-- 在职状态（0：试用员工 1：正式员工 2：离职员工） -->
             <el-form-item label="在职状态:" prop="jobStatus">
-              <el-radio-group v-model="formData.jobStatus">
+              <el-radio-group v-model="formData.jobStatus" disabled>
                 <el-radio
                   v-for="item in jobStatusOptions"
                   :key="'jobStatus' + item.value"
@@ -81,7 +81,7 @@
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="12">
+          <el-col :span="11">
             <el-form-item label="身份证号码:" prop="idCard">
               <el-input
                 v-model="formData.idCard"
@@ -90,7 +90,7 @@
               />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="13">
             <el-form-item label="联系电话:" prop="mobile">
               <el-input
                 v-model="formData.mobile"
@@ -101,7 +101,7 @@
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="12">
+          <el-col :span="11">
             <el-form-item label="现住址:" prop="address">
               <el-input
                 v-model="formData.address"
@@ -110,7 +110,7 @@
               />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="13">
             <el-form-item label="户籍地址:" prop="sourceAddress">
               <el-input
                 v-model="formData.sourceAddress"
@@ -121,7 +121,7 @@
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="12">
+          <el-col :span="11">
             <el-form-item label="婚姻状况:" prop="maritalStatus">
               <el-select
                 v-model="formData.maritalStatus"
@@ -138,7 +138,7 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="13">
             <el-form-item label="政治面貌:" prop="politicalStatus">
               <el-select
                 v-model="formData.politicalStatus"
@@ -157,7 +157,7 @@
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="12">
+          <el-col :span="11">
             <el-form-item label="学历:" prop="education">
               <el-select
                 v-model="formData.education"
@@ -174,7 +174,7 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="13">
             <el-form-item label="毕业时间:" prop="graduateDate">
               <el-date-picker
                 v-model="formData.graduateDate"
@@ -187,7 +187,7 @@
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="12">
+          <el-col :span="11">
             <el-form-item label="毕业学校:" prop="graduateSchool">
               <el-input
                 v-model="formData.graduateSchool"
@@ -196,7 +196,7 @@
               />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="13">
             <el-form-item label="在校专业:" prop="speciality">
               <el-input
                 v-model="formData.speciality"
@@ -207,7 +207,7 @@
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="12">
+          <el-col :span="11">
             <el-form-item label="入职时间:" prop="entryDate">
               <!-- value-format="yyyy-MM-dd" -->
               <el-date-picker
@@ -219,19 +219,23 @@
               />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="13">
             <el-form-item label="入职部门:" prop="uemDeptId">
               <Department v-model="formData.uemDeptId" clearable placeholder="请选择入职部门" class="input-width" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="12">
+          <el-col :span="11">
             <el-form-item label="入职岗位:" prop="staffDutyId">
-              <StaffDuty v-model="formData.staffDutyId" class="input-width" />
+              <StaffDuty
+                v-model="formData.staffDutyId"
+                class="input-width"
+                @change="handleStaffDutyChange"
+              />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="13">
             <el-form-item label="岗位职称:" prop="technicalTitleId">
               <el-select
                 v-model="formData.technicalTitleId"
@@ -250,7 +254,7 @@
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="12">
+          <el-col :span="11">
             <el-form-item label="电子邮箱:" prop="email">
               <el-input
                 v-model="formData.email"
@@ -259,7 +263,7 @@
               />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="13">
             <el-form-item label="工作年限:" prop="seniority">
               <el-input
                 v-model="formData.seniority"
@@ -270,47 +274,17 @@
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="12">
+          <el-col :span="11">
             <el-form-item label="归属项目:" prop="projectId">
               <ProjectSelect v-model="formData.projectId" placeholder="请选择归属项目" class="input-width" />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="13">
             <el-form-item label="个人简历:">
               <Upload :upload-data.sync="uploadData" :file-info="formData.resume" />
             </el-form-item>
           </el-col>
         </el-row>
-        <!-- <el-row>
-          <el-col :span="12">
-            <el-form-item
-              v-if="type === 'detail'"
-              label="创建时间:"
-            >
-              <el-input
-                v-model="formData.createTime"
-                placeholder="请输入创建时间"
-                clearable
-                class="input-width"
-                disabled
-              />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item
-              v-if="type === 'detail'"
-              label="创建人:"
-            >
-              <el-input
-                v-model="formData.creatorName"
-                placeholder="请输入创建人"
-                clearable
-                class="input-width"
-                disabled
-              />
-            </el-form-item>
-          </el-col>
-        </el-row> -->
       </div>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -361,7 +335,7 @@ export default {
         uemUserId: '',
         type: '个人简历'
       },
-      rules: formRules, // 验证规则
+      rules: formRules(this), // 验证规则
       formData: {
         uemUserId: '',
         name: '',
@@ -385,9 +359,9 @@ export default {
         email: '',
         seniority: '', // 工作年限
         projectId: '', // 归属项目,
-        resume: '',
-        createTime: '',
-        creatorName: ''
+        resume: ''
+        // createTime: '',
+        // creatorName: ''
       },
       // sexOptions: this.$dict.getDictOptions('SEX'),
       maritalStatusOptions: this.$dict.getDictOptions('MARITAL_STATUS'),
@@ -405,7 +379,7 @@ export default {
     },
     // 在职状态 （0：试用员工 1：正式员工 2：离职员工）
     jobStatusOptions() {
-      return this.$dict.getDictOptions('JOB_STATUS').filter(item => item.value.toString() === '0' || item.value.toString() === '1')
+      return this.$dict.getDictOptions('JOB_STATUS')// .filter(item => item.value.toString() === '0' || item.value.toString() === '1')
     }
   },
   watch: {},
@@ -415,6 +389,23 @@ export default {
   },
   mounted() {},
   methods: {
+    // 过滤岗位职称下拉信息
+    async filterTechnicalOptions() {
+      const postId = this.formData.staffDutyId.toString()
+      if (postId) {
+        const technicalOptions = await queryTechnicalNameBySelect()
+        this.technicalOptions = technicalOptions.filter(item => {
+          return item.postId.toString() === postId
+        })
+      } else {
+        this.technicalOptions = []
+      }
+    },
+    handleStaffDutyChange(val) {
+      this.formData.technicalTitleId = ''
+      this.$refs['elForm'].validateField('technicalTitleId')
+      this.filterTechnicalOptions()
+    },
     // 关闭弹框
     close() {
       this.$emit('update:visible', false);
@@ -425,7 +416,6 @@ export default {
       queryStaffById({
         uemUserId: this.editData.uemUserId
       }).then(res => {
-        // console.log('【 res .projectId===】-428', typeof res.projectId)
         for (const key in this.formData) {
           if (key === 'sex') {
             const sex = res[key]
@@ -434,11 +424,11 @@ export default {
             this.formData[key] = res[key] || ''
           }
         }
+        this.filterTechnicalOptions()
       });
     },
     // 获取下拉信息
     async getSelectOptions() {
-      this.technicalOptions = await queryTechnicalNameBySelect()
       const politicalList = await querySysDictCodeByDictType({ dictTypeCode: 'POLITICAL_STATUS' })
       this.politicalList = politicalList.data
     },
@@ -464,6 +454,9 @@ export default {
     margin-bottom: 20px;
     .input-width {
       width: 180px !important;
+    }
+    .el-radio {
+      margin-right: 10px !important;
     }
   }
   // 底部按钮
