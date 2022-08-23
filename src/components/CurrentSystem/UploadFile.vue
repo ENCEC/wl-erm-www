@@ -206,7 +206,10 @@ export default {
         }
       )
         .then(() => {
-          deleteResume(this.userId)
+          deleteResume({
+            uemUserId: this.userId,
+            type: this.type
+          })
             .then(() => {
               this.$message({
                 type: 'success',

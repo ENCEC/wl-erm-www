@@ -39,13 +39,11 @@ export function uploadExternalFile(data) {
 }
 
 // 8082端口删除文件
-export function deleteResume(uemUserId) {
+export function deleteResume(params) {
   return request({
     url: shareAuthPrefix + '/uemUserManage/deleteResume',
     method: 'get',
-    params: {
-      uemUserId
-    }
+    params
   });
 }
 

@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-01 13:52:08
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-23 13:34:15
+ * @LastEditTime: 2022-08-23 13:54:19
  * @Description:
  */
 
@@ -77,7 +77,7 @@ export const filterConfig = _this => {
         optionLabel: 'label',
         optionValue: 'value',
         optionKey: 'value',
-        options: [{ value: '', label: '全部' }, ..._this.$dict.getDictOptions('JOB_STATUS').filter(item => item.value.toString() === '0' || item.value.toString() === '1')],
+        options: [{ value: '', label: '全部' }, ..._this.$dict.getDictOptions('JOB_STATUS')],
         changeSelect: (optionVal) => {
           _this.filterForm.jobStatus = optionVal
         } }

@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-04 17:34:53
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-22 17:24:00
+ * @LastEditTime: 2022-08-23 14:14:30
  * @Description: 上传
 -->
 
@@ -14,15 +14,17 @@
       :limit="1"
       :show-file-list="false"
       :on-success="handleSuccess"
-      :on-preview="handlePreview"
-      :before-remove="beforeRemove"
-      :on-remove="handleRemove"
       :on-exceed="handleExceed"
-      :file-list="fileList"
       :before-upload="beforeUpload"
       size="mini"
       class="upload-demo"
     >
+      <!--
+      :file-list="fileList"
+      :before-remove="beforeRemove"
+      :on-remove="handleRemove"
+      :on-preview="handlePreview"
+      -->
       <el-button size="small" type="primary">上传</el-button>
     <!-- <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div> -->
     </el-upload>
@@ -39,9 +41,10 @@
 </template>
 <script>
 import {
-  downloadExternalFile, deleteFile
+  downloadExternalFile
 } from '@/api/common';
 import { downloadFile } from '@/utils/util'
+import { deleteResume } from '@/api/staff-query.js';
 
 export default {
   props: {
@@ -125,7 +128,6 @@ export default {
     },
     // 点击文件下载
     handlePreview(file) {
-      console.log(file);
       downloadExternalFile({
         systemId: process.env.VUE_APP_SYSTEMID, // 写死
         fileKey: this.fileKey// file.fileKey.toString()// ''4312d611-9c3a-4f45-932e-a71e91b81863.txt''
@@ -148,17 +150,20 @@ export default {
     },
     // TODO 确认删除后执行的操作
     handleRemove(file, fileList) {
-      console.log('【 file, fileList 】-130', file, fileList)
+      // console.log('【 file, fileList 】-130', file, fileList)
       this.$confirm('确定移除该文件吗', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        deleteFile({
-          systemId: process.env.VUE_APP_SYSTEMID, // 写死
-          fileKey: this.fileKey// file.fileKey.toString()// ''4312d611-9c3a-4f45-932e-a71e91b81863.txt''
+        deleteResume({
+          // systemId: process.env.VUE_APP_SYSTEMID, // 写死
+          // fileKey: this.fileKey// file.fileKey.toString()// ''4312d611-9c3a-4f45-932e-a71e91b81863.txt''
+          uemUserId: this.uploadData.uemUserId,
+          type: this.uploadData.type
         }).then(res => {
           if (res.success) {
+            this.fileList = []
             this.$message.success('删除成功!');
           } else {
             this.$message.error(res.resultMsg)
