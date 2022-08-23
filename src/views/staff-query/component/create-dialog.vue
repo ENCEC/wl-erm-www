@@ -767,9 +767,15 @@ export default {
         name: this.form.name
       }
       queryOfferInfo(params).then((res) => {
-        const data = Object.assign({}, res.data[1], res.data[0])
-        for (const key of arr) {
-          this.form[key] = data[key] || ''
+        if (!(res.success)) {
+          for (const key of arr) {
+            this.form[key] = ''
+          }
+        } else {
+          const data = Object.assign({}, res.data[1], res.data[0])
+          for (const key of arr) {
+            this.form[key] = data[key] || ''
+          }
         }
       }).catch((err) => {
         this.$message.error(
