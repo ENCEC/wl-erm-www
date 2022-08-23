@@ -614,6 +614,7 @@ export default {
         email: '', // 邮箱地址
         resume: '', // 简历fileKey
         dismissApplication: '', // 辞退fileKey
+        staffApplication: '', // 转正申请表fileKey
         seniority: '', // 工作年限
         projectId: '', // 归属项目,
         offerDate: '', // 转正日期
