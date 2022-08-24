@@ -230,6 +230,7 @@
               <el-form-item label="岗位职称:" prop="technicalTitleId">
                 <el-select
                   v-model="form.technicalTitleId"
+                  v-loading="technicalOptionsLoading"
                   placeholder="请选择岗位职称"
                   clearable
                   class="input-width"
@@ -350,6 +351,8 @@ export default {
 
   data() {
     return {
+      // 职称下拉框加载状态
+      technicalOptionsLoading: false,
       // 表单加载状态
       formLoading: false,
       // 保存按钮加载状态
@@ -479,20 +482,21 @@ export default {
   },
   methods: {
     // 岗位职称下拉框选中值改变
-    handleTechnicalChange(technicalTitleId) {
+    handleTechnicalChange() {
       if (!(this.form.staffDutyId)) {
         this.form.technicalTitleId = ''
         this.$message.error('请先选择入职岗位')
       }
     },
-    // 入职岗位下拉框选中值改变
+    // 入职岗位下拉框选中值改变c
     async handlePostChange(staffDutyId) {
+      this.technicalOptionsLoading = true
       this.form.technicalTitleId = ''
-      this.technicalOptions = await queryTechnicalNameBySelect();
-      console.log(this.technicalOptions);
-      this.technicalOptions = this.technicalOptions.filter((item) => {
+      const technicalOptions = await queryTechnicalNameBySelect();
+      this.technicalOptions = technicalOptions.filter((item) => {
         return item.postId === staffDutyId
       })
+      this.technicalOptionsLoading = false
     },
     // 文件上传后
     handleResumeChange(resume) {
