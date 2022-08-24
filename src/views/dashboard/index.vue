@@ -1,5 +1,13 @@
+<!--
+ * @Author: Hongzf
+ * @Date: 2022-08-12 19:00:39
+ * @LastEditors: Hongzf
+ * @LastEditTime: 2022-08-24 15:42:44
+ * @Description: 首页
+-->
 <template>
   <div class="dashboard-container">
+    <!-- <Keyboard /> -->
     <div class="home-wrap">
       <el-card v-for="(item,index) in 3 " :key="index" class="box-card">
         <div slot="header" class="clearfix">
@@ -20,10 +28,11 @@
 
 <script>
 import { mapGetters } from 'vuex'
+// import Keyboard from '@/components/Charts/Keyboard.vue'
 
 export default {
   name: 'Dashboard',
-  components: {},
+  // components: { Keyboard },
   data() {
     return {
       permissionsLoading: true

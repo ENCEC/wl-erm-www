@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:15:04
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-22 10:01:40
+ * @LastEditTime: 2022-08-24 11:05:19
  * @Description:
  */
 
@@ -99,25 +99,26 @@ export const columns = _this => {
     {
       prop: 'taskTitle',
       label: '任务标题',
-      render: (h, ctx) => {
-        // console.log('【 h, ctx 】-121', h, ctx)
-        return h(
-          'el-button',
-          {
-            props: {
-              type: 'text',
-              size: 'small'
-              // ghost: true
-            },
-            on: {
-              click: () => {
-                _this.handleOpen(ctx.row, 'edit');
-              }
-            }
-          },
-          ctx.row.taskTitle// 文本值
-        );
-      }
+      customSlot: true // 自定义插槽
+      // render: (h, ctx) => {
+      //   // console.log('【 h, ctx 】-121', h, ctx)
+      //   return h(
+      //     'el-button',
+      //     {
+      //       props: {
+      //         type: 'text',
+      //         size: 'small'
+      //         // ghost: true
+      //       },
+      //       on: {
+      //         click: () => {
+      //           _this.handleOpen(ctx.row, 'edit');
+      //         }
+      //       }
+      //     },
+      //     ctx.row.taskTitle// 文本值
+      //   );
+      // }
     },
     {
       prop: 'taskType',

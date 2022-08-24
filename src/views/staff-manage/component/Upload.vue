@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-04 17:34:53
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-23 14:14:30
+ * @LastEditTime: 2022-08-24 13:38:51
  * @Description: 上传
 -->
 
@@ -132,9 +132,9 @@ export default {
         systemId: process.env.VUE_APP_SYSTEMID, // 写死
         fileKey: this.fileKey// file.fileKey.toString()// ''4312d611-9c3a-4f45-932e-a71e91b81863.txt''
       }).then(res => {
-        // TODO :错误提示
-        if (res.success === false) {
-          this.$message.error(res.errorMessages[0] || res.resultMsg)
+        if (res.success === false || !res.success) {
+          const msg = res.errorMessages && res.errorMessages.length ? res.errorMessages[0] : res.resultMsg
+          this.$message.error(msg)
           return false
         }
         const fileName = this.uploadData.type// res.fileName.substring(0, res.fileName.lastIndexOf('.'));

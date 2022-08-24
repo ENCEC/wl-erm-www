@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-08 18:45:59
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-19 14:02:00
+ * @LastEditTime: 2022-08-24 13:40:28
  * @Description:
 -->
 
@@ -353,7 +353,9 @@ export default {
         approverName: '', // TODO 审批人姓名
         approvalDate: '', // 审批时间
         resultAccess: '', // 审批结果
-        approvalRemark: '' // 审批意见
+        approvalRemark: '', // 审批意见
+        createTime: '',
+        creatorName: ''
       },
       inclinedAgreeOptions: this.$dict.getDictOptions('INCLINED_AGREE_TYPE'),
       taskTypeOptions: this.$dict.getDictOptions('TASK_TYPE'),

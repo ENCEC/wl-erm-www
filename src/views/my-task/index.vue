@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 17:38:09
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-19 10:29:10
+ * @LastEditTime: 2022-08-24 11:07:31
  * @Description: 我的任务
 -->
 
@@ -20,7 +20,12 @@
       :list-loading="listLoading"
       @handleIndexChange="handleCurrentChange"
       @handleSizeChange="handleSizeChange"
-    />
+    >
+      <!-- 任务标题 -->
+      <template #taskTitle="scope">
+        <el-button type="text" @click="handleOpen(scope.row, 'edit')">{{ scope.row.taskTitle }}</el-button>
+      </template>
+    </table-component>
     <!-- 表格 End -->
     <!-- 试验任务 -->
     <CreateDialog
