@@ -609,7 +609,9 @@ export default {
               display_name: item.dictName
             });
           });
-          this.entryTypeOptions = Array.from(new Set(this.entryTypeOptions))
+          this.entryTypeOptions = this.entryTypeOptions.filter(function(item, index, self) {
+            return self.findIndex(el => el.key === item.key) === index
+          })
         })
         .catch(() => {
           this.$message.error('初始化条目类型失败');
