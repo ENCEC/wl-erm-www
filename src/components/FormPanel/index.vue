@@ -92,6 +92,7 @@
           <el-select
             v-if="item.type === 'select'"
             v-model="value[item.prop]"
+            v-loading="item.selectLoading"
             :disabled="item.disabled"
             :clearable="item.clearable"
             :multiple="item.multiple"
@@ -135,7 +136,7 @@
             class="el-associate"
             :value-prop="item.valueProp"
             :label-prop="item.labelProp"
-            :display-init="item.displayInit"
+            :display-init="item.displayInitd"
             :columns="item.columns"
             :clearable="item.clearable"
             :multiple="item.multiple"

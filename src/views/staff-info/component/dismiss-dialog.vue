@@ -155,10 +155,15 @@ export default {
             uemUserId: this.userId
           });
           saveLeave(params)
-            .then(() => {
-              this.$message.success('申请成功');
-              this.dialogVisible = false;
-              this.buttonLoading = false;
+            .then((res) => {
+              if (res.success) {
+                this.$message.success('申请成功');
+                this.dialogVisible = false;
+                this.buttonLoading = false;
+              } else {
+                this.$message.error(res.errorMessages[0]);
+                this.buttonLoading = false;
+              }
             })
             .catch(() => {
               this.$message.error('申请失败');

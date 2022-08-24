@@ -229,6 +229,7 @@ export default {
                 this.buttonLoading = false;
               } else {
                 this.$message.error(res.errorMessages[0]);
+                this.buttonLoading = false;
               }
             })
             .catch(() => {

@@ -171,7 +171,6 @@ export default {
             width: '200px',
             label: '规范条目',
             clearable: true,
-
             placeholder: '请选择规范条目',
             optionLabel: 'display_name',
             optionValue: 'key',
@@ -201,13 +200,16 @@ export default {
             prop: 'itemType',
             width: '200px',
             clearable: true,
-
             label: '条目类型',
             placeholder: '请选择条目类型',
             optionLabel: 'display_name',
             optionValue: 'key',
             optionKey: 'key',
-            options: entryTypeOptions
+            options: entryTypeOptions,
+            changeSelect: (optionVal) => {
+              this.listQuery.entryName = '';
+              this.handleEntryTypeChange(optionVal);
+            }
           }
         ],
         operates: [
@@ -436,14 +438,14 @@ export default {
               itemType: item.itemType
             });
           });
-          console.log(this.entryOptions);
           if (arr) {
             this.formConfig.formItemList[1].options = arr;
+            this.filterConfig.filterList[1].options = arr;
             this.entryLoading = false
           } else {
             this.formConfig.formItemList[1].options = this.entryOptions;
+            this.filterConfig.filterList[1].options = this.entryOptions;
           }
-          this.filterConfig.filterList[1].options = this.entryOptions;
         })
         .catch(() => {
           this.$message.error('初始化规范条目失败');
@@ -504,6 +506,9 @@ export default {
         });
     },
     handleAdd() {
+      this.initEntryOptions()
+      this.listQuery.entryName = ''
+      this.listQuery.itemType = ''
       this.dialogStatus = 'create';
       this.dialogFormVisible = true;
       this.$nextTick(() => {
@@ -511,6 +516,9 @@ export default {
       });
     },
     handleUpdate(row) {
+      this.initEntryOptions()
+      this.listQuery.entryName = ''
+      this.listQuery.itemType = ''
       this.temp = Object.assign({}, row); // copy obj
       this.dialogStatus = 'update';
       this.dialogFormVisible = true;

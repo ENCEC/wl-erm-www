@@ -283,9 +283,9 @@
                 >
                   <el-option
                     v-for="(item,index) in projectTypeOptions"
-                    :key="'projectId'+index+item.projectId"
+                    :key="'projectId'+index+item.uemProjectId"
                     :label="item.projectName"
-                    :value="item.projectId"
+                    :value="item.uemProjectId"
                   />
                 </el-select>
               </el-form-item>
