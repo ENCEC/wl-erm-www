@@ -93,10 +93,10 @@ import { saveOffer, downloadExternalFile } from '@/api/staff-query.js';
 import UploadFile from '@/components/CurrentSystem/UploadFile';
 
 // import { saveOffer, downloadExternalFile, uploadExternalFile, queryOfferInfo, queryLeaveInfo, queryDismissInfo, preservationUemUser, saveLeave, queryUemUser, getUemUser } from '@/api/staff-query.js';
-const positiveTypeOptions = [
-  { label: '正常转正', value: '正常转正' },
-  { label: '提前转正', value: '提前转正' }
-];
+// const positiveTypeOptions = [
+//   { label: '正常转正', value: '正常转正' },
+//   { label: '提前转正', value: '提前转正' }
+// ];
 const approverColumns = [
   {
     field: 'account',
@@ -124,7 +124,7 @@ export default {
     return {
       buttonLoading: false,
       dialogVisible: false,
-      positiveTypeOptions,
+      positiveTypeOptions: this.$dict.getDictOptions('OFFER_TYPE'),
       approverColumns,
       tableData: [],
       form: {
@@ -222,10 +222,14 @@ export default {
             uemUserId: this.userId
           });
           saveOffer(params)
-            .then(() => {
-              this.$message.success('申请成功');
-              this.dialogVisible = false;
-              this.buttonLoading = false;
+            .then((res) => {
+              if (res.success) {
+                this.$message.success(res.data);
+                this.dialogVisible = false;
+                this.buttonLoading = false;
+              } else {
+                this.$message.error(res.errorMessages[0]);
+              }
             })
             .catch(() => {
               this.$message.error('申请失败');
