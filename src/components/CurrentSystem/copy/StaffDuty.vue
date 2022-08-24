@@ -18,9 +18,9 @@
   >
     <el-option
       v-for="(item, index) in optionsList"
-      :key="'staffDutyId' + index + item.postCode"
+      :key="'staffDutyId' + index + item.postId"
       :label="item.postName"
-      :value="item.postCode"
+      :value="item.postId"
     />
     <!-- <el-option
       v-for="item in supplierList"
