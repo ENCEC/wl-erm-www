@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-04 17:34:53
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-24 13:38:51
+ * @LastEditTime: 2022-08-25 15:34:03
  * @Description: 上传
 -->
 
@@ -12,6 +12,7 @@
       :action="uploadUrl"
       :data="uploadData"
       :limit="1"
+      :file-list="fileList"
       :show-file-list="false"
       :on-success="handleSuccess"
       :on-exceed="handleExceed"
@@ -20,7 +21,6 @@
       class="upload-demo"
     >
       <!--
-      :file-list="fileList"
       :before-remove="beforeRemove"
       :on-remove="handleRemove"
       :on-preview="handlePreview"
@@ -111,8 +111,6 @@ export default {
     },
     // 上传成功
     handleSuccess(response, file, fileList) {
-      console.log('【handleSuccess- response, file, fileList 】-87', response.data, file, fileList)
-      // this.fileList = []
       if (response.success) {
         this.$message.success('上传成功');
         const obj = response.data
@@ -123,22 +121,20 @@ export default {
           name: this.fileName, // file.name,
           fileKey: this.fileKey
         }]
-        // console.log('【 this.fileKey 】-106', this.fileKey)
       }
     },
     // 点击文件下载
     handlePreview(file) {
       downloadExternalFile({
         systemId: process.env.VUE_APP_SYSTEMID, // 写死
-        fileKey: this.fileKey// file.fileKey.toString()// ''4312d611-9c3a-4f45-932e-a71e91b81863.txt''
+        fileKey: this.fileKey
       }).then(res => {
-        if (res.success === false || !res.success) {
-          const msg = res.errorMessages && res.errorMessages.length ? res.errorMessages[0] : res.resultMsg
-          this.$message.error(msg)
-          return false
+        if (res.success) {
+          const fileName = this.uploadData.type// res.fileName.substring(0, res.fileName.lastIndexOf('.'));
+          downloadFile(res.data, fileName)
+        } else {
+          this.$message.error(res.errorMessages[0])
         }
-        const fileName = this.uploadData.type// res.fileName.substring(0, res.fileName.lastIndexOf('.'));
-        downloadFile(res.file, fileName)
       })
     },
     // 确认删除前执行的操作
@@ -148,17 +144,13 @@ export default {
         return this.$confirm(`确定移除 ${file.name}？`);
       }
     },
-    // TODO 确认删除后执行的操作
     handleRemove(file, fileList) {
-      // console.log('【 file, fileList 】-130', file, fileList)
       this.$confirm('确定移除该文件吗', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
         deleteResume({
-          // systemId: process.env.VUE_APP_SYSTEMID, // 写死
-          // fileKey: this.fileKey// file.fileKey.toString()// ''4312d611-9c3a-4f45-932e-a71e91b81863.txt''
           uemUserId: this.uploadData.uemUserId,
           type: this.uploadData.type
         }).then(res => {

@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-01 13:52:08
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-23 09:50:50
+ * @LastEditTime: 2022-08-25 16:24:11
  * @Description:
  */
 // 编辑
@@ -229,3 +229,146 @@ export const dissmissFormRules = {
     }
   ]
 };
+
+export const dissmissFormConfig = (_this) => {
+  return {
+    ref: 'dataForm',
+    inline: true,
+    flexWrap: true,
+    col: 12,
+    labelWidth: '100px',
+    // style: 'width: 100%;',
+    formItemList: [
+      {
+        label: '姓名:',
+        prop: 'name',
+        type: 'input',
+        placeholder: '请输入姓名',
+        width: '180px',
+        clearable: true
+      },
+      {
+        label: '性别:',
+        prop: 'sex',
+        type: 'radio',
+        radioLabel: 'label',
+        radioValue: 'value',
+        radioArr: [
+          {
+            value: false,
+            disabled: false,
+            label: '男'
+          },
+          {
+            value: true,
+            disabled: false,
+            label: '女'
+          }
+        ]
+      // changeSelect: (optionVal, item, index) => {
+      //   console.log(optionVal, item, index);
+      // }
+      },
+      {
+        // col: 12,
+        type: 'datePicker',
+        subType: 'date',
+        label: '入职时间:',
+        prop: 'entryDate',
+        format: 'yyyy-MM-dd',
+        valueFormat: 'yyyy-MM-dd',
+        placeholder: '请选择入职时间',
+        width: '180px !important',
+        clearable: true
+      },
+      {
+        label: '在职状态:',
+        prop: 'jobStatus',
+        type: 'radio',
+        radioLabel: 'label',
+        radioValue: 'value',
+        // 在职状态 （0：试用员工 1：正式员工 2：离职员工）
+        radioArr: _this.$dict.getDictOptions('JOB_STATUS').filter(item => item.value.toString() === '0' || item.value.toString() === '1')
+      // changeSelect: (optionVal, item, index) => {
+      //   console.log(optionVal, item, index);
+      // }
+      },
+      {
+        label: '入职部门:',
+        prop: 'deptName',
+        type: 'input',
+        placeholder: '请输入入职部门',
+        width: '180px',
+        disabled: true
+      },
+      {
+        label: '入职岗位:',
+        prop: 'staffDuty',
+        type: 'input',
+        placeholder: '请输入入职岗位',
+        width: '180px',
+        disabled: true
+      },
+      //  ====== 离职 Start =====
+      {
+        show: _this.type === 'quit',
+        col: 24,
+        label: '离职日期:',
+        prop: 'leaveDate',
+        type: 'datePicker',
+        subType: 'date',
+        format: 'yyyy-MM-dd',
+        valueFormat: 'yyyy-MM-dd',
+        placeholder: '请选择离职日期',
+        width: '180px !important',
+        clearable: true
+      },
+      {
+        show: _this.type === 'quit',
+        col: 24,
+        label: '离职原因:',
+        prop: 'leaveReason',
+        type: 'textarea',
+        placeholder: '请输入离职原因',
+        width: '500px !important',
+        clearable: true,
+
+        autoSize: { minRows: 2, maxRows: 4 }
+      },
+      //  ====== 离职 End =====
+      //  ====== 辞退 Start =====
+      {
+        show: _this.type === 'dismiss',
+        col: 24,
+        label: '辞退日期:',
+        prop: 'dismissDate',
+        type: 'datePicker',
+        subType: 'date',
+        format: 'yyyy-MM-dd',
+        valueFormat: 'yyyy-MM-dd',
+        placeholder: '请选择辞退日期',
+        width: '180px !important',
+        clearable: true
+      },
+      {
+        show: _this.type === 'dismiss',
+        col: 24,
+        label: '辞退原因:',
+        prop: 'dismissReason',
+        type: 'textarea',
+        placeholder: '输入辞退原因',
+        width: '500px !important',
+        clearable: true,
+        autoSize: { minRows: 2, maxRows: 4 }
+      },
+      {
+        show: _this.type === 'dismiss',
+        col: 24,
+        label: '附件:',
+        prop: 'dismissApplication',
+        type: 'customSlot'// 自定义插槽
+      }
+      //  ====== 辞退 End =====
+    ]
+  }
+}

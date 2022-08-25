@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-01 19:02:14
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-18 10:27:13
+ * @LastEditTime: 2022-08-25 15:25:58
  * @Description: 公共部分-接口
  */
 
@@ -62,7 +62,8 @@ export function queryUser(data) {
 // 下载文件
 export function downloadExternalFile(data) {
   return request({
-    url: shareFilePrefix + '/externalFile/downloadExternalFile',
+    url: prefix + '/uemUserManage/downloadExternalFile',
+    // url: shareFilePrefix + '/externalFile/downloadExternalFile',
     method: 'post',
     data
   });

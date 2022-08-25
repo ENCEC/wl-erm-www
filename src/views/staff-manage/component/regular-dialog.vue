@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 21:05:06
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-22 17:12:13
+ * @LastEditTime: 2022-08-25 16:23:23
  * @Description: 员工转正
 -->
 
@@ -213,7 +213,7 @@
 </template>
 <script>
 import { queryPositiveStaffInfo, savePositiveInfoByStaff } from '@/api/staff-manage';
-import { regularFormRules } from './rules';
+import { regularFormRules } from './dialog-config';
 // import StaffDuty from '@/components/CurrentSystem/StaffDuty.vue'
 import UserAssociate from '@/components/CurrentSystem/UserAssociate'
 // import Department from '@/components/CurrentSystem/Department.vue'

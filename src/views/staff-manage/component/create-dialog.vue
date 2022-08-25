@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 21:05:06
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-23 13:33:01
+ * @LastEditTime: 2022-08-25 16:23:15
  * @Description:
 -->
 
@@ -41,14 +41,8 @@
             </el-form-item>
           </el-col>
           <el-col :span="13">
-            <!-- 性别（0男，1女） -->
             <el-form-item label="性别:" prop="sex">
               <el-radio-group v-model="formData.sex">
-                <!-- <el-radio
-                    v-for="item in sexOptions"
-                    :key="'sex' + item.value"
-                    :label="item.value"
-                  >{{ item.label }}</el-radio> -->
                 <el-radio :label="false">男</el-radio>
                 <el-radio :label="true">女</el-radio>
               </el-radio-group>
@@ -306,7 +300,7 @@
 <script>
 import { queryStaffById, updateStaff } from '@/api/staff-manage';
 import { queryTechnicalNameBySelect, querySysDictCodeByDictType } from '@/api/common';
-import { formRules } from './rules';
+import { formRules } from './dialog-config';
 import Department from '@/components/CurrentSystem/Department.vue'
 import StaffDuty from '@/components/CurrentSystem/StaffDuty.vue'
 import ProjectSelect from '@/components/CurrentSystem/ProjectSelect.vue'
