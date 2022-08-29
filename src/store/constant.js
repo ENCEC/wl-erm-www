@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-07-22 16:25:46
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-29 11:35:03
+ * @LastEditTime: 2022-08-29 17:54:15
  * @Description: 字典
  */
 // 用户类型
@@ -81,13 +81,13 @@ export const TASK_TYPE = {
 
 // 我的任务-任务状态
 export const MY_TASK_STATUS = {
-  '0': '审批中',
+  // '0': '审批中',
+  // '1': '进行中',
+  // '2': '已完成'
+  '0': '待完成',
   '1': '进行中',
-  '2': '已完成'
-  // '0': '待完成',
-  // '1': '执行中',
-  // '2': '已完成',
-  // '3': '审批中'
+  '2': '已完成',
+  '3': '审批中'
 }
 // 完成结果
 export const COMPLETE_RESULT = {

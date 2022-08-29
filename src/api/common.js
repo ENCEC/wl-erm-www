@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-01 19:02:14
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-25 15:25:58
+ * @LastEditTime: 2022-08-29 17:07:10
  * @Description: 公共部分-接口
  */
 
@@ -54,6 +54,7 @@ export function queryUser(data) {
   return request({
     // url: '/uemUserManage/queryUemUser',
     url: prefix + '/uemUserManage/queryStaffByPage',
+    // url: prefix + '/uemUserManage/queryAllWorkUserList',
     method: 'post',
     data
   });

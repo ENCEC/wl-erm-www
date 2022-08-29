@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:15:03
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-29 17:49:14
+ * @LastEditTime: 2022-08-29 15:18:50
  * @Description:
 -->
 
@@ -37,14 +37,13 @@
                 v-model="formData.taskTitle"
                 placeholder="请输入标题，执行人姓名+任务类型"
                 clearable
-                class="input-width"
               />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <!-- 在职状态（0：试用员工 1：正式员工 2：离职员工） -->
             <el-form-item label="在职状态:" prop="status">
-              <el-radio-group v-model="formData.status" disabled>
+              <el-radio-group v-model="formData.status">
                 <el-radio
                   v-for="item in jobStatusOptions"
                   :key="'jobStatus' + item.value"
@@ -84,15 +83,23 @@
             <el-form-item label="员工任务:" prop="taskList">
               <div class="table-wrap">
                 <!-- 未勾选的数据 -->
+                <!-- v-if="type!=='detail'" -->
                 <TaskTable
                   ref="taskTableRef"
                   :records="selectedRecords"
                   :type="type"
                   :task-type="formData.taskType"
+                  @handleSelectAll="getAllSelectedData"
+                  @handleRowSelect="handleRowSelect"
                 />
-                <!-- @handleRowSelect="handleRowSelect"
-                 @handleSelectAll="getAllSelectedData"
-                -->
+                <!-- 已勾选的数据 -->
+                <!-- <SelectedTable
+                  ref="selectedTableForm"
+                  :records="selectedRecords"
+                  :type="type"
+                  @getSelectedData="getSelectedData"
+                /> -->
+                <!-- :task-type="formData.taskType" -->
               </div>
             </el-form-item>
           </el-col>
@@ -208,6 +215,7 @@ export default {
     // 获取选中的执行人的附带信息
     getSelectedRows(row) {
       this.formData.status = row.jobStatus
+      // console.log('【 row 】-252', row)
     },
     // 任务类型变化-获取必选问题
     handleTaskTypeChange(taskType, arr = []) {
@@ -220,11 +228,11 @@ export default {
           const isExist = arr.some((selectedItem) => requiredItem.standardDetailId === selectedItem.standardDetailId)
           if (!isExist) {
             // 不存在则加入
-            arr.push({
+            arr.unshift({
               ...requiredItem,
-              // standardEntryName: requiredItem.entryName,
-              // standardDetailName: requiredItem.detailName,
-              // leader: '',
+              standardEntryName: requiredItem.entryName,
+              standardDetailName: requiredItem.detailName,
+              leader: '',
               isNeed: true
             })
           }
@@ -238,19 +246,40 @@ export default {
           }
         })
         this.selectedRecords = selectedRecords
-        console.log('【 this.selectedRecords 】-241', this.selectedRecords)
       });
     },
-    // // TODO
-    // getSelectedData(val) {
-    //   // console.log('【 getSelectedData 】-258', val)
-    //   // this.records = val
-    //   // this.formData.taskDetailInfoDtoList = val.map(item => {
-    //   //   const { standardDetailId } = item
-    //   //   // leader
-    //   //   return { standardDetailId, leader: '6957613061678637056' }
-    //   // })
-    // },
+    // 单选-勾选数据行的 Checkbox 时触发的事件
+    handleRowSelect(isChecked, row) {
+      this.selectedRecords.push({
+        ...row,
+        standardEntryName: row.entryName,
+        standardDetailName: row.detailName,
+        leader: '',
+        isNeed: false
+      })
+    },
+    // TODO
+    getSelectedData(val) {
+      // console.log('【 getSelectedData 】-258', val)
+      // this.records = val
+      // this.formData.taskDetailInfoDtoList = val.map(item => {
+      //   const { standardDetailId } = item
+      //   // leader
+      //   return { standardDetailId, leader: '6957613061678637056' }
+      // })
+    },
+    // 全选
+    getAllSelectedData(newSelection) {
+      newSelection.forEach(item => {
+        this.selectedRecords.push({
+          ...item,
+          standardEntryName: item.entryName,
+          standardDetailName: item.detailName,
+          leader: '',
+          isNeed: false
+        })
+      })
+    },
     // 关闭弹框
     close() {
       this.$emit('update:visible', false);
@@ -269,21 +298,20 @@ export default {
           this.createTime = this.$moment(this.formData.createTime).format('YYYY-MM-DD')
         }
         // 详情-列表数据回显
-        // if (this.type === 'detail') {
-        this.selectedRecords = result.taskDetailInfoDtoList
-        // } else {
-        // 编辑-列表数据回显
-        // this.handleTaskTypeChange(this.formData.taskType, result.taskDetailInfoDtoList)
-        // }
+        if (this.type === 'detail') {
+          this.selectedRecords = result.taskDetailInfoDtoList
+        } else {
+          // 编辑-列表数据回显
+          this.handleTaskTypeChange(this.formData.taskType, result.taskDetailInfoDtoList)
+        }
       });
     },
     // 提交表单信息
     handleConfirm() {
       const isTableFormValid = this.$refs.taskTableRef.validateTableForm()
-      // console.log('【 handleConfirm===selectedRecords 】-299', this.selectedRecords)
       this.formData.taskDetailInfoDtoList = this.selectedRecords.map(item => {
         const { standardDetailId, leader } = item
-        return { standardDetailId, leader: leader ? leader.toString() : '' }// : '6957613061678637056'
+        return { standardDetailId, leader: leader.toString() }// : '6957613061678637056'
       })
       if (!this.formData.taskDetailInfoDtoList.length) {
         this.$message.error('请选择任务');
@@ -309,7 +337,7 @@ export default {
     min-height: 380px;
     margin-bottom: 20px;
     .input-width {
-      width: 240px !important;
+      width: 180px !important;
     }
     .table-wrap{
       width:750px;
