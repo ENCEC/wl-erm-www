@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-03 10:20:28
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-15 17:08:05
+ * @LastEditTime: 2022-08-29 11:07:58
  * @Description:联想控件-用户
 -->
 
@@ -92,9 +92,10 @@ export default {
     async getSelectOptions() {
       // this.optionsList = await queryStaffDutyBySelect();
     },
-    handleChange(value) {
+    handleChange(value, selectedRows) {
+      console.log('【 value, selectedRows 】-99', value, selectedRows)
       this.$emit('input', this.selectVal);
-      this.$emit('getSelectVal', this.selectVal);
+      this.$emit('getSelectedRows', selectedRows);
     }
   }
 };

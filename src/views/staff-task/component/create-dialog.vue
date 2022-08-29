@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:15:03
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-23 13:43:48
+ * @LastEditTime: 2022-08-29 11:32:52
  * @Description:
 -->
 
@@ -35,8 +35,9 @@
             <el-form-item label="标题:" prop="taskTitle">
               <el-input
                 v-model="formData.taskTitle"
-                placeholder="请输入标题"
+                placeholder="请输入标题，执行人姓名+任务类型"
                 clearable
+                class="input-width"
               />
             </el-form-item>
           </el-col>
@@ -48,6 +49,7 @@
                   v-for="item in jobStatusOptions"
                   :key="'jobStatus' + item.value"
                   :label="item.value"
+                  disabled
                 >{{ item.label }}</el-radio>
               </el-radio-group>
             </el-form-item>
@@ -56,7 +58,7 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="执行人:" prop="executor">
-              <UserAssociate v-model="formData.executor" :init-label="formData.executorName" class="input-width" />
+              <UserAssociate v-model="formData.executor" :init-label="formData.executorName" class="input-width" placeholder="请选择执行人" @getSelectedRows="getSelectedRows" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -246,6 +248,11 @@ export default {
         })
       });
     },
+    // 获取选中的执行人的附带信息
+    getSelectedRows(row) {
+      this.formData.status = row.jobStatus
+      // console.log('【 row 】-252', row)
+    },
     // 单选-勾选数据行的 Checkbox 时触发的事件
     handleRowSelect(isChecked, row) {
       this.selectedRecords.push({
@@ -335,7 +342,7 @@ export default {
     min-height: 380px;
     margin-bottom: 20px;
     .input-width {
-      width: 180px !important;
+      width: 240px !important;
     }
     .table-wrap{
       width:750px;

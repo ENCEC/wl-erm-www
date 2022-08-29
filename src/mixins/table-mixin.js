@@ -1,8 +1,10 @@
+import keyFor from 'core-js/fn/symbol/key-for';
+
 /*
  * @Author: Hongzf
  * @Date: 2022-07-26 11:00:24
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-01 11:46:01
+ * @LastEditTime: 2022-08-29 09:40:48
  * @Description: 表格公用方法
  */
 const mixin = {
@@ -21,16 +23,17 @@ const mixin = {
   methods: {
     // 表格查询
     handleQuery() {
-      console.log('【 mix-handleQuery 】-28');
+      // console.log('【 mix-handleQuery 】-28');
       this.params.currentPage = 1;
       this.getTableData();
     },
     // 重置表格查询条件
-    resetQueryForm(filterForm) {
-      console.log('【 mix-resetQueryForm-filterForm 】-33', filterForm);
+    resetQueryForm(filterForm, excludeKeys = []) {
+      // console.log('【 mix-resetQueryForm-filterForm 】-33', filterForm);
       // this.$refs[filterForm].resetFields();
       Object.keys(filterForm).forEach(key => {
-        if (key !== 'projectId') {
+        // 排除不需要清空的字段
+        if (!excludeKeys.includes(key)) {
           filterForm[key] = ''
         }
       })
@@ -43,7 +46,7 @@ const mixin = {
     },
     // 页数切换
     handleSizeChange(curSize) {
-      console.log('【 mix-currentSize 】-56', curSize);
+      // console.log('【 mix-currentSize 】-56', curSize);
       this.params.currentPage = 1;
       this.params.pageSize = curSize;
       this.getTableData();

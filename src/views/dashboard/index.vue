@@ -2,12 +2,20 @@
  * @Author: Hongzf
  * @Date: 2022-08-12 19:00:39
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-24 15:42:44
+ * @LastEditTime: 2022-08-26 16:34:42
  * @Description: 首页
 -->
 <template>
   <div class="dashboard-container">
     <!-- <Keyboard /> -->
+    <!-- <LineMarker /> -->
+    <!-- <MixChart /> -->
+    <!-- 折线图 -->
+    <!-- <EcLine width="900px" height="300px" /> -->
+    <!-- 饼图 -->
+    <!-- <EcPieRing width="350px" height="300px" /> -->
+    <!-- 柱状图 -->
+    <!-- <EcBarMultiple width="900px" height="300px" /> -->
     <div class="home-wrap">
       <el-card v-for="(item,index) in 3 " :key="index" class="box-card">
         <div slot="header" class="clearfix">
@@ -29,10 +37,19 @@
 <script>
 import { mapGetters } from 'vuex'
 // import Keyboard from '@/components/Charts/Keyboard.vue'
+// import LineMarker from '@/components/Charts/LineMarker.vue'
+// import MixChart from '@/components/Charts/MixChart.vue'
+// import EcLine from './component/ec-line.vue'
+// import EcPieRing from './component/ec-pie-ring.vue'
+// import EcBarMultiple from './component/ec-bar-multiple.vue'
 
 export default {
   name: 'Dashboard',
-  // components: { Keyboard },
+  components: {
+    // EcLine
+    // EcBarMultiple
+  // Keyboard, LineMarker, MixChart
+  },
   data() {
     return {
       permissionsLoading: true
