@@ -103,9 +103,9 @@ export default {
         uemUserName: '',
         applyDate: '',
         approver: '',
-        leaveReason: '',
+        leaveReason: ''
         // standardDetailId: '6960887517290696704',
-        standardEntryId: ''
+        // standardEntryId: ''
       },
       rules: {
         applyDate: [
@@ -138,9 +138,9 @@ export default {
       };
       queryStandardDetail(params).then((response) => {
         this.tableData = response.data.records || [];
-        if (this.tableData.length > 0) {
-          this.form.standardEntryId = this.tableData[0].standardEntryId;
-        }
+        // if (this.tableData.length > 0) {
+        //   this.form.standardEntryId = this.tableData[0].standardEntryId;
+        // }
         this.tableData.forEach((item, index) => {
           item.count = index + 1;
         });
@@ -183,8 +183,8 @@ export default {
         uemUserName: '',
         applyDate: '',
         leaveReason: '',
-        approver: '',
-        standardEntryId: ''
+        approver: ''
+        // standardEntryId: ''
       };
     },
     approverQueryMethod({ keyword, pageSize, currentPage }) {
