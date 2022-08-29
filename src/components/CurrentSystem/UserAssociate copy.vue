@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-03 10:20:28
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-29 11:07:58
+ * @LastEditTime: 2022-08-29 16:55:36
  * @Description:联想控件-用户
 -->
 
@@ -16,6 +16,9 @@
     label-prop="name"
     clearable
     :query-method="queryMethod"
+    :options="{
+      pageSize:10
+    }"
     v-on="$listeners"
     @change="handleChange"
   />
@@ -68,7 +71,7 @@ export default {
   methods: {
     queryMethod({
       keyword,
-      pageSize,
+      pageSize = 10,
       currentPage
 
     }) {
@@ -78,10 +81,11 @@ export default {
           pageSize,
           pageNo: currentPage
         }).then((res) => {
-          const records = res.records
+          console.log('【 res 】-81', res)
+          const records = res.data// res.records
           resolve({
             records,
-            total: res.totalRecord
+            total: res.data.length // res.totalRecord
           });
         });
       }).catch((err) => {

@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:15:03
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-29 10:54:08
+ * @LastEditTime: 2022-08-29 15:18:50
  * @Description:
 -->
 
@@ -56,7 +56,7 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="执行人:" prop="executor">
-              <UserAssociate v-model="formData.executor" :init-label="formData.executorName" class="input-width" />
+              <UserAssociate v-model="formData.executor" :init-label="formData.executorName" class="input-width" placeholder="请选择执行人" @getSelectedRows="getSelectedRows" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -83,10 +83,11 @@
             <el-form-item label="员工任务:" prop="taskList">
               <div class="table-wrap">
                 <!-- 未勾选的数据 -->
+                <!-- v-if="type!=='detail'" -->
                 <TaskTable
-                  v-if="type!=='detail'"
                   ref="taskTableRef"
                   :records="selectedRecords"
+                  :type="type"
                   :task-type="formData.taskType"
                   @handleSelectAll="getAllSelectedData"
                   @handleRowSelect="handleRowSelect"
@@ -211,6 +212,11 @@ export default {
   created() {},
   mounted() {},
   methods: {
+    // 获取选中的执行人的附带信息
+    getSelectedRows(row) {
+      this.formData.status = row.jobStatus
+      // console.log('【 row 】-252', row)
+    },
     // 任务类型变化-获取必选问题
     handleTaskTypeChange(taskType, arr = []) {
       let selectedRecords = []

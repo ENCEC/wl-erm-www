@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:15:04
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-24 11:05:19
+ * @LastEditTime: 2022-08-29 10:53:35
  * @Description:
  */
 
@@ -67,16 +67,16 @@ export const filterConfig = _this => {
         method: () => {
           _this.handleQuery();
         }
+      },
+      {
+        type: 'primary',
+        buttonLabel: '重置',
+        btnType: 'primary',
+        plain: true,
+        method: () => {
+          _this.resetQueryForm(_this.filterForm, ['userType']);
+        }
       }
-      // {
-      //   type: 'primary',
-      //   buttonLabel: '重置',
-      //   btnType: 'primary',
-      //   plain: true,
-      //   method: () => {
-      //     _this.resetQueryForm(_this.filterForm);
-      //   }
-      // }
     ]
   };
 };

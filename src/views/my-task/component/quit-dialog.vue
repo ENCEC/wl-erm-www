@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-08 18:45:59
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-24 13:40:28
+ * @LastEditTime: 2022-08-29 18:02:58
  * @Description:
 -->
 
@@ -373,11 +373,15 @@ export default {
       const taskStatus = this.editData.status.toString()
       let status = 0
       // 审批中
-      if (taskStatus === '0') {
-        status = this.STATUS_TYPE.CHECK // 1
-      }
+      // if (taskStatus === '0') {
+      //   status = this.STATUS_TYPE.CHECK // 1
+      // }
       // 进行中 进行中分是项目经理还是部门领导
-      if (taskStatus === '1') {
+      if (taskStatus === '3') {
+        // 员工
+        if (this.userType.toString() === this.USER_TYPE.STAFF.toString()) {
+          status = this.STATUS_TYPE.CHECK// 1
+        }
         if (this.userType.toString() === this.USER_TYPE.PROJECT_MANAGER.toString()) {
           status = this.STATUS_TYPE.ON_MANAGER// 2
         }

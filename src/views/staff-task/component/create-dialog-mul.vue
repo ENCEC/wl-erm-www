@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:15:03
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-29 10:54:08
+ * @LastEditTime: 2022-08-29 11:32:52
  * @Description:
 -->
 
@@ -37,6 +37,7 @@
                 v-model="formData.taskTitle"
                 placeholder="请输入标题，执行人姓名+任务类型"
                 clearable
+                class="input-width"
               />
             </el-form-item>
           </el-col>
@@ -48,6 +49,7 @@
                   v-for="item in jobStatusOptions"
                   :key="'jobStatus' + item.value"
                   :label="item.value"
+                  disabled
                 >{{ item.label }}</el-radio>
               </el-radio-group>
             </el-form-item>
@@ -56,7 +58,7 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="执行人:" prop="executor">
-              <UserAssociate v-model="formData.executor" :init-label="formData.executorName" class="input-width" />
+              <UserAssociate v-model="formData.executor" :init-label="formData.executorName" class="input-width" placeholder="请选择执行人" @getSelectedRows="getSelectedRows" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -66,7 +68,7 @@
                 placeholder="请选择任务类型"
                 clearable
                 class="input-width"
-                @change="handleTaskTypeChange(formData.taskType,selectedRecords)"
+                @change="handleTaskTypeChange(formData.taskType,[])"
               >
                 <el-option
                   v-for="(item) in taskTypeOptions"
@@ -92,12 +94,12 @@
                   @handleRowSelect="handleRowSelect"
                 />
                 <!-- 已勾选的数据 -->
-                <!-- <SelectedTable
+                <SelectedTable
                   ref="selectedTableForm"
                   :records="selectedRecords"
                   :type="type"
                   @getSelectedData="getSelectedData"
-                /> -->
+                />
                 <!-- :task-type="formData.taskType" -->
               </div>
             </el-form-item>
@@ -153,12 +155,13 @@
 </template>
 <script>
 import TaskTable from './task-table'
+import SelectedTable from './selected-table'
 import UserAssociate from '@/components/CurrentSystem/UserAssociate'
 import { getTaskInfoDetail, saveTaskInfo, updateTaskInfo, queryNeedStandardFullDetailByTaskType } from '@/api/staff-task';
 import { formRules } from './rules';
 
 export default {
-  components: { UserAssociate, TaskTable },
+  components: { UserAssociate, TaskTable, SelectedTable },
   props: {
     // 编辑信息
     editData: {
@@ -240,7 +243,15 @@ export default {
           }
         })
         this.selectedRecords = selectedRecords
+        this.$nextTick(() => {
+          this.$refs.selectedTableForm && this.$refs.selectedTableForm.clearValidateTableForm()
+        })
       });
+    },
+    // 获取选中的执行人的附带信息
+    getSelectedRows(row) {
+      this.formData.status = row.jobStatus
+      // console.log('【 row 】-252', row)
     },
     // 单选-勾选数据行的 Checkbox 时触发的事件
     handleRowSelect(isChecked, row) {
@@ -302,7 +313,7 @@ export default {
     },
     // 提交表单信息
     handleConfirm() {
-      const isTableFormValid = this.$refs.taskTableRef.validateTableForm()
+      const isTableFormValid = this.$refs.selectedTableForm.validateTableForm()
       this.formData.taskDetailInfoDtoList = this.selectedRecords.map(item => {
         const { standardDetailId, leader } = item
         return { standardDetailId, leader: leader.toString() }// : '6957613061678637056'
@@ -331,7 +342,7 @@ export default {
     min-height: 380px;
     margin-bottom: 20px;
     .input-width {
-      width: 180px !important;
+      width: 240px !important;
     }
     .table-wrap{
       width:750px;

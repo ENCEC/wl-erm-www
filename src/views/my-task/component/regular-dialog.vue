@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:15:03
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-19 20:02:37
+ * @LastEditTime: 2022-08-29 18:00:41
  * @Description:
 -->
 
@@ -357,8 +357,8 @@ export default {
       USER_TYPE,
       STATUS_TYPE: {
         CHECK: 1, // 审批中（撤回）
-        ON_MANAGER: 2, // 进行中(项目经理)
-        ON_LEADER: 4, // 进行中(部门领导)
+        ON_MANAGER: 2, // 审批中(项目经理)
+        ON_LEADER: 4, // 审批中(部门领导)
         COMPLETED: 3 // 已完成
       },
       rules: regularFormRules, // 验证规则
@@ -401,14 +401,20 @@ export default {
       const taskStatus = this.editData.status.toString()
       let status = 0
       // 审批中
-      if (taskStatus === '0') {
-        status = this.STATUS_TYPE.CHECK // 1
-      }
-      // 进行中 进行中分是项目经理还是部门领导
-      if (taskStatus === '1') {
+      // if (taskStatus === '3') {
+      //   status = this.STATUS_TYPE.CHECK // 1
+      // }
+      // 审批中 审批中分是项目经理还是部门领导
+      if (taskStatus === '3') {
+        // 员工
+        if (this.userType.toString() === this.USER_TYPE.STAFF.toString()) {
+          status = this.STATUS_TYPE.CHECK// 1
+        }
+        // 项目经理
         if (this.userType.toString() === this.USER_TYPE.PROJECT_MANAGER.toString()) {
           status = this.STATUS_TYPE.ON_MANAGER// 2
         }
+        // 部门领导
         if (this.userType.toString() === this.USER_TYPE.DEPT_LEADER.toString()) {
           status = this.STATUS_TYPE.ON_LEADER// 4
         }
