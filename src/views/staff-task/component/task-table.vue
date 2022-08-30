@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-07-26 14:43:35
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-29 17:53:25
+ * @LastEditTime: 2022-08-30 14:43:54
  * @Description:
 -->
 <template>
@@ -54,6 +54,7 @@
               ]"
             >
               <UserAssociate v-model="scope.row.leader" :init-label="scope.row.leaderName" @getSelectedRows="(val)=>{ return getSelectedRows(val,scope.row)}" />
+              <!-- {{ scope.row.isNeed }}{{ scope.row.isChecked }} -->
             </el-form-item>
           </template>
         </el-table-column>
@@ -117,7 +118,8 @@ export default {
         //   { required: true, message: '请选择负责人', trigger: 'change' }
         // ]
       },
-      selectedRecords: []
+      selectedRecords: [],
+      allSelection: []
     };
   },
   computed: {},
@@ -144,6 +146,64 @@ export default {
       deep: true,
       immediate: true,
       handler(newVal) {
+      }
+    },
+    // 监听当前页的全选数据（判断全选或取消全选）
+    allSelection: {
+      deep: true,
+      // immediate: true,
+      handler(newVal, oldVal) {
+        // console.log('【 newVal, oldVal 】-155', newVal, oldVal)
+        const newLen = newVal.length
+        const oldLen = oldVal.length
+        // 新增数据
+        if (newLen >= oldLen) {
+          console.log('【全选  】-158',)
+          const allSelection = newVal
+          // 过滤出新的数据
+          const newSelection = allSelection.filter(multipleItem => {
+            const isExit = this.selectedRecords.some((item) => {
+              return multipleItem.standardDetailId === item.standardDetailId
+            })
+            return !isExit// 过滤出新的不存在的数据
+          })
+          // 存入数组
+          newSelection.forEach(item => {
+            this.selectedRecords.push({ ...item, isChecked: true })
+          })
+          const newIds = newSelection.map(item => item.standardDetailId)
+          this.tableForm.tableData.forEach((tableItem, index) => {
+            if (newIds.includes(tableItem.standardDetailId)) {
+              console.log('【 tableItem 】-192', tableItem)
+              tableItem.isChecked = true
+            }
+          })
+        } else {
+          // 删除数据
+          // 过滤出被删的数据(旧数据不在新数据中存在)
+          const deletedSelection = oldVal.filter(oldItem => {
+            // 新数据中能找到，说明未被删除
+            const isExit = newVal.some((newItem) => {
+              return oldItem.standardDetailId === newItem.standardDetailId
+            })
+            return !isExit// 过滤出新的不存在的数据
+          })
+          const deletedIds = deletedSelection.map(item => item.standardDetailId)
+          console.log('【 deletedSelection 】-177', deletedSelection)
+          this.selectedRecords.forEach((item, index) => {
+            if (deletedIds.includes(item.standardDetailId)) {
+              this.selectedRecords.splice(index, 1)
+            }
+          })
+          this.tableForm.tableData.forEach((tableItem, index) => {
+            if (deletedIds.includes(tableItem.standardDetailId)) {
+              // console.log('【 tableItem 】-192', tableItem)
+              tableItem.isChecked = false
+            }
+          })
+          // console.log('【取消全选  】-158',)
+        }
+        // console.log('【 this.selectedRecords 】-172', this.selectedRecords)
       }
     },
     // 监听页数变化
@@ -175,7 +235,10 @@ export default {
           })
           // 存在或是必选项也设为选中状态
           if (tableItem.isNeed || isExit) {
+            tableItem.isChecked = true
             tableRef && tableRef.toggleRowSelection(tableItem, true)
+          } else {
+            tableItem.isChecked = false
           }
         })
       })
@@ -192,7 +255,7 @@ export default {
     },
     // 回显填写的数据
     reviewData(arr, records) {
-      console.log('【 arr ===】-177', arr, records)
+      // console.log('【 arr ===】-177', arr, records)
       let tableData = []
       // 没有详情数据，直接返回请求的数据
       // TODO
@@ -203,13 +266,13 @@ export default {
       // 获取详情中的数据
       tableData = arr.map(item => {
         const detailItem = records.filter((detailItem) => item.standardDetailId === detailItem.standardDetailId)
-        return { ...item, ...detailItem[0], isChecked: true }
+        return { ...item, ...detailItem[0], isChecked: false }
       })
       return tableData
     },
     // 分页触发
     handleCurrentChange(curPage) {
-      const isTableFormValid = this.validateTableForm()
+      const isTableFormValid = this.validateTableForm()// 验证当前页
       this.params.currentPage = this.oldPage
       if (isTableFormValid) {
         this.params.currentPage = curPage// 切换到下一页
@@ -256,21 +319,9 @@ export default {
     },
     // 当选择项发生变化时会触发该事件
     handleSelectionChange() {},
-    // TODO:全选
+    // 全选
     handleSelectAll(allSelection) {
-      console.log('【 val 】-190', allSelection)
-      // const selected = allSelection.length && allSelection.indexOf(allSelection) !== -1
-      // 过滤出新的数据
-      const newSelection = allSelection.filter(multipleItem => {
-        const isExit = this.records.some((item) => {
-          return multipleItem.standardDetailId === item.standardDetailId
-        })
-        return !isExit// 过滤出新的不存在的数据
-      })
-      newSelection.forEach(item => {
-        this.selectedRecords.push(item)
-      })
-      // console.log('【 newSelection 】-192', newSelection)
+      this.allSelection = [...allSelection]// 必须用浅拷贝
     },
     // 验证表格
     validateTableForm() {

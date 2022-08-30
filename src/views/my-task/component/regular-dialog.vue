@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:15:03
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-29 18:00:41
+ * @LastEditTime: 2022-08-30 10:37:04
  * @Description:
 -->
 
@@ -327,7 +327,7 @@
 <script>
 import RegularTable from './regular-table'
 import UserAssociate from '@/components/CurrentSystem/UserAssociate'
-import { queryPositiveApply, queryTaskInfoByUser, savePositiveInfo, savePositiveInfoByLeader, deletedApplyByStaff } from '@/api/my-task';
+import { queryTaskDetailInfo, queryPositiveApply, queryTaskInfoByUser, savePositiveInfo, savePositiveInfoByLeader, deletedApplyByStaff } from '@/api/my-task';
 import { regularFormRules } from './rules';
 import { USER_TYPE } from '@/store/constant'
 import { downloadExternalFile } from '@/api/common';
@@ -345,12 +345,12 @@ export default {
     type: {
       type: String,
       default: ''
-    },
-    // 用户类型
-    userType: {
-      type: String,
-      default: ''
     }
+    // // 用户类型
+    // userType: {
+    //   type: String,
+    //   default: ''
+    // }
   },
   data() {
     return {
@@ -361,6 +361,7 @@ export default {
         ON_LEADER: 4, // 审批中(部门领导)
         COMPLETED: 3 // 已完成
       },
+      userType: '',
       rules: regularFormRules, // 验证规则
       formData: {
         taskInfoId: '',
@@ -399,9 +400,10 @@ export default {
     },
     status() {
       const taskStatus = this.editData.status.toString()
-      let status = 0
+      console.log('【 taskStatus 】-403', taskStatus)
+      let status = 3
       // 审批中
-      // if (taskStatus === '3') {
+      // if (taskStatus === '1') {
       //   status = this.STATUS_TYPE.CHECK // 1
       // }
       // 审批中 审批中分是项目经理还是部门领导
@@ -415,7 +417,8 @@ export default {
           status = this.STATUS_TYPE.ON_MANAGER// 2
         }
         // 部门领导
-        if (this.userType.toString() === this.USER_TYPE.DEPT_LEADER.toString()) {
+        if (this.userType.toString() === this.USER_TYPE.DEPT_LEADER_APPROVER.toString() ||
+        this.userType.toString() === this.USER_TYPE.DEPT_LEADER_AUDITOR.toString()) {
           status = this.STATUS_TYPE.ON_LEADER// 4
         }
       }
@@ -426,7 +429,7 @@ export default {
       if (taskStatus === '2') {
         status = this.STATUS_TYPE.COMPLETED // 3
       }
-      // console.log('【 status==== 】-396', this.userType, status)
+      console.log('【 userType，status==== 】-396', this.userType, status)
       return status
     }
   },
@@ -453,6 +456,16 @@ export default {
     },
     // 获取详细信息
     getDetailInfo() {
+      // 获取用户类型
+      queryTaskDetailInfo({
+        pageNo: '1', // this.params.currentPage,
+        pageSize: '10', // this.params.pageSize,
+        taskInfoId: this.editData.taskInfoId // 6961151640916795392
+      }).then(res => {
+        this.userType = res.data.userType
+        console.log('【 this.userType 】-465', this.userType)
+      });
+      // 获取转正信息
       queryPositiveApply({ taskInfoId: this.editData.taskInfoId }).then(res => {
         const _res = res.data
         for (const key in this.formData) {
@@ -463,6 +476,7 @@ export default {
           }
         }
       });
+      // 获取简历
       // console.log('【 this.editData 】-461', this.editData)
       queryTaskInfoByUser({
         taskInfoId: this.editData.taskInfoId,

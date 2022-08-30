@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-03 10:20:28
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-29 11:07:58
+ * @LastEditTime: 2022-08-30 14:47:27
  * @Description:联想控件-用户
 -->
 
@@ -21,16 +21,14 @@
   />
 </template>
 <script>
-import {
-  queryUser
-} from '@/api/common';
+import { querySubordinateUser, queryAllWorkUserList } from '@/api/common';
 // import { getSupplier } from '@/api/procurement-manage'
 export default {
   props: {
-    // disabled: {
-    //   type: Boolean,
-    //   default: false
-    // },
+    isAllUser: {
+      type: Boolean,
+      default: true// ['all','subordinate'] 可选用户的范围：全部用户，下属
+    },
     value: {
       type: String, // 传入的值
       require: true
@@ -66,25 +64,33 @@ export default {
   },
   mounted() {},
   methods: {
-    queryMethod({
-      keyword,
-      pageSize,
-      currentPage
-
-    }) {
-      return new Promise((resolve) => {
-        queryUser({
-          name: keyword,
-          pageSize,
-          pageNo: currentPage
-        }).then((res) => {
-          const records = res.records
-          resolve({
-            records,
-            total: res.totalRecord
+    queryMethod({ keyword, pageSize, currentPage }) {
+      return new Promise(resolve => {
+        if (!this.isAllUser) {
+          querySubordinateUser({
+            name: keyword,
+            pageSize,
+            pageNo: currentPage
+          }).then(res => {
+            // console.log('【 res 】-81', res)
+            const _res = res;
+            const records = _res.records;
+            const total = _res.totalRecord
+            resolve({ records, total });
           });
-        });
-      }).catch((err) => {
+        } else {
+          queryAllWorkUserList({
+            name: keyword,
+            pageSize,
+            pageNo: currentPage
+          }).then(res => {
+            const _res = res.data;
+            const records = _res.records;
+            const total = _res.totalRecord
+            resolve({ records, total });
+          });
+        }
+      }).catch(err => {
         console.log(err);
       });
     },
@@ -93,7 +99,7 @@ export default {
       // this.optionsList = await queryStaffDutyBySelect();
     },
     handleChange(value, selectedRows) {
-      console.log('【 value, selectedRows 】-99', value, selectedRows)
+      // console.log('【 value, selectedRows 】-99', value, selectedRows);
       this.$emit('input', this.selectVal);
       this.$emit('getSelectedRows', selectedRows);
     }

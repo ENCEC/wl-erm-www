@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:15:04
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-29 10:53:35
+ * @LastEditTime: 2022-08-29 18:12:09
  * @Description:
  */
 
@@ -14,22 +14,22 @@ export const filterConfig = _this => {
     operateCol: 24,
     labelWidth: '100px',
     filterList: [
-      {
-        type: 'select',
-        label: '用户类型',
-        prop: 'userType',
-        width: '200px',
-        placeholder: '请选择用户类型',
-        col: 8,
-        optionLabel: 'label',
-        optionValue: 'value',
-        optionKey: 'value',
-        options: _this.$dict.getDictOptions('USER_TYPE_CN'),
-        changeSelect: optionVal => {
-          _this.filterForm.userType = optionVal || 1;
-          _this.handleUserTypeChange(optionVal)
-        }
-      },
+      // {
+      //   type: 'select',
+      //   label: '用户类型',
+      //   prop: 'userType',
+      //   width: '200px',
+      //   placeholder: '请选择用户类型',
+      //   col: 8,
+      //   optionLabel: 'label',
+      //   optionValue: 'value',
+      //   optionKey: 'value',
+      //   options: _this.$dict.getDictOptions('USER_TYPE_CN'),
+      //   changeSelect: optionVal => {
+      //     _this.filterForm.userType = optionVal || 1;
+      //     _this.handleUserTypeChange(optionVal)
+      //   }
+      // },
       {
         type: 'input',
         label: '标题',

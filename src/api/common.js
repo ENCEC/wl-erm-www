@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-01 19:02:14
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-29 17:07:10
+ * @LastEditTime: 2022-08-30 11:35:34
  * @Description: 公共部分-接口
  */
 
@@ -49,17 +49,22 @@ export function queryTechnicalNameBySelect(data) {
     data
   });
 }
-// 用户列表
-export function queryUser(data) {
+// 用户列表-下属
+export function querySubordinateUser(data) {
   return request({
-    // url: '/uemUserManage/queryUemUser',
     url: prefix + '/uemUserManage/queryStaffByPage',
-    // url: prefix + '/uemUserManage/queryAllWorkUserList',
     method: 'post',
     data
   });
 }
-
+// 用户列表-全部
+export function queryAllWorkUserList(data) {
+  return request({
+    url: prefix + '/uemUserManage/queryAllWorkUserList',
+    method: 'post',
+    data
+  });
+}
 // 下载文件
 export function downloadExternalFile(data) {
   return request({

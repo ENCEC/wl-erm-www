@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 17:38:09
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-19 13:45:56
+ * @LastEditTime: 2022-08-30 10:17:09
  * @Description: 我的任务-试用任务信息-弹框
 -->
 
@@ -34,6 +34,7 @@
               <el-form-item label=" ">
                 <TaskTable
                   ref="tableForm"
+                  :table-data="tableData"
                   :task-info-id="editData.taskInfoId"
                   :user-type="userType"
                 />
@@ -63,6 +64,7 @@
 <script>
 import TaskTable from './task-table'
 import { USER_TYPE } from '@/store/constant'
+import { queryTaskDetailInfo } from '@/api/my-task';
 
 export default {
   components: { TaskTable },
@@ -76,32 +78,51 @@ export default {
     type: {
       type: String,
       default: ''
-    },
-    // 用户类型
-    userType: {
-      type: String,
-      default: '1'
     }
+    // // 用户类型
+    // userType: {
+    //   type: String,
+    //   default: '1'
+    // }
   },
   data() {
     return {
       USER_TYPE,
       rules: {}, // 验证规则
-      formData: {}
+      formData: {},
+      tableData: []
     };
   },
   computed: {
     // 弹框标题
     dialogTitle() {
       return this.editData.taskTitle || '试用任务信息'
+    },
+    userType() {
+      console.log('【 this.formData.userType 】-110', this.formData.userType)
+      return this.formData.userType
     }
   },
   watch: {},
   created() {
-    // console.log('【 userType 】-81', this.userType)
+    console.log('【 userType 】-81', this.userType)
+    this.getDetailInfo()
   },
   mounted() {},
   methods: {
+    // 获取表格数据
+    getDetailInfo() {
+      queryTaskDetailInfo({
+        pageNo: '1', // this.params.currentPage,
+        pageSize: '10', // this.params.pageSize,
+        taskInfoId: this.editData.taskInfoId // 6961151640916795392
+      }).then(res => {
+        console.log('【 res 】-115', res)
+        const _res = res.data
+        this.formData = _res
+        this.tableData = _res.taskDetailInfoDtoList;
+      });
+    },
     // 获取填写的数据
     // getTableFormData(val, isClose) {
     //   isClose && this.close();

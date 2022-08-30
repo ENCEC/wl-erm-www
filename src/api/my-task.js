@@ -2,12 +2,20 @@
  * @Author: Hongzf
  * @Date: 2022-08-08 10:55:42
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-19 19:33:32
+ * @LastEditTime: 2022-08-29 18:10:20
  * @Description: 员工管理-我的任务
  */
 
 import request from '@/utils/request';
 const prefix = process.env.VUE_APP_WL_ERM_PREFIX
+// 我的任务-列表
+export function queryTaskInfoPageByUemUser(data) {
+  return request({
+    url: prefix + '/taskInfo/queryTaskInfoPageByUemUser',
+    method: 'post',
+    data
+  });
+}
 // 列表-员工
 export function queryStaffTaskInfo(data) {
   return request({
