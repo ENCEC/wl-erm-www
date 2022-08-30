@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 17:38:09
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-30 15:57:03
+ * @LastEditTime: 2022-08-30 17:27:06
  * @Description: 我的任务
 -->
 
@@ -33,7 +33,7 @@
       :visible.sync="dialogVisible"
       :edit-data="editData"
       :type="openType"
-      :user-type="filterForm.userType"
+      :user-type="userType"
       @getTableData="getTableData"
     />
     <!-- 转正 -->
@@ -42,7 +42,7 @@
       :visible.sync="regularDialogVisible"
       :edit-data="editData"
       :type="openType"
-      :user-type="filterForm.userType"
+      :user-type="userType"
       @getTableData="getTableData"
     />
     <!--离职 辞退 -->
@@ -51,7 +51,7 @@
       :visible.sync="quitDialogVisible"
       :edit-data="editData"
       :type="openType"
-      :user-type="filterForm.userType"
+      :user-type="userType"
       @getTableData="getTableData"
     />
   </div>
@@ -64,10 +64,7 @@ import TaskDialog from './component/task-dialog';
 import RegularDialog from './component/regular-dialog';
 import QuitDialog from './component/quit-dialog';
 import {
-  // queryStaffTaskInfo,
-  // queryLeaderTaskInfo,
-  // queryOrdinatorTaskInfo,
-  // queryTaskInfoByPage,
+  queryTaskDetailInfo,
   queryTaskInfoPageByUemUser
 } from '@/api/my-task';
 import tableMix from '@/mixins/table-mixin';
@@ -94,8 +91,7 @@ export default {
       filterConfig: filterConfig(this),
       filterForm: {
         taskTitle: '',
-        status: '',
-        userType: '1'
+        status: ''
       },
       // 表格
       columns: columns(this),
@@ -104,6 +100,7 @@ export default {
       tableConfig,
       tableData: [],
       // 弹框
+      userType: '',
       editData: {},
       openType: '',
       dialogVisible: false,
@@ -117,22 +114,18 @@ export default {
   },
   mounted() {},
   methods: {
-    // 用户类型切换
-    handleUserTypeChange(val) {
-      this.params.currentPage = 1
-      this.getTableData()
+    // 获取用户类型
+    getUserType(taskInfoId) {
+      queryTaskDetailInfo({
+        taskInfoId
+      }).then(res => {
+        if (res.success) {
+          this.userType = res.data.userType
+        }
+      });
     },
     // 获取表格数据
     getTableData() {
-      // const funcInfo = {
-      //   // 不同用户类型调不同接口
-      //   '1': queryStaffTaskInfo, // 员工
-      //   '2': queryOrdinatorTaskInfo, // 统筹人
-      //   '3': queryLeaderTaskInfo, // 负责人
-      //   '4': queryTaskInfoByPage, // 项目经理
-      //   '5': queryTaskInfoByPage// 部门领导
-      // }
-      // const funcName = funcInfo[this.filterForm.userType]
       // this.listLoading = true;
       queryTaskInfoPageByUemUser({
         pageNo: this.params.currentPage,
@@ -149,10 +142,7 @@ export default {
     handleOpen(item = {}, type) {
       this.openType = type
       this.editData = item
-      // {
-      //   taskInfoId: item.taskInfoId || '',
-      //   taskTitle: item.taskTitle
-      // };
+      this.getUserType(item.taskInfoId)
       const TASK_TYPE = {
         // TEST: '试用任务',
         POSITIVE: '员工转正',

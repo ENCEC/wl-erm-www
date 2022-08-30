@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:15:03
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-30 15:55:14
+ * @LastEditTime: 2022-08-30 17:40:06
  * @Description:
 -->
 
@@ -30,7 +30,7 @@
     >
       <div class="form-wrap">
         <el-row>
-          <!-- 进行中 -->
+          <!-- 审批中 -->
           <el-col v-if="status === STATUS_TYPE.ON_MANAGER || status === STATUS_TYPE.ON_LEADER" :span="12">
             <el-form-item label="申请人:" prop="dispatchersName">
               <el-input
@@ -327,7 +327,7 @@
 <script>
 import RegularTable from './regular-table'
 import UserAssociate from '@/components/CurrentSystem/UserAssociate'
-import { queryTaskDetailInfo, queryPositiveApply, queryTaskInfoByUser, savePositiveInfo, savePositiveInfoByLeader, deletedApplyByStaff } from '@/api/my-task';
+import { queryPositiveApply, queryTaskInfoByUser, savePositiveInfo, savePositiveInfoByLeader, deletedApplyByStaff } from '@/api/my-task';
 import { regularFormRules } from './rules';
 import { USER_TYPE } from '@/store/constant'
 import { downloadExternalFile } from '@/api/common';
@@ -345,12 +345,12 @@ export default {
     type: {
       type: String,
       default: ''
+    },
+    // 用户类型
+    userType: {
+      type: String,
+      default: ''
     }
-    // // 用户类型
-    // userType: {
-    //   type: String,
-    //   default: ''
-    // }
   },
   data() {
     return {
@@ -361,7 +361,6 @@ export default {
         ON_LEADER: 4, // 审批中(部门领导)
         COMPLETED: 3 // 已完成
       },
-      userType: '',
       rules: regularFormRules, // 验证规则
       formData: {
         taskInfoId: '',
@@ -417,8 +416,7 @@ export default {
           status = this.STATUS_TYPE.ON_MANAGER// 2
         }
         // 部门领导
-        if (this.userType.toString() === this.USER_TYPE.DEPT_LEADER_APPROVER.toString() ||
-        this.userType.toString() === this.USER_TYPE.DEPT_LEADER_AUDITOR.toString()) {
+        if (this.userType.toString() === this.USER_TYPE.DEPT_LEADER.toString()) {
           status = this.STATUS_TYPE.ON_LEADER// 4
         }
       }
@@ -450,19 +448,11 @@ export default {
     },
     // 关闭弹框
     close() {
-      this.$emit('getTableData', '');
       this.$emit('update:visible', false);
-      this.$refs['elForm'].resetFields();
+      // this.$refs['elForm'].resetFields();
     },
     // 获取详细信息
     getDetailInfo() {
-      // 获取用户类型
-      queryTaskDetailInfo({
-        taskInfoId: this.editData.taskInfoId // 6961151640916795392
-      }).then(res => {
-        this.userType = res.data.userType
-        console.log('【 this.userType 】-465', this.userType)
-      });
       // 获取转正信息
       queryPositiveApply({ taskInfoId: this.editData.taskInfoId }).then(res => {
         const _res = res.data
@@ -501,6 +491,7 @@ export default {
           const funcName = funcInfo[this.status]// this.editData.taskInfoId ? updateTaskInfo : saveTaskInfo;
           funcName(this.formData).then(res => {
             this.$message.success('操作成功');
+            this.$emit('getTableData', '');
             this.close();
           });
         }

@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-08 18:45:59
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-30 15:54:50
+ * @LastEditTime: 2022-08-30 17:44:28
  * @Description:
 -->
 
@@ -304,7 +304,7 @@
 <script>
 import UserAssociate from '@/components/CurrentSystem/UserAssociate'
 import { quitFormRules } from './rules';
-import { queryTaskDetailInfo, queryLeaveInfoByLeader, saveLeaveInfo, saveLeaveInfoByLeader, deletedApplyByStaff } from '@/api/my-task';
+import { queryLeaveInfoByLeader, saveLeaveInfo, saveLeaveInfoByLeader, deletedApplyByStaff } from '@/api/my-task';
 import { USER_TYPE } from '@/store/constant'
 
 export default {
@@ -319,17 +319,16 @@ export default {
     type: {
       type: String,
       default: ''
+    },
+    // 用户类型
+    userType: {
+      type: String,
+      default: ''
     }
-    // // 用户类型
-    // userType: {
-    //   type: String,
-    //   default: ''
-    // }
   },
   data() {
     return {
       USER_TYPE,
-      userType: '',
       STATUS_TYPE: {
         CHECK: 1, // 审批中
         ON_MANAGER: 2, // 进行中
@@ -372,7 +371,6 @@ export default {
     },
     status() {
       const taskStatus = this.editData.status.toString()
-      console.log('【 taskStatus 】-403', taskStatus)
       let status = 3
       // 审批中
       // if (taskStatus === '0') {
@@ -388,8 +386,7 @@ export default {
           status = this.STATUS_TYPE.ON_MANAGER// 2
         }
         // 部门领导
-        if (this.userType.toString() === this.USER_TYPE.DEPT_LEADER_APPROVER.toString() ||
-        this.userType.toString() === this.USER_TYPE.DEPT_LEADER_AUDITOR.toString()) {
+        if (this.userType.toString() === this.USER_TYPE.DEPT_LEADER) {
           status = this.STATUS_TYPE.ON_LEADER// 4
         }
       }
@@ -397,7 +394,9 @@ export default {
       if (taskStatus === '2') {
         status = this.STATUS_TYPE.COMPLETED // 1
       }
-      console.log('【 userType，status==== 】-396', this.userType, status)
+      console.log('【 taskStatus 】-403', taskStatus)
+      console.log('【 status】-396', status)
+      console.log('【 userType 】-399', this.userType)
       return status
     }
   },
@@ -420,19 +419,6 @@ export default {
     },
     // 获取详细信息
     getDetailInfo() {
-      // queryLeaveInfo({ uemUserId: this.editData.dispatchers }).then(res => {
-      //   const _res = res.data
-      //   for (const key in this.formData) {
-      //     this.formData[key] = _res[key] || ''
-      //   }
-      // });
-      // 获取用户类型
-      queryTaskDetailInfo({
-        taskInfoId: this.editData.taskInfoId // 6961151640916795392
-      }).then(res => {
-        this.userType = res.data.userType
-        console.log('【 this.userType 】-465', this.userType)
-      });
       queryLeaveInfoByLeader({
         dispatchers: this.editData.dispatchers, // '6958664088091697152', //
         taskInfoId: this.editData.taskInfoId

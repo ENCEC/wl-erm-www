@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 17:38:09
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-30 15:53:49
+ * @LastEditTime: 2022-08-30 17:47:37
  * @Description: 我的任务-试用任务信息-弹框
 -->
 
@@ -78,12 +78,12 @@ export default {
     type: {
       type: String,
       default: ''
+    },
+    // 用户类型
+    userType: {
+      type: String,
+      default: ''
     }
-    // // 用户类型
-    // userType: {
-    //   type: String,
-    //   default: '1'
-    // }
   },
   data() {
     return {
@@ -97,15 +97,10 @@ export default {
     // 弹框标题
     dialogTitle() {
       return this.editData.taskTitle || '试用任务信息'
-    },
-    userType() {
-      console.log('【 this.formData.userType 】-110', this.formData.userType)
-      return this.formData.userType
     }
   },
   watch: {},
   created() {
-    console.log('【 userType 】-81', this.userType)
     this.getDetailInfo()
   },
   mounted() {},
@@ -115,7 +110,7 @@ export default {
       queryTaskDetailInfo({
         taskInfoId: this.editData.taskInfoId // 6961151640916795392
       }).then(res => {
-        console.log('【 res 】-115', res)
+        // console.log('【 res 】-115', res)
         const _res = res.data
         this.formData = _res
         this.tableData = _res.taskDetailInfoDtoList;

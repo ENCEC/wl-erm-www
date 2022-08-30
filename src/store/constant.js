@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-07-22 16:25:46
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-30 10:15:48
+ * @LastEditTime: 2022-08-30 17:39:39
  * @Description: 字典
  */
 // 用户类型
@@ -15,10 +15,10 @@ export const USER_TYPE = {
   STAFF: 'executor',
   ORDINATOR: 'ordinator', // 统筹人
   CHARGE: 'leader', // 负责人
-  PROJECT_MANAGER: 'dispatcher', // 项目经理
-  DEPT_LEADER: 'approver', // 部门领导
-  DEPT_LEADER_APPROVER: 'approver', // 部门领导_转正
-  DEPT_LEADER_AUDITOR: 'auditor' // 部门领导_离职
+  PROJECT_MANAGER: 'approver', // 项目经理
+  DEPT_LEADER: 'auditor' // 部门领导
+  // DEPT_LEADER_APPROVER: 'approver', // 部门领导_转正
+  // DEPT_LEADER_AUDITOR: 'auditor' // 部门领导_离职
 }
 // 用户类型_中文
 export const USER_TYPE_CN = {
