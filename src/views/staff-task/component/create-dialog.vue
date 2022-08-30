@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:15:03
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-30 11:49:35
+ * @LastEditTime: 2022-08-30 15:39:56
  * @Description:
 -->
 
@@ -67,7 +67,7 @@
                 placeholder="请选择任务类型"
                 clearable
                 class="input-width"
-                @change="handleTaskTypeChange(formData.taskType,selectedRecords)"
+                @change="handleTaskTypeChange(formData.taskType,[])"
               >
                 <el-option
                   v-for="(item) in taskTypeOptions"
@@ -86,23 +86,17 @@
                 <!-- 未勾选的数据 -->
                 <TaskTable
                   ref="taskTableRef"
-                  :records="selectedRecords"
+                  :records.sync="selectedRecords"
                   :type="type"
                   :task-type="formData.taskType"
                 />
-                <!-- @handleRowSelect="handleRowSelect"
-                 @handleSelectAll="getAllSelectedData"
-                -->
               </div>
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row>
+        <el-row v-if="type === 'detail'">
           <el-col :span="12">
-            <el-form-item
-              v-if="type === 'detail'"
-              label="创建时间:"
-            >
+            <el-form-item label="创建时间:">
               <el-input
                 v-model="createTime"
                 placeholder="请输入创建时间"
@@ -113,10 +107,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item
-              v-if="type === 'detail'"
-              label="创建人:"
-            >
+            <el-form-item label="创建人:">
               <el-input
                 v-model="formData.creatorName"
                 placeholder="请输入创建人"
@@ -168,12 +159,11 @@ export default {
   data() {
     return {
       selectedRecords: [],
-      selectedData: [],
       rules: formRules, // 验证规则
       formData: {
         taskInfoId: '',
         taskTitle: '',
-        executor: '', // 执行人6957613061678637056
+        executor: '', // 执行人
         executorName: '',
         status: '', // 在职状态（0：试用员工 1：正式员工 2：离职员工）
         taskType: '', //
@@ -205,7 +195,7 @@ export default {
   created() {},
   mounted() {},
   methods: {
-    // 获取选中的执行人的附带信息
+    // 获取选中的执行人的附带信息（在职状态）
     getSelectedRows(row) {
       this.formData.status = row.jobStatus
     },
@@ -215,16 +205,14 @@ export default {
       taskType && queryNeedStandardFullDetailByTaskType({
         taskType
       }).then(res => {
-        res.data.forEach(requiredItem => {
+        const requiredList = res.data
+        requiredList.forEach(requiredItem => {
           // 判断详情中是否已存在必选项
           const isExist = arr.some((selectedItem) => requiredItem.standardDetailId === selectedItem.standardDetailId)
           if (!isExist) {
             // 不存在则加入
             arr.push({
               ...requiredItem,
-              // standardEntryName: requiredItem.entryName,
-              // standardDetailName: requiredItem.detailName,
-              // leader: '',
               isNeed: true
             })
           }
@@ -241,25 +229,16 @@ export default {
         console.log('【 this.selectedRecords 】-241', this.selectedRecords)
       });
     },
-    // // TODO
-    // getSelectedData(val) {
-    //   // console.log('【 getSelectedData 】-258', val)
-    //   // this.records = val
-    //   // this.formData.taskDetailInfoDtoList = val.map(item => {
-    //   //   const { standardDetailId } = item
-    //   //   // leader
-    //   //   return { standardDetailId, leader: '6957613061678637056' }
-    //   // })
-    // },
     // 关闭弹框
     close() {
       this.$emit('update:visible', false);
       this.$refs['elForm'].resetFields();
     },
-    // 获取详细信息
+    // 编辑、查看——获取详细信息
     getDetailInfo() {
       getTaskInfoDetail({ taskInfoId: this.editData.taskInfoId }).then(res => {
         const result = res.data
+        // 表单数据
         for (const key in this.formData) {
           if (key === 'status') {
             this.formData[key] = result[key].toString() || ''
@@ -268,22 +247,16 @@ export default {
           }
           this.createTime = this.$moment(this.formData.createTime).format('YYYY-MM-DD')
         }
-        // 详情-列表数据回显
-        // if (this.type === 'detail') {
+        // 列表数据
         this.selectedRecords = result.taskDetailInfoDtoList
-        // } else {
-        // 编辑-列表数据回显
-        // this.handleTaskTypeChange(this.formData.taskType, result.taskDetailInfoDtoList)
-        // }
       });
     },
     // 提交表单信息
     handleConfirm() {
       const isTableFormValid = this.$refs.taskTableRef.validateTableForm()
-      // console.log('【 handleConfirm===selectedRecords 】-299', this.selectedRecords)
       this.formData.taskDetailInfoDtoList = this.selectedRecords.map(item => {
         const { standardDetailId, leader } = item
-        return { standardDetailId, leader: leader ? leader.toString() : '' }// : '6957613061678637056'
+        return { standardDetailId, leader: leader ? leader.toString() : '' }
       })
       if (!this.formData.taskDetailInfoDtoList.length) {
         this.$message.error('请选择任务');
@@ -293,9 +266,13 @@ export default {
         if (isTableFormValid && valid) {
           const funcName = this.editData.taskInfoId ? updateTaskInfo : saveTaskInfo;
           funcName(this.formData).then(res => {
-            this.$message.success('操作成功');
-            this.$emit('getTableData', '');
-            this.close();
+            if (res.success) {
+              this.$message.success(res.data);
+              this.$emit('getTableData', '');
+              this.close();
+            } else {
+              this.$message.success('操作失败');
+            }
           });
         }
       });

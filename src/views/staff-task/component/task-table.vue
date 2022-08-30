@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-07-26 14:43:35
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-30 14:43:54
+ * @LastEditTime: 2022-08-30 16:28:39
  * @Description:
 -->
 <template>
@@ -21,7 +21,6 @@
         stripe
         size="mini"
         @select="handleRowSelect"
-        @selection-change="handleSelectionChange"
         @select-all="handleSelectAll"
       >
         <!-- 新增、编辑 -->
@@ -134,7 +133,6 @@ export default {
       deep: true,
       immediate: true,
       handler(newVal) {
-        // console.log('【 newVal 】-122', newVal, this.type)
         this.selectedRecords = newVal
         if (this.type === 'detail') {
           // 详情的列表数据
@@ -142,23 +140,16 @@ export default {
         }
       }
     },
-    selectedRecords: {
-      deep: true,
-      immediate: true,
-      handler(newVal) {
-      }
-    },
     // 监听当前页的全选数据（判断全选或取消全选）
     allSelection: {
       deep: true,
       // immediate: true,
       handler(newVal, oldVal) {
-        // console.log('【 newVal, oldVal 】-155', newVal, oldVal)
         const newLen = newVal.length
         const oldLen = oldVal.length
         // 新增数据
         if (newLen >= oldLen) {
-          console.log('【全选  】-158',)
+          console.log('【全选  】-158')
           const allSelection = newVal
           // 过滤出新的数据
           const newSelection = allSelection.filter(multipleItem => {
@@ -174,7 +165,6 @@ export default {
           const newIds = newSelection.map(item => item.standardDetailId)
           this.tableForm.tableData.forEach((tableItem, index) => {
             if (newIds.includes(tableItem.standardDetailId)) {
-              console.log('【 tableItem 】-192', tableItem)
               tableItem.isChecked = true
             }
           })
@@ -189,7 +179,6 @@ export default {
             return !isExit// 过滤出新的不存在的数据
           })
           const deletedIds = deletedSelection.map(item => item.standardDetailId)
-          console.log('【 deletedSelection 】-177', deletedSelection)
           this.selectedRecords.forEach((item, index) => {
             if (deletedIds.includes(item.standardDetailId)) {
               this.selectedRecords.splice(index, 1)
@@ -197,13 +186,11 @@ export default {
           })
           this.tableForm.tableData.forEach((tableItem, index) => {
             if (deletedIds.includes(tableItem.standardDetailId)) {
-              // console.log('【 tableItem 】-192', tableItem)
               tableItem.isChecked = false
             }
           })
           // console.log('【取消全选  】-158',)
         }
-        // console.log('【 this.selectedRecords 】-172', this.selectedRecords)
       }
     },
     // 监听页数变化
@@ -251,21 +238,13 @@ export default {
           this.selectedRecords[index].leaderName = info.name
         }
       })
-      // console.log('【 info, row 】-184', info, row)
     },
     // 回显填写的数据
-    reviewData(arr, records) {
-      // console.log('【 arr ===】-177', arr, records)
+    reviewData(arr, selectedRecords) {
       let tableData = []
-      // 没有详情数据，直接返回请求的数据
-      // TODO
-      // if (!records.length) {
-      //   console.log('【 没有详情数据，直接返回请求的数据 】-182')
-      //   tableData = arr;
-      // } else {
       // 获取详情中的数据
       tableData = arr.map(item => {
-        const detailItem = records.filter((detailItem) => item.standardDetailId === detailItem.standardDetailId)
+        const detailItem = selectedRecords.filter((detailItem) => item.standardDetailId === detailItem.standardDetailId)
         return { ...item, ...detailItem[0], isChecked: false }
       })
       return tableData
@@ -298,18 +277,17 @@ export default {
     },
     // 勾选数据行的 Checkbox 时触发的事件
     handleRowSelect(selection, row) {
-      // 是否是勾选操作
+      // 判断是否是勾选操作
       const isChecked = selection.some((item) => {
         return item.standardDetailId === row.standardDetailId
       })
-      // 勾选操作,选中
+      // 标记列的勾选状态
+      row.isChecked = isChecked
+      // 勾选操作-选中
       if (isChecked) {
-        row.isChecked = true
         this.selectedRecords.push(row)
-        // console.log('勾选  】-284')
       } else {
-        row.isChecked = false
-        // console.log('【删除  】-284')
+      // 取消选中
         this.selectedRecords.forEach((item, index) => {
           if (item.standardDetailId === row.standardDetailId) {
             this.selectedRecords.splice(index, 1)
@@ -317,17 +295,17 @@ export default {
         })
       }
     },
-    // 当选择项发生变化时会触发该事件
-    handleSelectionChange() {},
     // 全选
     handleSelectAll(allSelection) {
-      this.allSelection = [...allSelection]// 必须用浅拷贝
+      this.allSelection = [...allSelection]// ☆必须用浅拷贝
     },
     // 验证表格
     validateTableForm() {
       let isTableFormValid = false
       this.$refs.tableFormRef.validate(valid => {
         isTableFormValid = valid
+        // 更新数据
+        this.$emit('update:records', this.selectedRecords)
       })
       return isTableFormValid
     }

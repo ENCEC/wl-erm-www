@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 17:38:09
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-30 10:17:09
+ * @LastEditTime: 2022-08-30 15:53:49
  * @Description: 我的任务-试用任务信息-弹框
 -->
 
@@ -113,8 +113,6 @@ export default {
     // 获取表格数据
     getDetailInfo() {
       queryTaskDetailInfo({
-        pageNo: '1', // this.params.currentPage,
-        pageSize: '10', // this.params.pageSize,
         taskInfoId: this.editData.taskInfoId // 6961151640916795392
       }).then(res => {
         console.log('【 res 】-115', res)

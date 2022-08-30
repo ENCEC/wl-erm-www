@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:15:03
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-30 10:37:04
+ * @LastEditTime: 2022-08-30 15:55:14
  * @Description:
 -->
 
@@ -458,8 +458,6 @@ export default {
     getDetailInfo() {
       // 获取用户类型
       queryTaskDetailInfo({
-        pageNo: '1', // this.params.currentPage,
-        pageSize: '10', // this.params.pageSize,
         taskInfoId: this.editData.taskInfoId // 6961151640916795392
       }).then(res => {
         this.userType = res.data.userType

@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 17:38:09
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-29 18:17:38
+ * @LastEditTime: 2022-08-30 15:57:03
  * @Description: 我的任务
 -->
 
@@ -28,7 +28,7 @@
     </table-component>
     <!-- 表格 End -->
     <!-- 试验任务 -->
-    <CreateDialog
+    <TaskDialog
       v-if="dialogVisible"
       :visible.sync="dialogVisible"
       :edit-data="editData"
@@ -60,7 +60,7 @@
 import filterPanel from '@/components/FilterPanel';
 import tableComponent from '@/components/TableComponent';
 import { filterConfig, tableConfig, columns, operates } from './config-data.js';
-import CreateDialog from './component/create-dialog';
+import TaskDialog from './component/task-dialog';
 import RegularDialog from './component/regular-dialog';
 import QuitDialog from './component/quit-dialog';
 import {
@@ -77,7 +77,7 @@ export default {
   components: {
     filterPanel,
     tableComponent,
-    CreateDialog,
+    TaskDialog,
     RegularDialog,
     QuitDialog
   },
