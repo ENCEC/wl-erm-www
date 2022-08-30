@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 17:38:09
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-24 11:07:31
+ * @LastEditTime: 2022-08-29 18:17:38
  * @Description: 我的任务
 -->
 
@@ -64,13 +64,13 @@ import CreateDialog from './component/create-dialog';
 import RegularDialog from './component/regular-dialog';
 import QuitDialog from './component/quit-dialog';
 import {
-  queryStaffTaskInfo,
-  queryLeaderTaskInfo,
-  queryOrdinatorTaskInfo,
-  queryTaskInfoByPage
+  // queryStaffTaskInfo,
+  // queryLeaderTaskInfo,
+  // queryOrdinatorTaskInfo,
+  // queryTaskInfoByPage,
+  queryTaskInfoPageByUemUser
 } from '@/api/my-task';
 import tableMix from '@/mixins/table-mixin';
-import { USER_TYPE } from '@/store/constant'
 
 export default {
   name: 'MyTask',
@@ -84,7 +84,6 @@ export default {
   mixins: [tableMix],
   data() {
     return {
-      USER_TYPE,
       // 任务状态
       MY_TASK_STATUS: {
         check: 1, // 审批中
@@ -125,17 +124,17 @@ export default {
     },
     // 获取表格数据
     getTableData() {
-      const funcInfo = {
-        // 不同用户类型调不同接口
-        '1': queryStaffTaskInfo, // 员工
-        '2': queryOrdinatorTaskInfo, // 统筹人
-        '3': queryLeaderTaskInfo, // 负责人
-        '4': queryTaskInfoByPage, // 项目经理
-        '5': queryTaskInfoByPage// 部门领导
-      }
-      const funcName = funcInfo[this.filterForm.userType]
+      // const funcInfo = {
+      //   // 不同用户类型调不同接口
+      //   '1': queryStaffTaskInfo, // 员工
+      //   '2': queryOrdinatorTaskInfo, // 统筹人
+      //   '3': queryLeaderTaskInfo, // 负责人
+      //   '4': queryTaskInfoByPage, // 项目经理
+      //   '5': queryTaskInfoByPage// 部门领导
+      // }
+      // const funcName = funcInfo[this.filterForm.userType]
       // this.listLoading = true;
-      funcName({
+      queryTaskInfoPageByUemUser({
         pageNo: this.params.currentPage,
         pageSize: this.params.pageSize,
         ...this.filterForm

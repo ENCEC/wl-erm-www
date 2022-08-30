@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 17:38:09
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-19 14:06:44
+ * @LastEditTime: 2022-08-30 11:01:44
  * @Description: 我的任务-试用任务信息-弹框-表格
 -->
 
@@ -154,6 +154,10 @@ export default {
     userType: {
       type: String,
       default: '1'
+    },
+    tableData: {
+      type: Array,
+      default: () => []
     }
   },
   data() {
@@ -199,10 +203,18 @@ export default {
       handler(newVal, oldVal) {
         this.oldPage = oldVal
       }
+    },
+    tableData: {
+      deep: true,
+      immediate: true,
+      handler(newVal) {
+        this.getTableData();
+        console.log('【 tableData 】-211', this.tableData)
+      }
     }
   },
   created() {
-    this.getTableData();
+    // this.getTableData();
     // console.log('【 table-userType 】-81', this.userType)
   },
   mounted() {},
@@ -220,7 +232,7 @@ export default {
             type: 'warning'
           }
         ).then(async() => {
-          await this.saveCurPageData(false)// 保存当前页数据
+          await this.saveCurPageData()// 保存当前页数据
           this.params.currentPage = curPage// 切换到下一页
           // console.log('【 保存成功，切换到下一页 】-227')
           this.getTableData();
@@ -237,15 +249,22 @@ export default {
     },
     // 获取表格数据
     getTableData() {
-      queryTaskDetailInfo({
-        pageNo: this.params.currentPage,
-        pageSize: this.params.pageSize,
-        taskInfoId: this.taskInfoId // 6961151640916795392
-      }).then(res => {
-        const _res = res.data
-        this.tableForm.tableData = _res.records;
-        this.params.totalRecord = _res.totalRecord;
-      });
+      // queryTaskDetailInfo({
+      //   pageNo: this.params.currentPage,
+      // console.log('【 this.params.currentPag 】-254', this.params.currentPag)
+      //   pageSize: this.params.pageSize,
+      //   taskInfoId: this.taskInfoId // 6961151640916795392
+      // }).then(res => {
+      // const _res = res.data
+      // this.tableForm.tableData = _res.records;
+      // this.params.totalRecord = _res.totalRecord;
+      // });
+      const startIndex = (this.params.currentPage - 1) * 10
+      const endIndex = startIndex + 10
+      // console.log('【 start 】-263', startIndex, endIndex)
+      this.tableForm.tableData = this.tableData.slice(startIndex, endIndex);
+      // console.log('【  this.tableForm.tableData  】-267', this.tableForm.tableData)
+      this.params.totalRecord = this.tableData.length;
     },
     // 保存当前页数据
     saveCurPageData() {
@@ -277,8 +296,13 @@ export default {
             funcName = updateTaskDetailStatus
           }
           funcName(tableFormData).then(res => {
-            this.$message.success(res.data);
-            resolve()
+            if (res.success) {
+              this.$message.success(res.data);
+              resolve()
+            } else {
+              this.$message.error(res.errorMessages[0])
+              // reject()
+            }
           });
         } else {
           reject()
