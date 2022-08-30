@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-07-26 14:43:35
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-30 16:28:39
+ * @LastEditTime: 2022-08-30 18:27:19
  * @Description:
 -->
 <template>
@@ -244,8 +244,13 @@ export default {
       let tableData = []
       // 获取详情中的数据
       tableData = arr.map(item => {
-        const detailItem = selectedRecords.filter((detailItem) => item.standardDetailId === detailItem.standardDetailId)
-        return { ...item, ...detailItem[0], isChecked: false }
+        const detailArr = selectedRecords.filter((detailItem) => item.standardDetailId === detailItem.standardDetailId)
+        const detailItem = detailArr[0] || {}
+        // console.log('【 detailItem 】-248', detailItem)
+        const { leader, leaderName, planEndDate } = detailItem
+        return { ...item, leader, leaderName, planEndDate,
+          // ...detailItem[0],
+          isChecked: false }
       })
       return tableData
     },
