@@ -88,7 +88,7 @@
 <script>
 import { mapGetters } from 'vuex';
 import { queryStandardDetail } from '@/api/standard-detail.js';
-import { queryUemUser } from '@/api/standard-entry.js';
+import { queryAllWorkUserList } from '@/api/common';
 import { saveOffer, downloadExternalFile, batchUploadFile } from '@/api/staff-query.js';
 import UploadFileMultiple from '@/components/CurrentSystem/UploadFileMultiple';
 
@@ -303,7 +303,7 @@ export default {
     },
     approverQueryMethod({ keyword, pageSize, currentPage }) {
       return new Promise((resolve) => {
-        queryUemUser({
+        queryAllWorkUserList({
           name: keyword,
           pageSize,
           pageNo: currentPage
