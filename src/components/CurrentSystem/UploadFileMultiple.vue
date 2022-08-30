@@ -19,17 +19,18 @@
     <div slot="trigger">
       <el-button
         :loading="buttonLoading"
-        :disabled="list.length>0"
+        :disabled="list.length>1"
         size="medium"
         type="primary"
       >上传</el-button>
     </div>
     <div v-for="(item, index) in list" :key="index" v-loading="buttonLoading" class="sys-file-list-item">
       <i class="el-icon-s-order" order />
-      <span class="file-name" @click="handleDownload">
-        {{ userName + type }}
+      <!-- @click="handleDownload(item)" -->
+      <span class="file-name">
+        {{ item.name }}
       </span>
-      <i class="el-icon-close close" @click="handleDelete(item)" />
+      <i class="el-icon-close close" @click="handleDelete(index)" />
       <i class="el-icon-check check" />
     </div>
     <div slot="tip" class="el-upload__tip">只能上传pdf文件，且不超过2MB</div>
@@ -125,7 +126,7 @@ export default {
           console.log(err);
         });
     },
-    handleUpload() {
+    handleUpload(uploadObject) {
       this.$emit('fileListChange', this.list)
     },
     sysUploadFile() {
@@ -144,9 +145,8 @@ export default {
     },
     beforeUpload(file) {
       // this.list.push(file);
-      // this.$refs.uploadFile.fileList = [];
 
-      this.$refs.uploadFile.fileList = [];
+      // this.$refs.uploadFileMultiple.fileList = [];
       const isPDF = file.type === 'application/pdf';
       const isLtNM = file.size / 1024 / 1024 < 2;
       if (!isPDF) {
@@ -161,10 +161,9 @@ export default {
       return isPDF && isLtNM
     },
     beforeRemove() {
-      debugger
       // return this.$confirm(`确定移除 ${file.name}？`);
     },
-    handleDelete(file) {
+    handleDelete(index) {
       this.$confirm(
         '您确定要删除该文件吗?删除后不可恢复',
         '提示',
@@ -175,10 +174,9 @@ export default {
         }
       )
         .then(() => {
-          const index = this.list.findIndex((item) => {
-            item.fileKey === file.fileKey
-          })
           this.list.splice(index, 1)
+          this.$refs.uploadFileMultiple.fileList.splice(index, 1)
+          this.$emit('fileListChange', this.list)
         })
         .catch(() => {
           this.$message({
@@ -186,6 +184,10 @@ export default {
             message: '已取消删除'
           });
         });
+    },
+    reset() {
+      this.$refs.uploadFileMultiple.clearFiles()
+      this.list = []
     }
   }
 };

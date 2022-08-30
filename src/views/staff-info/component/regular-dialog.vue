@@ -56,7 +56,7 @@
               type="primary"
               @click="handleDownload"
             >申请表下载</el-button>
-            <upload-file accept=".pdf" :resume="form.staffApplication" type="转正申请表" :user-id="userId" :user-name="name" @fileListChange="fileListChange" />
+            <upload-file-multiple ref="regularUploadFile" accept=".pdf" :resume="form.staffApplication" type="转正申请表" :user-id="userId" :user-name="name" @fileListChange="fileListChange" />
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -89,8 +89,8 @@
 import { mapGetters } from 'vuex';
 import { queryStandardDetail } from '@/api/standard-detail.js';
 import { queryUemUser } from '@/api/standard-entry.js';
-import { saveOffer, downloadExternalFile } from '@/api/staff-query.js';
-import UploadFile from '@/components/CurrentSystem/UploadFile';
+import { saveOffer, downloadExternalFile, batchUploadFile } from '@/api/staff-query.js';
+import UploadFileMultiple from '@/components/CurrentSystem/UploadFileMultiple';
 
 // import { saveOffer, downloadExternalFile, uploadExternalFile, queryOfferInfo, queryLeaveInfo, queryDismissInfo, preservationUemUser, saveLeave, queryUemUser, getUemUser } from '@/api/staff-query.js';
 // const positiveTypeOptions = [
@@ -118,9 +118,15 @@ const approverColumns = [
 export default {
   name: 'RegularDialog',
   components: {
-    UploadFile
+    UploadFileMultiple
   },
   data() {
+    var validateStaffApplication = (rule, value, callback) => {
+      if (this.fileList.length < 2) {
+        callback(new Error('请上传试用期考核表和试用期工作总结'));
+      }
+      callback();
+    };
     return {
       buttonLoading: false,
       dialogVisible: false,
@@ -148,7 +154,7 @@ export default {
           { required: true, message: '请选择审批人', trigger: 'blur' }
         ],
         staffApplication: [
-          { required: true, message: '请上传转正申请表', trigger: 'blur' }
+          { validator: validateStaffApplication, trigger: 'blur' }
         ]
       }
     };
@@ -193,7 +199,6 @@ export default {
       };
       downloadExternalFile(params)
         .then((res) => {
-          debugger
           const fileName = res.fileName;
           console.log(res);
           const base = res.file; // 你要传入的base64数据
@@ -225,42 +230,30 @@ export default {
         });
     },
     handleUploadFileMultiple() {
-      // var suffix = uploadObject.file.name.substring(
-      //   uploadObject.file.name.lastIndexOf('.') + 1
-      // ); // txt
-      // var fileName = uploadObject.file.name.substring(
-      //   0,
-      //   uploadObject.file.name.lastIndexOf('.')
-      // );
-
-      // const params = {
-      //   systemId: 'YYDM200013',
-      //   fileType: suffix,
-      //   fileName: fileName,
-      //   file: uploadObject.file
-      // };
-      // this.formdata = new FormData();
-      // this.formdata.append('fileType', params.fileType);
-      // this.formdata.append('fileName', params.fileName);
-      // this.formdata.append('systemId', 'YYDM200013');
-      // this.formdata.append('file', params.file);
-      // this.formdata.append('uemUserId', this.userId);
-      // this.formdata.append('type', this.type);
-      // uploadExternalFile(this.formdata)
-      //   .then((res) => {
-      //     // this.$emit('resumeChange', Object.keys(res.data)[0]);
-      //     // this.$message.success('上传成功');
-      //   })
-      //   .catch(() => {
-      //     // this.fileList = []
-      //     this.$message.error('文件上传失败');
-      //   });
+      var fileType = ['pdf', 'pdf']
+      const params = {
+        systemId: 'YYDM200013',
+        fileType: fileType,
+        file: this.fileList
+      };
+      this.formdata = new FormData();
+      this.formdata.append('fileType', params.fileType);
+      this.formdata.append('systemId', params.systemId);
+      this.formdata.append('file', params.file[0]);
+      this.formdata.append('file', params.file[1]);
+      this.formdata.append('uemUserId', this.userId);
+      batchUploadFile(this.formdata)
+        .then((res) => {
+        })
+        .catch(() => {
+          // this.fileList = []
+          this.$message.error('文件上传失败');
+        });
     },
     handleSumbit() {
       this.$refs.regularForm.validate((valid) => {
         if (valid) {
           this.buttonLoading = true;
-          this.handleUploadFileMultiple()
           const params = Object.assign({}, this.form, {
             uemUserName: this.name,
             uemUserId: this.userId
@@ -269,6 +262,7 @@ export default {
             .then((res) => {
               if (res.success) {
                 this.$message.success(res.data);
+                this.handleUploadFileMultiple()
                 this.dialogVisible = false;
                 this.buttonLoading = false;
               } else {
@@ -285,6 +279,7 @@ export default {
     },
     handleClose() {
       this.$nextTick(() => {
+        this.$refs.regularUploadFile.reset()
         this.resetForm();
         this.$refs.regularForm.clearValidate();
       });
