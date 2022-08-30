@@ -64,8 +64,8 @@ import filterPanel from '@/components/FilterPanel';
 import formPanel from '@/components/FormPanel';
 // 条目状态
 const statusTypeOptions = [
-  { key: 1, display_name: '启用' },
-  { key: 0, display_name: '禁用' },
+  { key: 0, display_name: '启用' },
+  { key: 1, display_name: '禁用' },
   { key: '', display_name: '所有' }
 ];
 // 条目类型
@@ -581,6 +581,9 @@ export default {
     this.initEntryTypeSelect();
     this.initTechnicalSelect();
   },
+  // destroyed(){
+  //   this.entryTypeOptions=[]
+  // },
   methods: {
     getDisplayInit(id) {
       this.$nextTick(() => {
@@ -603,15 +606,14 @@ export default {
       };
       querySysDictType(params)
         .then((res) => {
+          var arr = []
           res.data.forEach((item) => {
-            this.entryTypeOptions.push({
+            arr.push({
               key: item.dictName,
               display_name: item.dictName
             });
           });
-          this.entryTypeOptions = this.entryTypeOptions.filter(function(item, index, self) {
-            return self.findIndex(el => el.key === item.key) === index
-          })
+          this.formConfig.formItemList[1].options = arr
         })
         .catch(() => {
           this.$message.error('初始化条目类型失败');
@@ -682,7 +684,7 @@ export default {
           res.data.records.forEach((item) => {
             this.roleOptions.push({
               key: item.sysRoleId,
-              display_name: item.roleName
+              display_name: item.remark
             });
           });
         })
@@ -704,6 +706,7 @@ export default {
       queryStandardEntry(this.listQuery).then((response) => {
         this.list = response.data.records;
         this.list.forEach((item, index) => {
+          item.status = !(item.status)
           item.count =
             (this.listQuery.currentPage - 1) * this.listQuery.pageSize +
             index +
@@ -756,7 +759,7 @@ export default {
       this.getList();
     },
     handleModifyStatus(row) {
-      const params = Object.assign({}, row);
+      const params = Object.assign({}, row, { status: !(row.status) });
       updateStatus(params)
         .then(() => {
           this.$message({

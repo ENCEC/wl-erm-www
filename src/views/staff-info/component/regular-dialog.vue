@@ -42,21 +42,21 @@
         </el-col>
         <el-col :span="24">
           <el-form-item label="转正程序:">
-            <el-table stripe :data="tableData" style="width: 100%">
-              <el-table-column prop="count" label="序号" />
-              <el-table-column prop="entryName" label="规范条目" />
+            <el-table class="table-regular" border stripe :data="tableData" style="width: 100%">
+              <el-table-column prop="count" label="序号" width="50" />
+              <el-table-column prop="entryName" label="规范条目" width="120" />
               <el-table-column prop="detailName" label="程序名称" />
-              <el-table-column prop="actionSerialNum" label="执行顺序" />
+              <el-table-column prop="actionSerialNum" label="执行顺序" width="100" />
             </el-table>
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="附件:">
+          <el-form-item label="附件:" prop="staffApplication">
             <el-button
               type="primary"
               @click="handleDownload"
             >申请表下载</el-button>
-            <upload-file accept=".pdf" :resume="form.staffApplication" type="转正申请表" :user-id="userId" :user-name="name" />
+            <upload-file accept=".pdf" :resume="form.staffApplication" type="转正申请表" :user-id="userId" :user-name="name" @fileListChange="fileListChange" />
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -127,13 +127,15 @@ export default {
       positiveTypeOptions: this.$dict.getDictOptions('OFFER_TYPE'),
       approverColumns,
       tableData: [],
+      fileList: [],
       form: {
         uemUserName: '',
         applyDate: '',
         offerType: '',
         approver: '',
+        staffApplication: ''
         // standardDetailId: '6960887517290696704',
-        standardEntryId: ''
+        // standardEntryId: ''
       },
       rules: {
         applyDate: [
@@ -144,6 +146,9 @@ export default {
         ],
         approver: [
           { required: true, message: '请选择审批人', trigger: 'blur' }
+        ],
+        staffApplication: [
+          { required: true, message: '请上传转正申请表', trigger: 'blur' }
         ]
       }
     };
@@ -155,6 +160,9 @@ export default {
     this.getTableData();
   },
   methods: {
+    fileListChange(list) {
+      this.fileList = [].concat(list)
+    },
     open() {
       this.dialogVisible = true;
     },
@@ -166,23 +174,27 @@ export default {
       };
       queryStandardDetail(params).then((response) => {
         this.tableData = response.data.records || [];
-        if (this.tableData.length > 0) {
-          this.form.standardEntryId = this.tableData[0].standardEntryId;
-        }
+        // if (this.tableData.length > 0) {
+        //   this.form.standardEntryId = this.tableData[0].standardEntryId;
+        // }
         this.tableData.forEach((item, index) => {
           item.count = index + 1;
         });
       });
     },
-    handleDownload() {
+    async handleDownload() {
+      await this.downloadMethod('fed56a9f-02fa-45ac-8fc7-a4c2c68fe309.doc')
+      await this.downloadMethod('2b34de16-d50f-4962-beec-04b42e67d052.doc')
+    },
+    downloadMethod(fileKey) {
       const params = {
         systemId: 'YYDM200013',
-        // fileKey:''
-        fileKey: '120df0ff-8d74-4868-a5b9-bcb34333df0e.pdf'
+        fileKey: fileKey
       };
       downloadExternalFile(params)
         .then((res) => {
-          const fileName = res.file.substring(0, res.file.lastIndexOf('.'));
+          debugger
+          const fileName = res.fileName;
           console.log(res);
           const base = res.file; // 你要传入的base64数据
           const bstr = window.atob(base);
@@ -193,15 +205,14 @@ export default {
           }
           // 确定解析格式，可能可以变成img，没有深入研究
           const blob = new Blob([u8arr], {
-            type: 'application/pdf;chartset=UTF-8'
+            type: 'application/msword;chartset=UTF-8'
           });
           const url = window.URL.createObjectURL(blob);
-          // 在新窗口打开该pdf用这个
-          window.open(url);
-          // 下载dpf用这个
+          // 在新窗口打开该文件用这个
+          // window.open(url);
           const a = document.createElement('a');
           a.setAttribute('href', url);
-          a.setAttribute('download', fileName + '.pdf');
+          a.setAttribute('download', fileName);
           a.setAttribute('target', '_blank'); // 打开一个新的窗口
           document.body.appendChild(a);
           a.click();
@@ -213,10 +224,43 @@ export default {
           console.log(err);
         });
     },
+    handleUploadFileMultiple() {
+      // var suffix = uploadObject.file.name.substring(
+      //   uploadObject.file.name.lastIndexOf('.') + 1
+      // ); // txt
+      // var fileName = uploadObject.file.name.substring(
+      //   0,
+      //   uploadObject.file.name.lastIndexOf('.')
+      // );
+
+      // const params = {
+      //   systemId: 'YYDM200013',
+      //   fileType: suffix,
+      //   fileName: fileName,
+      //   file: uploadObject.file
+      // };
+      // this.formdata = new FormData();
+      // this.formdata.append('fileType', params.fileType);
+      // this.formdata.append('fileName', params.fileName);
+      // this.formdata.append('systemId', 'YYDM200013');
+      // this.formdata.append('file', params.file);
+      // this.formdata.append('uemUserId', this.userId);
+      // this.formdata.append('type', this.type);
+      // uploadExternalFile(this.formdata)
+      //   .then((res) => {
+      //     // this.$emit('resumeChange', Object.keys(res.data)[0]);
+      //     // this.$message.success('上传成功');
+      //   })
+      //   .catch(() => {
+      //     // this.fileList = []
+      //     this.$message.error('文件上传失败');
+      //   });
+    },
     handleSumbit() {
       this.$refs.regularForm.validate((valid) => {
         if (valid) {
           this.buttonLoading = true;
+          this.handleUploadFileMultiple()
           const params = Object.assign({}, this.form, {
             uemUserName: this.name,
             uemUserId: this.userId
@@ -250,9 +294,17 @@ export default {
         uemUserName: '',
         applyDate: '',
         offerType: '',
-        approver: '',
-        standardEntryId: ''
+        approver: ''
+        // standardEntryId: ''
       };
+    },
+    // 文件上传后
+    handleResumeChange(resume) {
+      this.form.staffApplication = resume || '';
+    },
+    // 文件删除后
+    handleDeleteChange() {
+      this.form.staffApplication = '';
     },
     approverQueryMethod({ keyword, pageSize, currentPage }) {
       return new Promise((resolve) => {
@@ -276,4 +328,7 @@ export default {
 </script>
 
 <style lang="scss">
+.table-regular{
+
+}
 </style>

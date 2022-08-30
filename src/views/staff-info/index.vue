@@ -233,6 +233,7 @@
                   v-loading="technicalOptionsLoading"
                   placeholder="请选择岗位职称"
                   clearable
+                  disabled
                   class="input-width"
                   @change="handleTechnicalChange"
                 >
@@ -254,6 +255,7 @@
                   v-model="form.staffDutyId"
                   placeholder="请选择入职岗位"
                   clearable
+                  disabled
                   class="input-width"
                   @change="handlePostChange"
                 >

@@ -62,8 +62,8 @@ import filterPanel from '@/components/FilterPanel';
 import formPanel from '@/components/FormPanel';
 // 条目状态
 const statusTypeOptions = [
-  { key: true, display_name: '启用' },
-  { key: false, display_name: '禁用' },
+  { key: 0, display_name: '启用' },
+  { key: 1, display_name: '禁用' },
   { key: '', display_name: '所有' }
 ];
 // 条目类型
@@ -261,13 +261,7 @@ export default {
         {
           prop: 'itemType',
           label: '条目类型',
-          align: 'center',
-          formatter: (row) => {
-            const find = this.entryTypeOptions.find((item) => {
-              return item.key === row.itemType
-            })
-            return find ? find.display_name : ''
-          }
+          align: 'center'
         },
         {
           prop: 'entryName',
@@ -297,6 +291,7 @@ export default {
           prop: 'status',
           label: '状态',
           align: 'center',
+          type: 'entry',
           width: '100',
           component: 'switch',
           method: (row, status) => {
@@ -391,9 +386,11 @@ export default {
     };
   },
   created() {
-    this.getList();
     this.initEntryOptions();
     this.initEntryTypeSelect();
+  },
+  mounted() {
+    this.getList();
   },
   methods: {
     initEntryTypeSelect() {
@@ -402,19 +399,22 @@ export default {
       };
       querySysDictType(params)
         .then((res) => {
+          var arr = []
           res.data.forEach((item) => {
-            this.entryTypeOptions.push({
+            arr.push({
               key: item.dictName,
               display_name: item.dictName
             });
           });
+          this.formConfig.formItemList[0].options = arr
+          this.filterConfig.filterList[3].options = arr
         })
         .catch(() => {
           this.$message.error('初始化条目类型失败');
         });
     },
     async handleEntryTypeChange(entryType) {
-      this.entryLoading = true
+      this.entryLoading = true;
       const arr = this.entryOptions.filter((item) => {
         return item.itemType === entryType;
       });
@@ -441,7 +441,7 @@ export default {
           if (arr) {
             this.formConfig.formItemList[1].options = arr;
             this.filterConfig.filterList[1].options = arr;
-            this.entryLoading = false
+            this.entryLoading = false;
           } else {
             this.formConfig.formItemList[1].options = this.entryOptions;
             this.filterConfig.filterList[1].options = this.entryOptions;
@@ -465,6 +465,7 @@ export default {
       queryStandardDetail(this.listQuery).then((response) => {
         this.list = response.data.records;
         this.list.forEach((item, index) => {
+          item.status = !(item.status)
           item.count =
             (this.listQuery.currentPage - 1) * this.listQuery.pageSize +
             index +
@@ -490,7 +491,7 @@ export default {
       this.getList();
     },
     handleModifyStatus(row) {
-      const params = Object.assign({}, row);
+      const params = Object.assign({}, row, { status: !(row.status) });
       standardDetailStartStop(params)
         .then(() => {
           this.$message({
@@ -506,9 +507,9 @@ export default {
         });
     },
     handleAdd() {
-      this.initEntryOptions()
-      this.listQuery.entryName = ''
-      this.listQuery.itemType = ''
+      this.initEntryOptions();
+      this.listQuery.entryName = '';
+      this.listQuery.itemType = '';
       this.dialogStatus = 'create';
       this.dialogFormVisible = true;
       this.$nextTick(() => {
@@ -516,9 +517,9 @@ export default {
       });
     },
     handleUpdate(row) {
-      this.initEntryOptions()
-      this.listQuery.entryName = ''
-      this.listQuery.itemType = ''
+      this.initEntryOptions();
+      this.listQuery.entryName = '';
+      this.listQuery.itemType = '';
       this.temp = Object.assign({}, row); // copy obj
       this.dialogStatus = 'update';
       this.dialogFormVisible = true;
@@ -650,7 +651,7 @@ export default {
       this.$nextTick(() => {
         this.handleResetForm();
         this.initEntryOptions();
-        this.dialogButtonLoading = false
+        this.dialogButtonLoading = false;
       });
       this.$refs['formPanel'].$refs['dataForm'].clearValidate();
     }

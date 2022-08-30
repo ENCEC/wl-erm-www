@@ -173,6 +173,7 @@ export default {
       }
     },
     openMenu(tag, e) {
+      debugger
       const menuMinWidth = 105
       const offsetLeft = this.$el.getBoundingClientRect().left // container margin left
       const offsetWidth = this.$el.offsetWidth // container width
@@ -185,7 +186,7 @@ export default {
         this.left = left
       }
 
-      this.top = e.clientY
+      this.top = e.clientY - 55
       this.visible = true
       this.selectedTag = tag
     },
