@@ -68,10 +68,9 @@
 
 <script>
 import { mapGetters } from 'vuex';
+import { queryAllWorkUserList } from '@/api/common';
 import { queryStandardDetail } from '@/api/standard-detail.js';
-import { queryUemUser } from '@/api/standard-entry.js';
 import { saveLeave } from '@/api/staff-query.js';
-// import { saveOffer, downloadExternalFile, uploadExternalFile, queryOfferInfo, queryLeaveInfo, queryDismissInfo, preservationUemUser, saveLeave, queryUemUser, getUemUser } from '@/api/staff-query.js';
 
 const approverColumns = [
   {
@@ -189,7 +188,7 @@ export default {
     },
     approverQueryMethod({ keyword, pageSize, currentPage }) {
       return new Promise((resolve) => {
-        queryUemUser({
+        queryAllWorkUserList({
           name: keyword,
           pageSize,
           pageNo: currentPage
