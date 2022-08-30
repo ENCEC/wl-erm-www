@@ -62,7 +62,7 @@ import {
 import { queryTechnicalNameBySelect, queryStaffDutyBySelect, queryDepartmentBySelect } from '@/api/select-02';
 import tableMix from '@/mixins/table-mixin';
 export default {
-  name: 'StaffManage',
+  name: 'StaffQuery',
   components: {
     filterPanel,
     tableComponent,

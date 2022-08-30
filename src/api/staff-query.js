@@ -38,6 +38,15 @@ export function uploadExternalFile(data) {
   });
 }
 
+// 8082端口批量上传文件
+export function batchUploadFile(data) {
+  return request({
+    url: shareAuthPrefix + '/uemUserManage/batchUploadFile',
+    method: 'post',
+    data
+  });
+}
+
 // 8082端口删除文件
 export function deleteResume(params) {
   return request({

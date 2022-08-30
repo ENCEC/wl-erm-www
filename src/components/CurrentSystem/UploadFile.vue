@@ -175,6 +175,7 @@ export default {
     handleExceed() {
     },
     beforeUpload(file) {
+      debugger
       // this.list.push(file);
       // this.$refs.uploadFile.fileList = [];
 

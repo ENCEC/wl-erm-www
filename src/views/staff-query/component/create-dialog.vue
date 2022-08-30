@@ -16,8 +16,8 @@
       <div class="btn-exchange">
         <el-button type="primary" @click="handleLookBasic">基本信息</el-button>
         <el-button v-if="form.jobStatus==='1'" type="primary" @click="handleLookRegular">转正评语</el-button>
-        <el-button v-if="form.leaveReason" type="primary" @click="handleLookLeave">离职原因</el-button>
-        <el-button v-if="form.dismissReason" type="primary" @click="handleLookDismiss">辞退原因</el-button>
+        <el-button v-if="form.leaveReason&&form.jobStatus==='2'" type="primary" @click="handleLookLeave">离职原因</el-button>
+        <el-button v-if="form.dismissReason&&form.jobStatus==='2'" type="primary" @click="handleLookDismiss">辞退原因</el-button>
       </div>
       <el-form
         ref="elForm"
@@ -481,7 +481,7 @@
                 <el-form :model="form" label-width="80px" label-position="right">
                   <el-form-item label="附件:" prop="interviewerName" label-width="80px">
                     <el-button v-if="form.resume" class="btn-attachment" type="text" @click="handleLookResume">{{ form.name }}个人简历</el-button>
-                    <el-button v-if="form.staffApplication" class="btn-attachment" type="text" @click="handleLookQuestionnaire">{{ form.name }}转正申请表</el-button>
+                    <el-button v-if="form.staffApplication" class="btn-attachment" type="text" @click="handleLookQuestionnaire">{{ form.name }}转正申请材料</el-button>
                   </el-form-item>
                 </el-form>
               </el-col>
@@ -700,14 +700,18 @@ export default {
         });
     },
     // 查看个人’试用期调查表‘
-    handleLookQuestionnaire() {
+    async handleLookQuestionnaire() {
+      await this.downloadMethod('fed56a9f-02fa-45ac-8fc7-a4c2c68fe309.doc')
+      await this.downloadMethod('2b34de16-d50f-4962-beec-04b42e67d052.doc')
+    },
+    downloadMethod(fileKey) {
       const params = {
         systemId: 'YYDM200013',
-        fileKey: this.form.staffApplication
+        fileKey: fileKey
       };
       downloadExternalFile(params)
         .then((res) => {
-          const fileName = res.file.substring(0, res.file.lastIndexOf('.'));
+          const fileName = res.fileName;
           console.log(res);
           const base = res.file; // 你要传入的base64数据
           const bstr = window.atob(base);
@@ -718,15 +722,14 @@ export default {
           }
           // 确定解析格式，可能可以变成img，没有深入研究
           const blob = new Blob([u8arr], {
-            type: 'application/pdf;chartset=UTF-8'
+            type: 'application/msword;chartset=UTF-8'
           });
           const url = window.URL.createObjectURL(blob);
-          // 在新窗口打开该pdf用这个
-          window.open(url);
-          // 下载dpf用这个
+          // 在新窗口打开该文件用这个
+          // window.open(url);
           const a = document.createElement('a');
           a.setAttribute('href', url);
-          a.setAttribute('download', fileName + '.pdf');
+          a.setAttribute('download', fileName);
           a.setAttribute('target', '_blank'); // 打开一个新的窗口
           document.body.appendChild(a);
           a.click();
@@ -734,8 +737,8 @@ export default {
           // 删除url绑定
           window.URL.revokeObjectURL(url);
         })
-        .catch(() => {
-          this.$message.error('下载文件失败')
+        .catch((err) => {
+          console.log(err);
         });
     },
     // 点击‘基本信息’按钮
