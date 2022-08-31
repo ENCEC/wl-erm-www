@@ -565,7 +565,11 @@
 </template>
 <script>
 import { queryStaffById, updateStaff } from '@/api/staff-manage';
-import { queryOfferInfo, downloadExternalFile } from '@/api/staff-query';
+import {
+  downloadExternalFile
+} from '@/api/common';
+import { downloadFile } from '@/utils/util'
+import { queryOfferInfo } from '@/api/staff-query';
 // import { preservationUemUser } from '@/api/staff-query.js';
 import { queryTechnicalNameBySelect, queryProjectNameBySelect } from '@/api/select-02';
 import { formRules } from './rules';
@@ -668,32 +672,12 @@ export default {
       };
       downloadExternalFile(params)
         .then((res) => {
-          const fileName = res.file.substring(0, res.file.lastIndexOf('.'));
-          console.log(res);
-          const base = res.file; // 你要传入的base64数据
-          const bstr = window.atob(base);
-          let n = bstr.length;
-          const u8arr = new Uint8Array(n);
-          while (n--) {
-            u8arr[n] = bstr.charCodeAt(n);
+          if (res.success) {
+            const fileName = '个人简历'// res.fileName.substring(0, res.fileName.lastIndexOf('.'));
+            downloadFile(res.data, fileName)
+          } else {
+            this.$message.error(res.errorMessages[0])
           }
-          // 确定解析格式，可能可以变成img，没有深入研究
-          const blob = new Blob([u8arr], {
-            type: 'application/pdf;chartset=UTF-8'
-          });
-          const url = window.URL.createObjectURL(blob);
-          // 在新窗口打开该pdf用这个
-          window.open(url);
-          // 下载dpf用这个
-          const a = document.createElement('a');
-          a.setAttribute('href', url);
-          a.setAttribute('download', fileName + '.pdf');
-          a.setAttribute('target', '_blank'); // 打开一个新的窗口
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
-          // 删除url绑定
-          window.URL.revokeObjectURL(url);
         })
         .catch(() => {
           this.$message.error('下载文件失败')
@@ -701,8 +685,9 @@ export default {
     },
     // 查看个人’试用期调查表‘
     async handleLookQuestionnaire() {
-      await this.downloadMethod('fed56a9f-02fa-45ac-8fc7-a4c2c68fe309.doc')
-      await this.downloadMethod('2b34de16-d50f-4962-beec-04b42e67d052.doc')
+      const arr = this.form.staffApplication.split(',')
+      await this.downloadMethod(arr[0])
+      await this.downloadMethod(arr[1])
     },
     downloadMethod(fileKey) {
       const params = {
@@ -711,31 +696,12 @@ export default {
       };
       downloadExternalFile(params)
         .then((res) => {
-          const fileName = res.fileName;
-          console.log(res);
-          const base = res.file; // 你要传入的base64数据
-          const bstr = window.atob(base);
-          let n = bstr.length;
-          const u8arr = new Uint8Array(n);
-          while (n--) {
-            u8arr[n] = bstr.charCodeAt(n);
+          if (res.success) {
+            const fileName = '文件'// res.fileName.substring(0, res.fileName.lastIndexOf('.'));
+            downloadFile(res.data, fileName)
+          } else {
+            this.$message.error(res.errorMessages[0])
           }
-          // 确定解析格式，可能可以变成img，没有深入研究
-          const blob = new Blob([u8arr], {
-            type: 'application/msword;chartset=UTF-8'
-          });
-          const url = window.URL.createObjectURL(blob);
-          // 在新窗口打开该文件用这个
-          // window.open(url);
-          const a = document.createElement('a');
-          a.setAttribute('href', url);
-          a.setAttribute('download', fileName);
-          a.setAttribute('target', '_blank'); // 打开一个新的窗口
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
-          // 删除url绑定
-          window.URL.revokeObjectURL(url);
         })
         .catch((err) => {
           console.log(err);

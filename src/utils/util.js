@@ -87,3 +87,32 @@ export function downloadFile(fileData, fileName) {
   // 删除url绑定
   window.URL.revokeObjectURL(url);
 }
+
+// DOC下载
+export function downloadDocFile(fileData, fileName) {
+  // console.log('【 downloadFile 】-64', fileData)
+  const base = fileData// 你要传入的base64数据
+  const bstr = window.atob(base);
+  let n = bstr.length;
+  const u8arr = new Uint8Array(n);
+  while (n--) {
+    u8arr[n] = bstr.charCodeAt(n);
+  }
+  // 确定解析格式，可能可以变成img，没有深入研究
+  const blob = new Blob([u8arr], {
+    type: 'application/msword;chartset=UTF-8'
+  });
+  const url = window.URL.createObjectURL(blob);
+  // 在新窗口打开该pdf用这个
+  // window.open(url);
+  // 下载dpf用这个
+  const a = document.createElement('a');
+  a.setAttribute('href', url);
+  a.setAttribute('download', fileName + '.pdf');
+  a.setAttribute('target', '_blank'); // 打开一个新的窗口
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  // 删除url绑定
+  window.URL.revokeObjectURL(url);
+}

@@ -74,20 +74,8 @@ import { saveLeave } from '@/api/staff-query.js';
 
 const approverColumns = [
   {
-    field: 'account',
-    title: '用户名'
-  },
-  {
     field: 'name',
     title: '姓名'
-  },
-  {
-    field: 'mobile',
-    title: '联系电话'
-  },
-  {
-    field: 'email',
-    title: '电子邮箱'
   }
 ];
 export default {
