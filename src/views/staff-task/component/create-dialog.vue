@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:15:03
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-30 15:39:56
+ * @LastEditTime: 2022-08-31 16:00:58
  * @Description:
 -->
 
@@ -57,7 +57,13 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="执行人:" prop="executor">
-              <UserAssociate v-model="formData.executor" :init-label="formData.executorName" :is-all-user="false" class="input-width" placeholder="请选择执行人" @getSelectedRows="getSelectedRows" />
+              <UserAssociate
+                v-model="formData.executor"
+                :init-label="formData.executorName"
+                class="input-width"
+                placeholder="请选择执行人"
+                @getSelectedRows="getSelectedRows"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -271,7 +277,7 @@ export default {
               this.$emit('getTableData', '');
               this.close();
             } else {
-              this.$message.success('操作失败');
+              this.$message.error(res.errorMessages[0]);
             }
           });
         }

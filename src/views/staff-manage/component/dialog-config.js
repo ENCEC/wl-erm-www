@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-01 13:52:08
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-25 16:24:11
+ * @LastEditTime: 2022-08-31 17:11:59
  * @Description:
  */
 // 编辑
@@ -146,19 +146,19 @@ const commonRules = {
   deptName: [
     {
       required: true,
-      message: '请选择入职部门',
+      message: '入职部门不能为空',
       trigger: 'change'
     }
   ],
   staffDuty: [
     {
       required: true,
-      message: '请选择入职岗位',
+      message: '入职岗位不能为空',
       trigger: 'change'
     }
   ]
 }
-// 转正
+// 验证：转正
 export const regularFormRules = {
   ...commonRules,
   offerDate: [
@@ -195,7 +195,7 @@ export const regularFormRules = {
     }
   ]
 }
-// 离职、辞退
+// 验证：离职、辞退
 export const dissmissFormRules = {
   ...commonRules,
   // 离职
@@ -229,7 +229,7 @@ export const dissmissFormRules = {
     }
   ]
 };
-
+// 表单配置：离职、辞退
 export const dissmissFormConfig = (_this) => {
   return {
     ref: 'dataForm',

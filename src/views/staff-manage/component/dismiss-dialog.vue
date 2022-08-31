@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 21:05:06
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-25 16:23:42
+ * @LastEditTime: 2022-08-31 17:24:17
  * @Description:
 -->
 
@@ -20,7 +20,7 @@
       destroy-on-close
       v-on="$listeners"
     >
-      <form-panel
+      <CustomFormPanel
         ref="formPanel"
         :form-config="formConfig"
         :dialog-status="type"
@@ -31,7 +31,7 @@
         <template #dismissApplication="scope">
           <Upload :upload-data.sync="uploadData" :file-info="scope.item.dismissApplication" />
         </template>
-      </form-panel>
+      </CustomFormPanel>
       <!-- 底部按钮 -->
       <div slot="footer" class="dialog-footer">
         <el-button
@@ -56,11 +56,10 @@ import { dissmissFormRules, dissmissFormConfig } from './dialog-config';
 // import StaffDuty from '@/components/CurrentSystem/StaffDuty.vue'
 // import Department from '@/components/CurrentSystem/Department.vue'
 import Upload from './Upload.vue'
-import formPanel from './FormPanel';
-// import { queryTechnicalNameBySelect } from '@/api/select-02';
+import CustomFormPanel from '@/components/CustomFormPanel';
 
 export default {
-  components: { Upload, formPanel },
+  components: { Upload, CustomFormPanel },
   props: {
     // 编辑信息
     editData: {
@@ -112,7 +111,7 @@ export default {
         'quit': '离职',
         'dismiss': '辞退'
       }
-      return titleInfo[this.type]// '编辑员工信息' : '新增用户';
+      return titleInfo[this.type]
     }
   },
   watch: {},
@@ -137,7 +136,7 @@ export default {
         for (const key in this.formData) {
           if (key === 'sex') {
             const sex = res[key]
-            this.formData[key] = sex // === true ? true : (sex === false ? false : '')
+            this.formData[key] = sex
           } else {
             this.formData[key] = res[key] || ''
           }

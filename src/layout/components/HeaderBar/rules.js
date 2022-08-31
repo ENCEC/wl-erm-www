@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 17:38:09
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-09 14:05:28
+ * @LastEditTime: 2022-08-31 17:08:53
  * @Description:
  */
 
@@ -17,7 +17,7 @@ export const formRules = {
   name: [
     {
       required: true,
-      message: '请输入姓名',
+      message: '姓名不能为空',
       trigger: 'blur'
     }
   ],
@@ -50,14 +50,14 @@ export const formRules = {
   userType: [
     {
       required: true,
-      message: '请选择用户类型',
+      message: '用户类型不能为空',
       trigger: 'change'
     }
   ],
   deptName: [
     {
       required: true,
-      message: '请选择所属部门',
+      message: '所属部门不能为空',
       trigger: 'change'
     }
   ]

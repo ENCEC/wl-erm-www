@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-08 18:45:59
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-31 13:49:55
+ * @LastEditTime: 2022-08-31 14:50:03
  * @Description:
 -->
 
@@ -88,7 +88,6 @@
           <el-row>
             <!-- 进行中（部门领导 -->
             <el-col v-if="status === STATUS_TYPE.ON_LEADER" :span="12">
-              <!-- TODO：字段 -->
               <el-form-item label="审核人:" prop="approverName">
                 <el-input
                   v-model="formData.approverName"
@@ -140,7 +139,11 @@
           <el-row>
             <el-col v-if="status !== STATUS_TYPE.ON_LEADER" :span="12">
               <el-form-item label="提交审批人:" prop="approver">
-                <UserAssociate v-model="formData.approver" class="input-width" />
+                <UserAssociate
+                  v-model="formData.approver"
+                  :is-all-user="true"
+                  class="input-width"
+                />
               </el-form-item>
             </el-col>
           </el-row>

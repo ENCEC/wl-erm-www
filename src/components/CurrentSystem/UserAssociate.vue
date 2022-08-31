@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-03 10:20:28
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-30 14:47:27
+ * @LastEditTime: 2022-08-31 17:29:12
  * @Description:联想控件-用户
 -->
 
@@ -27,10 +27,11 @@ export default {
   props: {
     isAllUser: {
       type: Boolean,
-      default: true// ['all','subordinate'] 可选用户的范围：全部用户，下属
+      default: false
     },
     value: {
       type: String, // 传入的值
+      default: '',
       require: true
     },
     initLabel: {
@@ -59,14 +60,23 @@ export default {
       this.initLabel = newVal;
     }
   },
-  created() {
-    this.getSelectOptions();
-  },
+  created() {},
   mounted() {},
   methods: {
     queryMethod({ keyword, pageSize, currentPage }) {
       return new Promise(resolve => {
-        if (!this.isAllUser) {
+        if (this.isAllUser) {
+          queryAllWorkUserList({
+            name: keyword,
+            pageSize,
+            pageNo: currentPage
+          }).then(res => {
+            const _res = res.data;
+            const records = _res.records;
+            const total = _res.totalRecord
+            resolve({ records, total });
+          });
+        } else {
           querySubordinateUser({
             name: keyword,
             pageSize,
@@ -78,25 +88,10 @@ export default {
             const total = _res.totalRecord
             resolve({ records, total });
           });
-        } else {
-          queryAllWorkUserList({
-            name: keyword,
-            pageSize,
-            pageNo: currentPage
-          }).then(res => {
-            const _res = res.data;
-            const records = _res.records;
-            const total = _res.totalRecord
-            resolve({ records, total });
-          });
         }
       }).catch(err => {
         console.log(err);
       });
-    },
-    // 获取下拉信息
-    async getSelectOptions() {
-      // this.optionsList = await queryStaffDutyBySelect();
     },
     handleChange(value, selectedRows) {
       // console.log('【 value, selectedRows 】-99', value, selectedRows);

@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 17:38:09
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-19 14:04:52
+ * @LastEditTime: 2022-08-31 17:08:33
  * @Description: 用户资料
 -->
 
@@ -73,12 +73,14 @@
           <el-row>
             <el-col :span="12">
               <el-form-item label="用户类型:" prop="userType">
-                <el-input
-                  v-model="formData.userType"
-                  placeholder="请输入用户类型"
-                  clearable
-                  disabled
-                />
+                <span :title="formData.userType">
+                  <el-input
+                    v-model="formData.userType"
+                    placeholder="请输入用户类型"
+                    clearable
+                    disabled
+                  />
+                </span>
               </el-form-item>
             </el-col>
             <el-col :span="12">
@@ -86,7 +88,7 @@
               <el-form-item label="所属部门:" prop="deptName">
                 <el-input
                   v-model="formData.deptName"
-                  placeholder="请输入入职部门"
+                  placeholder="请输入所属部门"
                   clearable
                   disabled
                 />
@@ -182,10 +184,10 @@ export default {
     getDetailInfo() {
       getLoginUserInfo().then(res => {
         const _res = res.data
-        const roleList = _res.roleList.map(item => item.roleName)
+        const roleNameList = _res.roleList.map(item => item.roleName)
         for (const key in this.formData) {
           if (key === 'userType') {
-            this.formData[key] = roleList.join('、') || ''
+            this.formData[key] = roleNameList.join('、') || ''
           } else {
             this.formData[key] = _res[key] || ''
           }

@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 17:38:09
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-30 17:47:37
+ * @LastEditTime: 2022-08-31 16:06:23
  * @Description: 我的任务-试用任务信息-弹框
 -->
 
@@ -38,7 +38,6 @@
                   :task-info-id="editData.taskInfoId"
                   :user-type="userType"
                 />
-                <!-- @getTableFormData="getTableFormData" -->
               </el-form-item>
             </el-col>
           </el-row>
@@ -96,7 +95,7 @@ export default {
   computed: {
     // 弹框标题
     dialogTitle() {
-      return this.editData.taskTitle || '试用任务信息'
+      return this.editData.taskTitle
     }
   },
   watch: {},
@@ -108,27 +107,22 @@ export default {
     // 获取表格数据
     getDetailInfo() {
       queryTaskDetailInfo({
-        taskInfoId: this.editData.taskInfoId // 6961151640916795392
+        taskInfoId: this.editData.taskInfoId
       }).then(res => {
-        // console.log('【 res 】-115', res)
         const _res = res.data
         this.formData = _res
         this.tableData = _res.taskDetailInfoDtoList;
       });
     },
-    // 获取填写的数据
-    // getTableFormData(val, isClose) {
-    //   isClose && this.close();
-    // },
     // 关闭弹框
     close() {
-      this.$emit('getTableData', '');
       this.$emit('update:visible', false);
       this.$refs['elForm'].resetFields();
     },
     // 提交表单信息
     async handleConfirm() {
       await this.$refs.tableForm.saveCurPageData(true)
+      this.$emit('getTableData', '');
       this.close();
       // this.$refs['elForm'].validate(valid => {});
     }

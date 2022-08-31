@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 21:05:06
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-31 13:44:55
+ * @LastEditTime: 2022-08-31 14:51:07
  * @Description: 员工转正
 -->
 
@@ -146,6 +146,7 @@
             <el-form-item label="面谈评语:" prop="interviewerId">
               <UserAssociate
                 v-model="formData.interviewerId"
+                :is-all-user="true"
                 :init-label="formData.interviewerName"
                 placeholder="请选择面谈人"
                 class="input-width"
@@ -172,6 +173,7 @@
             <el-form-item label="转正评语:" prop="approver">
               <UserAssociate
                 v-model="formData.approver"
+                :is-all-user="true"
                 :init-label="formData.approverName"
                 placeholder="请选择审批人"
                 class="input-width"

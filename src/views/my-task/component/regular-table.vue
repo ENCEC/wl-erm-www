@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-09 16:19:33
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-19 14:07:56
+ * @LastEditTime: 2022-08-31 14:11:39
  * @Description:
 -->
 
@@ -35,12 +35,10 @@
 </template>
 <script>
 import { queryAllStandardDetail } from '@/api/my-task';
-import tableMix from '@/mixins/table-mixin';
 import { USER_TYPE } from '@/store/constant'
 
 export default {
-  name: 'TaskTable',
-  mixins: [tableMix],
+  name: 'RegularTable',
   props: {
     // 弹窗类型
     type: {
@@ -76,14 +74,8 @@ export default {
   methods: {
     // 获取表格数据
     getTableData() {
-      queryAllStandardDetail({
-        currentPage: this.params.currentPage,
-        pageSize: this.params.pageSize,
-        taskType: this.taskType
-      }).then(res => {
-        const _res = res.data
+      queryAllStandardDetail().then(res => {
         this.tableForm.tableData = res.data;
-        this.params.totalRecord = _res.totalRecord;
       });
     }
   }
