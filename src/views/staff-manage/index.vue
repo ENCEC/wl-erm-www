@@ -2,14 +2,23 @@
  * @Author: Hongzf
  * @Date: 2022-08-01 19:02:14
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-22 18:00:07
+ * @LastEditTime: 2022-08-31 11:01:25
  * @Description: 员工管理-员工管理
 -->
 
 <template>
   <div class="app-container user-manage">
     <!-- 查询组件 -->
-    <filter-panel :filter-config="filterConfig" :value="filterForm" />
+    <filter-panel :filter-config="filterConfig" :value="filterForm">
+      <!-- 入职部门 -->
+      <template #uemDeptId>
+        <Department v-model="filterForm.uemDeptId" clearable width="200px" placeholder="请选择入职部门" />
+      </template>
+      <!-- 入职岗位 -->
+      <template #staffDutyId>
+        <StaffDuty v-model="filterForm.staffDutyId" clearable width="200px" placeholder="请选择入职岗位" />
+      </template>
+    </filter-panel>
     <!-- 表格 Start -->
     <table-component
       :data="records"
@@ -51,6 +60,8 @@
 <script>
 import filterPanel from '@/components/FilterPanel';
 import tableComponent from '@/components/TableComponent';
+import Department from '@/components/CurrentSystem/Department.vue'
+import StaffDuty from '@/components/CurrentSystem/StaffDuty.vue'
 import { filterConfig, tableConfig, columns, operates } from './config-data.js';
 import CreateDialog from './component/create-dialog';
 import RegularDialog from './component/regular-dialog';
@@ -59,12 +70,13 @@ import {
   queryStaffByPage,
   deleteStaff
 } from '@/api/staff-manage';
-import { queryTechnicalNameBySelect, queryStaffDutyBySelect, queryDepartmentBySelect } from '@/api/common';
+import { queryTechnicalNameBySelect } from '@/api/common';
 import tableMix from '@/mixins/table-mixin';
 export default {
   name: 'StaffManage',
   components: {
     filterPanel,
+    Department, StaffDuty,
     tableComponent,
     CreateDialog,
     RegularDialog,
@@ -105,10 +117,6 @@ export default {
   methods: {
     // 获取下拉信息
     async getSelectOptions() {
-      // 部门
-      this.filterConfig.filterList[1].options = await queryDepartmentBySelect()
-      // 入职岗位
-      this.filterConfig.filterList[2].options = await queryStaffDutyBySelect()
       // 岗位职称
       this.filterConfig.filterList[3].options = await queryTechnicalNameBySelect()
     },

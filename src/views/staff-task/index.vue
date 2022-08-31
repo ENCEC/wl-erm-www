@@ -2,14 +2,19 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:15:04
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-15 17:08:33
+ * @LastEditTime: 2022-08-31 10:26:26
  * @Description: 员工管理-任务分配
 -->
 
 <template>
   <div class="app-container staff-task">
     <!-- 查询组件 -->
-    <filter-panel :filter-config="filterConfig" :value="filterForm" />
+    <filter-panel :filter-config="filterConfig" :value="filterForm">
+      <!-- 分配对象 -->
+      <template #executor>
+        <UserAssociate v-model="filterForm.executor" clearable placeholder="请选择分配对象" style="width:200px" />
+      </template>
+    </filter-panel>
     <!-- 表格 Start -->
     <table-component
       :data="records"
@@ -41,14 +46,14 @@ import {
   queryTaskInfoPage,
   deleteTaskInfo
 } from '@/api/staff-task';
-import {
-  queryUser
-} from '@/api/common';
 import tableMix from '@/mixins/table-mixin';
+import UserAssociate from '@/components/CurrentSystem/UserAssociate'
+
 export default {
   name: 'StaffTask',
   components: {
     filterPanel,
+    UserAssociate,
     tableComponent,
     CreateDialog
   },
@@ -81,28 +86,6 @@ export default {
   },
   mounted() {},
   methods: {
-    queryMethod({
-      keyword,
-      pageSize,
-      currentPage
-
-    }) {
-      return new Promise((resolve) => {
-        queryUser({
-          name: keyword,
-          pageSize,
-          pageNo: currentPage
-        }).then((res) => {
-          const records = res.records
-          resolve({
-            records,
-            total: res.totalRecord
-          });
-        });
-      }).catch((err) => {
-        console.log(err);
-      });
-    },
     // 获取表格数据
     getTableData() {
       // this.listLoading = true;

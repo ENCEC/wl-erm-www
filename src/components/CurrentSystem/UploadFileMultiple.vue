@@ -67,7 +67,7 @@ export default {
   },
   data() {
     return {
-      // fileList: [],
+      fileList: [],
       // uploadFile: null,
       list: [],
       formdata: '',

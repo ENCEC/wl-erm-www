@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 17:38:09
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-30 11:01:44
+ * @LastEditTime: 2022-08-31 09:58:38
  * @Description: 我的任务-试用任务信息-弹框-表格
 -->
 
@@ -59,66 +59,72 @@
         </el-table-column>
         <!-- 统筹人 -->
         <el-table-column v-if="userType===USER_TYPE.ORDINATOR" prop="progress" label="完成进度(%)" min-width="100" />
-        <!-- 非负责人-完成结果-文本 -->
-        <el-table-column v-if="userType!==USER_TYPE.CHARGE" prop="resultAccess" label="完成结果">
-          <template slot-scope="scope">
-            {{ $dict.getDictNameByCode('COMPLETION', scope.row.status) }}
-          </template>
-        </el-table-column>
-        <!-- 负责人-完成结果-输入框 -->
-        <el-table-column v-if="userType===USER_TYPE.CHARGE" prop="resultAccess" label="完成结果" min-width="130">
-          <template slot-scope="scope">
-            <el-form-item
-              v-if="(scope.$index >= 0)"
-              :prop="`tableData[${scope.$index}].resultAccess`"
-              :rules="tableFormRules.resultAccess"
-            >
-              <el-select
-                v-model="scope.row.resultAccess"
-                placeholder="请选择"
-                clearable
-                style="width:100px"
+        <!-- 负责人-下拉框-->
+        <template v-if="userType===USER_TYPE.CHARGE">
+          <!-- 完成结果 -->
+          <el-table-column prop="resultAccess" label="完成结果" min-width="130">
+            <template slot-scope="scope">
+              <el-form-item
+                v-if="(scope.$index >= 0)"
+                :prop="`tableData[${scope.$index}].resultAccess`"
+                :rules="tableFormRules.resultAccess"
               >
-                <el-option
-                  v-for="(item) in resultOptions"
-                  :key="item.label"
-                  :label="item.label"
-                  :value="item.label"
-                />
-              </el-select>
-            </el-form-item>
-          </template>
-        </el-table-column>
-        <!-- 非负责人-完成情况-文本 -->
-        <el-table-column v-if="userType!==USER_TYPE.CHARGE" prop="status" label="完成情况">
-          <template slot-scope="scope">
-            {{ $dict.getDictNameByCode('COMPLETION', scope.row.status) }}
-          </template>
-        </el-table-column>
-        <!-- 负责人-完成情况-输入框 -->
-        <el-table-column v-if="userType===USER_TYPE.CHARGE" prop="status" label="完成情况" min-width="130">
-          <template slot-scope="scope">
-            <el-form-item
-              v-if="(scope.$index >= 0)"
-              :prop="`tableData[${scope.$index}].status`"
-              :rules="tableFormRules.status"
-            >
-              <el-select
-                v-model="scope.row.status"
-                placeholder="请选择"
-                clearable
-                style="width:100px"
+                <el-select
+                  v-model="scope.row.resultAccess"
+                  placeholder="请选择"
+                  clearable
+                  style="width:100px"
+                >
+                  <el-option
+                    v-for="(item) in resultOptions"
+                    :key="item.label"
+                    :label="item.label"
+                    :value="item.label"
+                  />
+                </el-select>
+              </el-form-item>
+            </template>
+          </el-table-column>
+          <!-- 完成情况 -->
+          <el-table-column prop="status" label="完成情况" min-width="130">
+            <template slot-scope="scope">
+              <el-form-item
+                v-if="(scope.$index >= 0)"
+                :prop="`tableData[${scope.$index}].status`"
+                :rules="tableFormRules.status"
               >
-                <el-option
-                  v-for="(item) in statusOptions"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="Number(item.value)"
-                />
-              </el-select>
-            </el-form-item>
-          </template>
-        </el-table-column>
+                <el-select
+                  v-model="scope.row.status"
+                  placeholder="请选择"
+                  clearable
+                  style="width:100px"
+                >
+                  <el-option
+                    v-for="(item) in statusOptions"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="Number(item.value)"
+                  />
+                </el-select>
+              </el-form-item>
+            </template>
+          </el-table-column>
+        </template>
+        <!-- 非负责人-文本 -->
+        <template v-if="userType!==USER_TYPE.CHARGE">
+          <!-- 完成结果-->
+          <el-table-column v-if="userType!==USER_TYPE.CHARGE" prop="resultAccess" label="完成结果">
+            <template slot-scope="scope">
+              {{ $dict.getDictNameByCode('COMPLETION', scope.row.status) }}
+            </template>
+          </el-table-column>
+          <!-- 完成情况 -->
+          <el-table-column prop="status" label="完成情况">
+            <template slot-scope="scope">
+              {{ $dict.getDictNameByCode('COMPLETION', scope.row.status) }}
+            </template>
+          </el-table-column>
+        </template>
         <el-table-column prop="endDate" label="完成时间" min-width="120" />
       </el-table>
       <!-- 表格 End -->
@@ -137,7 +143,7 @@
   </div>
 </template>
 <script>
-import { queryTaskDetailInfo, updateTaskDetailProgress, updateTaskDetailStatus } from '@/api/my-task';
+import { updateTaskDetailProgress, updateTaskDetailStatus } from '@/api/my-task';
 import tableMix from '@/mixins/table-mixin';
 import { USER_TYPE, COMPLETION_EN } from '@/store/constant'
 
@@ -153,7 +159,7 @@ export default {
     // 用户类型
     userType: {
       type: String,
-      default: '1'
+      default: ''
     },
     tableData: {
       type: Array,
@@ -209,7 +215,7 @@ export default {
       immediate: true,
       handler(newVal) {
         this.getTableData();
-        console.log('【 tableData 】-211', this.tableData)
+        // console.log('【 tableData 】-211', this.tableData)
       }
     }
   },
@@ -222,7 +228,8 @@ export default {
     // 分页触发
     handleCurrentChange(curPage) {
       this.params.currentPage = this.oldPage
-      if (this.userType !== USER_TYPE.ORDINATOR) {
+      // console.log('【 this.userType 】-226', this.userType)
+      if (this.userType === USER_TYPE.STAFF || this.userType === USER_TYPE.CHARGE) {
         this.$confirm(
           '是否保存当前页的数据？',
           '提示',
@@ -249,21 +256,10 @@ export default {
     },
     // 获取表格数据
     getTableData() {
-      // queryTaskDetailInfo({
-      //   pageNo: this.params.currentPage,
-      // console.log('【 this.params.currentPag 】-254', this.params.currentPag)
-      //   pageSize: this.params.pageSize,
-      //   taskInfoId: this.taskInfoId // 6961151640916795392
-      // }).then(res => {
-      // const _res = res.data
-      // this.tableForm.tableData = _res.records;
-      // this.params.totalRecord = _res.totalRecord;
-      // });
       const startIndex = (this.params.currentPage - 1) * 10
       const endIndex = startIndex + 10
       // console.log('【 start 】-263', startIndex, endIndex)
       this.tableForm.tableData = this.tableData.slice(startIndex, endIndex);
-      // console.log('【  this.tableForm.tableData  】-267', this.tableForm.tableData)
       this.params.totalRecord = this.tableData.length;
     },
     // 保存当前页数据
@@ -278,16 +274,11 @@ export default {
         if (isTableFormValid) {
         // 发送数据
           const tableFormData = this.tableForm.tableData.map(item => {
-            return {
-              taskDetailId: item.taskDetailId, // this.taskInfoId // TODO
-              progress: item.progress,
-              status: item.status,
-              resultAccess: item.resultAccess
-            }
+            const { taskDetailId, progress, status, resultAccess } = item
+            return { taskDetailId, progress, status, resultAccess }
           })
           let funcName = ''
           // 员工-更新任务进度
-          // console.log('【 funcName-this.userType 】-279', this.userType)
           if (this.userType === USER_TYPE.STAFF) {
             funcName = updateTaskDetailProgress
           }

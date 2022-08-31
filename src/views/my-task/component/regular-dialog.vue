@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:15:03
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-30 17:40:06
+ * @LastEditTime: 2022-08-31 11:44:06
  * @Description:
 -->
 
@@ -399,24 +399,23 @@ export default {
     },
     status() {
       const taskStatus = this.editData.status.toString()
-      console.log('【 taskStatus 】-403', taskStatus)
       let status = 3
-      // 审批中
-      // if (taskStatus === '1') {
-      //   status = this.STATUS_TYPE.CHECK // 1
-      // }
-      // 审批中 审批中分是项目经理还是部门领导
+      // 审批中 审批中分是员工、项目经理、部门领导
       if (taskStatus === '3') {
         // 员工
-        if (this.userType.toString() === this.USER_TYPE.STAFF.toString()) {
+        if (this.userType.toString() === this.USER_TYPE.STAFF.toString() ||
+        this.userType.toString() === this.USER_TYPE.DISPATCHER.toString()) {
+          console.log('【 员工、本人-撤回 】-410')
           status = this.STATUS_TYPE.CHECK// 1
         }
         // 项目经理
         if (this.userType.toString() === this.USER_TYPE.PROJECT_MANAGER.toString()) {
+          console.log('【 项目经理-审批】-410')
           status = this.STATUS_TYPE.ON_MANAGER// 2
         }
         // 部门领导
         if (this.userType.toString() === this.USER_TYPE.DEPT_LEADER.toString()) {
+          console.log('【 部门领导-审批 】-410')
           status = this.STATUS_TYPE.ON_LEADER// 4
         }
       }
@@ -425,9 +424,12 @@ export default {
       // }
       // 已完成
       if (taskStatus === '2') {
+        console.log('【 已完成 】-410')
         status = this.STATUS_TYPE.COMPLETED // 3
       }
-      console.log('【 userType，status==== 】-396', this.userType, status)
+      console.log('【 taskStatus 】-403', taskStatus)
+      console.log('【 status】-396', status)
+      console.log('【 userType 】-399', this.userType)
       return status
     }
   },
@@ -459,6 +461,9 @@ export default {
         for (const key in this.formData) {
           if (key === 'uemUserId') {
             this.formData[key] = _res['approver']
+          }
+          if (key === 'progress') {
+            this.formData[key] = '审批中'
           } else {
             this.formData[key] = _res[key] || ''
           }

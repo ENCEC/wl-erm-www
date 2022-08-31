@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-08 18:45:59
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-30 17:44:28
+ * @LastEditTime: 2022-08-31 11:44:46
  * @Description:
 -->
 
@@ -372,27 +372,28 @@ export default {
     status() {
       const taskStatus = this.editData.status.toString()
       let status = 3
-      // 审批中
-      // if (taskStatus === '0') {
-      //   status = this.STATUS_TYPE.CHECK // 1
-      // }
-      // 进行中 进行中分是项目经理还是部门领导
+      // 审批中 审批中分是员工、项目经理、部门领导
       if (taskStatus === '3') {
-        // 员工
-        if (this.userType.toString() === this.USER_TYPE.STAFF.toString()) {
+        // 员工、本人
+        if (this.userType.toString() === this.USER_TYPE.STAFF.toString() ||
+        this.userType.toString() === this.USER_TYPE.DISPATCHER.toString()) {
+          console.log('【 员工、本人-撤回 】-410')
           status = this.STATUS_TYPE.CHECK// 1
         }
         if (this.userType.toString() === this.USER_TYPE.PROJECT_MANAGER.toString()) {
+          console.log('【 项目经理-审批】-410')
           status = this.STATUS_TYPE.ON_MANAGER// 2
         }
         // 部门领导
         if (this.userType.toString() === this.USER_TYPE.DEPT_LEADER) {
+          console.log('【 部门领导-审批 】-410')
           status = this.STATUS_TYPE.ON_LEADER// 4
         }
       }
       // 已完成
       if (taskStatus === '2') {
-        status = this.STATUS_TYPE.COMPLETED // 1
+        console.log('【 已完成 】-410')
+        status = this.STATUS_TYPE.COMPLETED // 3
       }
       console.log('【 taskStatus 】-403', taskStatus)
       console.log('【 status】-396', status)
