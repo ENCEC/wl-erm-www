@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-04 17:34:53
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-25 15:34:03
+ * @LastEditTime: 2022-08-31 10:36:50
  * @Description: 上传
 -->
 
@@ -15,6 +15,7 @@
       :file-list="fileList"
       :show-file-list="false"
       :on-success="handleSuccess"
+      :on-error="handleError"
       :on-exceed="handleExceed"
       :before-upload="beforeUpload"
       size="mini"
@@ -122,6 +123,10 @@ export default {
           fileKey: this.fileKey
         }]
       }
+    },
+    // 上传失败
+    handleError(res, file, fileList) {
+      this.$message.error('上传失败！')
     },
     // 点击文件下载
     handlePreview(file) {

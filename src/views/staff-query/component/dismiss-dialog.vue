@@ -142,7 +142,6 @@
             </el-col>
           </el-row>
           <el-row>
-            <!-- TODO -->
             <el-form-item label="附件:" prop="speciality">
               <Upload />
             </el-form-item>

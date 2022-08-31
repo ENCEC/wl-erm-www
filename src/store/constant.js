@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-07-22 16:25:46
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-30 17:39:39
+ * @LastEditTime: 2022-08-31 13:49:33
  * @Description: 字典
  */
 // 用户类型
@@ -12,7 +12,8 @@ export const USER_TYPE = {
   // CHARGE: '3', // 负责人
   // PROJECT_MANAGER: '4', // 项目经理
   // DEPT_LEADER: '5' // 部门领导
-  STAFF: 'executor',
+  DISPATCHER: 'dispatcher', // 本人
+  STAFF: 'executor', // 员工
   ORDINATOR: 'ordinator', // 统筹人
   CHARGE: 'leader', // 负责人
   PROJECT_MANAGER: 'approver', // 项目经理
@@ -115,7 +116,7 @@ export const COMPLETION_EN = {
   TODO: '待完成',
   REDO: '退回重做'
 }
-// TODO 拟同意类型
+// 拟同意类型
 export const INCLINED_AGREE_TYPE = {
   '0': '拟不同意',
   '1': '拟同意'

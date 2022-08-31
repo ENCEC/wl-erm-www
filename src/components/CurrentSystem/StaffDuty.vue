@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-03 09:55:18
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-15 17:07:58
+ * @LastEditTime: 2022-08-31 11:00:30
  * @Description: 入职岗位-下拉
 -->
 
@@ -13,6 +13,7 @@
     filterable
     clearable
     :disabled="disabled"
+    :style="{width}"
     v-on="$listeners"
     @change="handleChange"
   >
@@ -37,6 +38,10 @@ export default {
     value: {
       type: String, // 传入的值
       require: true
+    },
+    width: {
+      type: String, // 传入的值
+      default: '100%'
     }
   },
   data() {

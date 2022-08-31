@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 21:05:06
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-22 18:04:22
+ * @LastEditTime: 2022-08-31 13:46:29
  * @Description: 员工转正
 -->
 
@@ -135,7 +135,6 @@
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <!-- TODO -->
               <el-form-item label="附件:" prop="speciality">
                 <Upload />
               </el-form-item>

@@ -140,7 +140,6 @@
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <!-- TODO 下拉值-->
               <el-form-item label="政治面貌:" prop="politicalStatus">
                 <el-select
                   v-model="form.politicalStatus"
@@ -273,7 +272,6 @@
           </el-row>
           <el-row>
             <el-col :span="12">
-              <!-- TODO 联想控件 -->
               <el-form-item label="归属项目:" prop="projectId">
                 <el-select
                   v-model="form.projectId"

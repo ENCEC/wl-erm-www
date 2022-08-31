@@ -2,17 +2,11 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:15:04
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-19 16:05:09
+ * @LastEditTime: 2022-08-31 10:20:46
  * @Description:
  */
 
 export const filterConfig = _this => {
-  const associateColumns = [
-    {
-      title: '姓名',
-      field: 'name'
-    }
-  ]
   return {
     inline: false,
     gutter: 3, // 栅格的间隔
@@ -30,20 +24,10 @@ export const filterConfig = _this => {
         col: 8
       },
       {
-        type: 'associate',
-        label: '分配对象',
-        prop: 'executor',
-        width: '200px',
+        type: 'customSlot', // 自定义插槽
         col: 8,
-        valueProp: 'uemUserId',
-        labelProp: 'name',
-        columns: associateColumns,
-        multiple: false,
-        clearable: true,
-        queryMethod: _this.queryMethod,
-        changeSelect: () => {
-          //   this.listQuery.status=optionVal
-        }
+        label: '分配对象',
+        prop: 'executor'
       },
       {
         type: 'select',
@@ -176,7 +160,7 @@ export const operates = _this => {
         show: true,
         disabled: false,
         method: (row, index) => {
-          console.log('【 index 】-171', index)
+          // console.log('【 index 】-171', index)
           _this.handleOpen(row, 'edit');
         }
       },

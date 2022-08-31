@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-01 13:52:08
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-23 13:54:19
+ * @LastEditTime: 2022-08-31 10:54:13
  * @Description:
  */
 
@@ -25,32 +25,31 @@ export const filterConfig = _this => {
       },
       // 入职部门
       {
-        type: 'select',
-        label: '入职部门',
-        prop: 'uemDeptId',
-        width: '200px',
-        clearable: true,
-        placeholder: '请选择入职部门',
+        type: 'customSlot', // 自定义插槽
         col: 8,
-        optionLabel: 'deptName',
-        optionValue: 'uemDeptId',
-        optionKey: 'uemDeptId',
-        options: []
+        label: '入职部门',
+        prop: 'uemDeptId'
       },
       // 入职岗位
       {
-        type: 'select',
-        label: '入职岗位',
-        prop: 'staffDutyId',
-        width: '200px',
-        clearable: true,
-        placeholder: '请选择入职岗位',
+        type: 'customSlot', // 自定义插槽
         col: 8,
-        optionLabel: 'postName',
-        optionValue: 'postId',
-        optionKey: 'postId',
-        options: []
+        label: '入职岗位',
+        prop: 'staffDutyId'
       },
+      // {
+      //   type: 'select',
+      //   label: '入职岗位',
+      //   prop: 'staffDutyId',
+      //   width: '200px',
+      //   clearable: true,
+      //   placeholder: '请选择入职岗位',
+      //   col: 8,
+      //   optionLabel: 'postName',
+      //   optionValue: 'postId',
+      //   optionKey: 'postId',
+      //   options: []
+      // },
       // 岗位职称
       {
         type: 'select',

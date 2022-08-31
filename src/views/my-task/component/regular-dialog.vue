@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:15:03
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-30 17:40:06
+ * @LastEditTime: 2022-08-31 13:50:08
  * @Description:
 -->
 
@@ -68,7 +68,6 @@
           <!-- 进行中-->
           <el-col v-if="status === STATUS_TYPE.ON_MANAGER || status === STATUS_TYPE.ON_LEADER" :span="12">
             <el-form-item label="附件:" class="file-wrap">
-              <!-- TODO： -->
               <a v-if="formData.resume" @click="handleDownloadFile(formData.resume)">个人简历</a>
               <!-- <a>试用期调查表</a> -->
             </el-form-item>
@@ -368,7 +367,7 @@ export default {
         dispatchersName: '', // 申请人
         applyDate: '', // 申请日期
         offerType: '', // 转正类型
-        progress: '', // TODO 申请进度
+        progress: '', // 申请进度
         uemUserId: '', // 审批人id（面谈人）
         approverName: '', //  审批人姓名
         // 进行中（项目经理）
@@ -399,24 +398,23 @@ export default {
     },
     status() {
       const taskStatus = this.editData.status.toString()
-      console.log('【 taskStatus 】-403', taskStatus)
-      let status = 3
-      // 审批中
-      // if (taskStatus === '1') {
-      //   status = this.STATUS_TYPE.CHECK // 1
-      // }
-      // 审批中 审批中分是项目经理还是部门领导
+      let status = ''
+      // 审批中 审批中分是员工、项目经理、部门领导
       if (taskStatus === '3') {
         // 员工
-        if (this.userType.toString() === this.USER_TYPE.STAFF.toString()) {
+        if (this.userType.toString() === this.USER_TYPE.STAFF.toString() ||
+        this.userType.toString() === this.USER_TYPE.DISPATCHER.toString()) {
+          console.log('【 员工、本人-撤回 】-410')
           status = this.STATUS_TYPE.CHECK// 1
         }
         // 项目经理
         if (this.userType.toString() === this.USER_TYPE.PROJECT_MANAGER.toString()) {
+          console.log('【 项目经理-审批】-410')
           status = this.STATUS_TYPE.ON_MANAGER// 2
         }
         // 部门领导
         if (this.userType.toString() === this.USER_TYPE.DEPT_LEADER.toString()) {
+          console.log('【 部门领导-审批 】-410')
           status = this.STATUS_TYPE.ON_LEADER// 4
         }
       }
@@ -425,9 +423,12 @@ export default {
       // }
       // 已完成
       if (taskStatus === '2') {
+        console.log('【 已完成 】-410')
         status = this.STATUS_TYPE.COMPLETED // 3
       }
-      console.log('【 userType，status==== 】-396', this.userType, status)
+      console.log('【 taskStatus 】-403', taskStatus)
+      console.log('【 status】-396', status)
+      console.log('【 userType 】-399', this.userType)
       return status
     }
   },
@@ -459,6 +460,9 @@ export default {
         for (const key in this.formData) {
           if (key === 'uemUserId') {
             this.formData[key] = _res['approver']
+          }
+          if (key === 'progress') {
+            this.formData[key] = '审批中'
           } else {
             this.formData[key] = _res[key] || ''
           }

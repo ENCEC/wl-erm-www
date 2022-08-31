@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:15:04
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-29 18:12:09
+ * @LastEditTime: 2022-08-31 11:04:46
  * @Description:
  */
 
@@ -11,7 +11,7 @@ export const filterConfig = _this => {
     inline: false,
     gutter: 3, // 栅格的间隔
     col: 6, // 栅格的格数
-    operateCol: 24,
+    operateCol: 8,
     labelWidth: '100px',
     filterList: [
       // {

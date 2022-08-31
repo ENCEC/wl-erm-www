@@ -152,6 +152,11 @@
               :style="{width:item.width?item.width:'100%'}"
               @change="dateTime => {item.changeDateTime? item.changeDateTime(dateTime, item, index): ''}"
             />
+            <!-- 自定义插槽 -->
+            <template v-if="item.type === 'customSlot'">
+              <!-- 传出去的值通过scope.item获取? -->
+              <slot :name="`${item.prop}`" :item="item">自定义插槽</slot>
+            </template>
           </el-form-item>
         </el-col>
         <!-- 操作按钮 -->
