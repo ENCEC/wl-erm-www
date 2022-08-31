@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-08 18:45:59
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-31 11:44:46
+ * @LastEditTime: 2022-08-31 13:49:55
  * @Description:
 -->
 
@@ -281,13 +281,13 @@
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button
-        v-if="status === STATUS_TYPE.CHECK"
+        v-show="status === STATUS_TYPE.CHECK"
         type="primary"
         size="medium"
         @click="handleWithdraw"
       >撤回</el-button>
       <el-button
-        v-if="status === STATUS_TYPE.ON_MANAGER || status === STATUS_TYPE.ON_LEADER"
+        v-show="status === STATUS_TYPE.ON_MANAGER || status === STATUS_TYPE.ON_LEADER"
         type="primary"
         size="medium"
         @click="handleConfirm"
@@ -350,7 +350,7 @@ export default {
         auditRemark: '', // 审核意见
         approver: '', // 提交审批人
         // 部门领导审批
-        approverName: '', // TODO 审批人姓名
+        approverName: '', // 审批人姓名
         approvalDate: '', // 审批时间
         resultAccess: '', // 审批结果
         approvalRemark: '', // 审批意见
@@ -371,7 +371,7 @@ export default {
     },
     status() {
       const taskStatus = this.editData.status.toString()
-      let status = 3
+      let status = ''
       // 审批中 审批中分是员工、项目经理、部门领导
       if (taskStatus === '3') {
         // 员工、本人
@@ -414,7 +414,6 @@ export default {
     },
     // 关闭弹框
     close() {
-      this.$emit('getTableData', '');
       this.$emit('update:visible', false);
       this.$refs['elForm'].resetFields();
     },
@@ -440,12 +439,13 @@ export default {
             4: saveLeaveInfoByLeader
           }
 
-          const funcName = funcInfo[this.status]// this.editData.dispatchers ? updateTaskInfo : saveTaskInfo;
+          const funcName = funcInfo[this.status]
           funcName({
             ...this.formData,
             // TODO
-            uemUserId: '6958664088091697152' // this.editData.dispatchers,
+            uemUserId: this.editData.dispatchers// '6958664088091697152' //
           }).then(res => {
+            this.$emit('getTableData', '');
             this.$message.success('操作成功');
             this.close();
           });

@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:15:03
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-31 11:44:06
+ * @LastEditTime: 2022-08-31 13:50:08
  * @Description:
 -->
 
@@ -68,7 +68,6 @@
           <!-- 进行中-->
           <el-col v-if="status === STATUS_TYPE.ON_MANAGER || status === STATUS_TYPE.ON_LEADER" :span="12">
             <el-form-item label="附件:" class="file-wrap">
-              <!-- TODO： -->
               <a v-if="formData.resume" @click="handleDownloadFile(formData.resume)">个人简历</a>
               <!-- <a>试用期调查表</a> -->
             </el-form-item>
@@ -368,7 +367,7 @@ export default {
         dispatchersName: '', // 申请人
         applyDate: '', // 申请日期
         offerType: '', // 转正类型
-        progress: '', // TODO 申请进度
+        progress: '', // 申请进度
         uemUserId: '', // 审批人id（面谈人）
         approverName: '', //  审批人姓名
         // 进行中（项目经理）
@@ -399,7 +398,7 @@ export default {
     },
     status() {
       const taskStatus = this.editData.status.toString()
-      let status = 3
+      let status = ''
       // 审批中 审批中分是员工、项目经理、部门领导
       if (taskStatus === '3') {
         // 员工

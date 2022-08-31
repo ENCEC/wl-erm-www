@@ -171,7 +171,6 @@ export const columns = _this => {
     //   prop: 'mobile',
     //   label: '联系电话'
     // },
-    // // TODO
     // // {
     // //   prop: 'address2',
     // //   label: '归属地'
@@ -207,7 +206,6 @@ export const columns = _this => {
     //   prop: 'projectName',
     //   label: '归属项目'
     // },
-    // // TODO
     // {
     //   prop: 'technicalName',
     //   label: '人员标签'

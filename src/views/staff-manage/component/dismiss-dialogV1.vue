@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 21:05:06
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-25 16:25:01
+ * @LastEditTime: 2022-08-31 13:44:58
  * @Description:
 -->
 
@@ -160,7 +160,6 @@
               </el-col>
             </el-row>
             <el-row>
-              <!-- TODO -->
               <el-form-item label="附件:">
                 <Upload :upload-data.sync="uploadData" :file-info="formData.dismissApplication" />
                 <!-- <Upload :upload-data.sync="uploadData" :file-info="formData.resume" /> -->
