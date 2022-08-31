@@ -87,9 +87,13 @@
 
 <script>
 import { mapGetters } from 'vuex';
+import { downloadDocFile } from '@/utils/util'
 import { queryStandardDetail } from '@/api/standard-detail.js';
 import { queryAllWorkUserList } from '@/api/common';
-import { saveOffer, downloadExternalFile, batchUploadFile } from '@/api/staff-query.js';
+import {
+  downloadExternalFile
+} from '@/api/common';
+import { saveOffer, batchUploadFile } from '@/api/staff-query.js';
 import UploadFileMultiple from '@/components/CurrentSystem/UploadFileMultiple';
 
 // import { saveOffer, downloadExternalFile, uploadExternalFile, queryOfferInfo, queryDismissInfo, preservationUemUser, saveLeave, queryUemUser, getUemUser } from '@/api/staff-query.js';
@@ -99,20 +103,8 @@ import UploadFileMultiple from '@/components/CurrentSystem/UploadFileMultiple';
 // ];
 const approverColumns = [
   {
-    field: 'account',
-    title: '用户名'
-  },
-  {
     field: 'name',
     title: '姓名'
-  },
-  {
-    field: 'mobile',
-    title: '联系电话'
-  },
-  {
-    field: 'email',
-    title: '电子邮箱'
   }
 ];
 export default {
@@ -199,31 +191,12 @@ export default {
       };
       downloadExternalFile(params)
         .then((res) => {
-          const fileName = res.fileName;
-          console.log(res);
-          const base = res.file; // 你要传入的base64数据
-          const bstr = window.atob(base);
-          let n = bstr.length;
-          const u8arr = new Uint8Array(n);
-          while (n--) {
-            u8arr[n] = bstr.charCodeAt(n);
+          if (res.success) {
+            const fileName = '文件'// res.fileName.substring(0, res.fileName.lastIndexOf('.'));
+            downloadDocFile(res.data, fileName)
+          } else {
+            this.$message.error(res.errorMessages[0])
           }
-          // 确定解析格式，可能可以变成img，没有深入研究
-          const blob = new Blob([u8arr], {
-            type: 'application/msword;chartset=UTF-8'
-          });
-          const url = window.URL.createObjectURL(blob);
-          // 在新窗口打开该文件用这个
-          // window.open(url);
-          const a = document.createElement('a');
-          a.setAttribute('href', url);
-          a.setAttribute('download', fileName);
-          a.setAttribute('target', '_blank'); // 打开一个新的窗口
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
-          // 删除url绑定
-          window.URL.revokeObjectURL(url);
         })
         .catch((err) => {
           console.log(err);
