@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-04 17:34:53
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-31 10:46:17
+ * @LastEditTime: 2022-08-31 17:28:33
  * @Description: 所属部门-下拉
 -->
 
@@ -38,6 +38,7 @@ export default {
     },
     value: {
       type: String, // 传入的值
+      default: '',
       require: true
     },
     width: {

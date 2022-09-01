@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:15:03
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-31 13:50:08
+ * @LastEditTime: 2022-08-31 17:44:55
  * @Description:
 -->
 
@@ -175,7 +175,12 @@
             </el-col>
             <el-col v-if="status === STATUS_TYPE.ON_MANAGER" :span="12">
               <el-form-item label="提交审批人:" prop="uemUserId">
-                <UserAssociate v-model="formData.uemUserId" :init-label="formData.approverName" class="input-width" />
+                <UserAssociate
+                  v-model="formData.uemUserId"
+                  :init-label="formData.approverName"
+                  :is-all-user="true"
+                  class="input-width"
+                />
               </el-form-item>
             </el-col>
           </el-row>
@@ -458,18 +463,18 @@ export default {
       queryPositiveApply({ taskInfoId: this.editData.taskInfoId }).then(res => {
         const _res = res.data
         for (const key in this.formData) {
+          const value = _res[key]
           if (key === 'uemUserId') {
             this.formData[key] = _res['approver']
-          }
-          if (key === 'progress') {
-            this.formData[key] = '审批中'
+          } else if (key === 'progress') {
+            // 申请进度
+            this.formData[key] = this.$dict.getDictNameByCode('MY_TASK_STATUS', value)
           } else {
-            this.formData[key] = _res[key] || ''
+            this.formData[key] = value || ''
           }
         }
       });
       // 获取简历
-      // console.log('【 this.editData 】-461', this.editData)
       queryTaskInfoByUser({
         taskInfoId: this.editData.taskInfoId,
         dispatchers: this.editData.dispatchers

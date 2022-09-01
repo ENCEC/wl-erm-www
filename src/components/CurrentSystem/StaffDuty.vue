@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-03 09:55:18
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-31 11:00:30
+ * @LastEditTime: 2022-08-31 17:29:02
  * @Description: 入职岗位-下拉
 -->
 
@@ -37,6 +37,7 @@ export default {
     },
     value: {
       type: String, // 传入的值
+      default: '',
       require: true
     },
     width: {

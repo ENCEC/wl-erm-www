@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-15 14:54:15
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-22 15:02:13
+ * @LastEditTime: 2022-08-31 17:28:57
  * @Description: 归属项目-下拉
 -->
 
@@ -31,6 +31,7 @@ export default {
   props: {
     value: {
       type: String, // 传入的值
+      default: '',
       require: true
     }
   },

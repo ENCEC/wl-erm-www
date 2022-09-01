@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 17:38:09
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-31 09:58:38
+ * @LastEditTime: 2022-08-31 18:02:45
  * @Description: 我的任务-试用任务信息-弹框-表格
 -->
 
@@ -13,7 +13,7 @@
       <el-table
         highlight-current-row
         :data="tableForm.tableData"
-        height="320px"
+        height="340px"
         border
         size="mini"
         stripe
