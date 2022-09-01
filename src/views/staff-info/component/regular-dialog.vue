@@ -60,14 +60,14 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="审批人:" prop="approver">
+          <el-form-item label="审批人:" prop="auditId">
             <el-associate
-              v-model="form.approver"
-              :columns="approverColumns"
+              v-model="form.auditId"
+              :columns="auditIdColumns"
               value-prop="uemUserId"
               label-prop="name"
               clearable
-              :query-method="approverQueryMethod"
+              :query-method="auditIdQueryMethod"
             />
           </el-form-item>
         </el-col>
@@ -87,7 +87,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import { downloadDocFile } from '@/utils/util'
+import { downloadFile } from '@/utils/util'
 import { queryStandardDetail } from '@/api/standard-detail.js';
 import { queryAllWorkUserList } from '@/api/common';
 import {
@@ -101,7 +101,7 @@ import UploadFileMultiple from '@/components/CurrentSystem/UploadFileMultiple';
 //   { label: '正常转正', value: '正常转正' },
 //   { label: '提前转正', value: '提前转正' }
 // ];
-const approverColumns = [
+const auditIdColumns = [
   {
     field: 'name',
     title: '姓名'
@@ -123,14 +123,14 @@ export default {
       buttonLoading: false,
       dialogVisible: false,
       positiveTypeOptions: this.$dict.getDictOptions('OFFER_TYPE'),
-      approverColumns,
+      auditIdColumns,
       tableData: [],
       fileList: [],
       form: {
         uemUserName: '',
         applyDate: '',
         offerType: '',
-        approver: '',
+        auditId: '',
         staffApplication: ''
         // standardDetailId: '6960887517290696704',
         // standardEntryId: ''
@@ -142,7 +142,7 @@ export default {
         offerType: [
           { required: true, message: '请选择转正类型', trigger: 'blur' }
         ],
-        approver: [
+        auditId: [
           { required: true, message: '请选择审批人', trigger: 'blur' }
         ],
         staffApplication: [
@@ -181,8 +181,8 @@ export default {
       });
     },
     async handleDownload() {
-      await this.downloadMethod('fed56a9f-02fa-45ac-8fc7-a4c2c68fe309.doc')
-      await this.downloadMethod('2b34de16-d50f-4962-beec-04b42e67d052.doc')
+      await this.downloadMethod('1433ee48-ac94-44de-939a-77c8f5d61909.pdf')
+      await this.downloadMethod('f71bf2e9-45d8-4bea-a9c3-75ab8c9dba7a.pdf')
     },
     downloadMethod(fileKey) {
       const params = {
@@ -193,7 +193,7 @@ export default {
         .then((res) => {
           if (res.success) {
             const fileName = '文件'// res.fileName.substring(0, res.fileName.lastIndexOf('.'));
-            downloadDocFile(res.data, fileName)
+            downloadFile(res.data, fileName)
           } else {
             this.$message.error(res.errorMessages[0])
           }
@@ -262,7 +262,7 @@ export default {
         uemUserName: '',
         applyDate: '',
         offerType: '',
-        approver: ''
+        auditId: ''
         // standardEntryId: ''
       };
     },
@@ -274,7 +274,7 @@ export default {
     handleDeleteChange() {
       this.form.staffApplication = '';
     },
-    approverQueryMethod({ keyword, pageSize, currentPage }) {
+    auditIdQueryMethod({ keyword, pageSize, currentPage }) {
       return new Promise((resolve) => {
         queryAllWorkUserList({
           name: keyword,

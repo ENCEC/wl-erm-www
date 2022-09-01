@@ -41,14 +41,14 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="审批人:" prop="approver">
+          <el-form-item label="审批人:" prop="auditId">
             <el-associate
-              v-model="form.approver"
-              :columns="approverColumns"
+              v-model="form.auditId"
+              :columns="auditIdColumns"
               value-prop="uemUserId"
               label-prop="name"
               clearable
-              :query-method="approverQueryMethod"
+              :query-method="auditIdQueryMethod"
             />
           </el-form-item>
         </el-col>
@@ -72,7 +72,7 @@ import { queryAllWorkUserList } from '@/api/common';
 import { queryStandardDetail } from '@/api/standard-detail.js';
 import { saveLeave } from '@/api/staff-query.js';
 
-const approverColumns = [
+const auditIdColumns = [
   {
     field: 'name',
     title: '姓名'
@@ -84,12 +84,12 @@ export default {
     return {
       buttonLoading: false,
       dialogVisible: false,
-      approverColumns,
+      auditIdColumns,
       tableData: [],
       form: {
         uemUserName: '',
         applyDate: '',
-        approver: '',
+        auditId: '',
         leaveReason: ''
         // standardDetailId: '6960887517290696704',
         // standardEntryId: ''
@@ -101,7 +101,7 @@ export default {
         leaveReason: [
           { required: true, message: '请输入离职原因', trigger: 'blur' }
         ],
-        approver: [
+        auditId: [
           { required: true, message: '请选择审批人', trigger: 'blur' }
         ]
       }
@@ -170,11 +170,11 @@ export default {
         uemUserName: '',
         applyDate: '',
         leaveReason: '',
-        approver: ''
+        auditId: ''
         // standardEntryId: ''
       };
     },
-    approverQueryMethod({ keyword, pageSize, currentPage }) {
+    auditIdQueryMethod({ keyword, pageSize, currentPage }) {
       return new Promise((resolve) => {
         queryAllWorkUserList({
           name: keyword,
