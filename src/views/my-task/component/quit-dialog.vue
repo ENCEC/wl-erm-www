@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-08 18:45:59
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-31 14:50:03
+ * @LastEditTime: 2022-09-01 14:24:28
  * @Description:
 -->
 
@@ -56,9 +56,10 @@
           </el-col>
           <!-- 审批中 -->
           <el-col v-if="status === STATUS_TYPE.CHECK" :span="12">
+            <!-- 员工-审批结果- -->
             <el-form-item label="审批结果:">
               <el-input
-                v-model="formData.resultAccess"
+                v-model="formData.progress"
                 disabled
                 placeholder="请输入审批结果"
                 clearable
@@ -88,9 +89,9 @@
           <el-row>
             <!-- 进行中（部门领导 -->
             <el-col v-if="status === STATUS_TYPE.ON_LEADER" :span="12">
-              <el-form-item label="审核人:" prop="approverName">
+              <el-form-item label="审核人:" prop="auditName">
                 <el-input
-                  v-model="formData.approverName"
+                  v-model="formData.auditName"
                   clearable
                   :disabled="status === STATUS_TYPE.ON_LEADER"
                 />
@@ -141,6 +142,7 @@
               <el-form-item label="提交审批人:" prop="approver">
                 <UserAssociate
                   v-model="formData.approver"
+                  :init-label="formData.approverName"
                   :is-all-user="true"
                   class="input-width"
                 />
@@ -340,12 +342,14 @@ export default {
       },
       rules: quitFormRules, // 验证规则
       formData: {
-        taskInfoId: '',
+        taskDetailId: '', // 必须
+        taskInfoId: '', // 必须
         uemUserId: '',
         // taskDetailId: '',
         dispatchersName: '', // 申请人
         applyDate: '', // 申请日期
         leaveReason: '', // 离职原因
+        progress: '', // 员工-审批结果
         // 项目经理审核
         auditName: '', // 审核人
         auditDate: '', // 审核时间
@@ -428,7 +432,12 @@ export default {
       }).then(res => {
         const _res = res.data[0].data
         for (const key in this.formData) {
-          this.formData[key] = _res[key] || ''
+          if (key === 'progress') {
+            // 员工-审批结果
+            this.formData[key] = this.$dict.getDictNameByCode('MY_TASK_STATUS', _res['status'].toString())
+          } else {
+            this.formData[key] = _res[key] || ''
+          }
         }
         this.formData.leaveReason = res.data[1].data.leaveReason || ' '
       });
@@ -448,9 +457,13 @@ export default {
             // TODO
             uemUserId: this.editData.dispatchers// '6958664088091697152' //
           }).then(res => {
-            this.$emit('getTableData', '');
-            this.$message.success('操作成功');
-            this.close();
+            if (res.success) {
+              this.$emit('getTableData', '');
+              this.$message.success('操作成功');
+              this.close();
+            } else {
+              this.$message.error(res.errorMessages[0]);
+            }
           });
         }
       });
