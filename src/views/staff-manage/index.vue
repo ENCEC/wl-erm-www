@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-01 19:02:14
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-31 11:01:25
+ * @LastEditTime: 2022-09-02 10:50:30
  * @Description: 员工管理-员工管理
 -->
 
@@ -58,8 +58,6 @@
   </div>
 </template>
 <script>
-import filterPanel from '@/components/FilterPanel';
-import tableComponent from '@/components/TableComponent';
 import Department from '@/components/CurrentSystem/Department.vue'
 import StaffDuty from '@/components/CurrentSystem/StaffDuty.vue'
 import { filterConfig, tableConfig, columns, operates } from './config-data.js';
@@ -75,9 +73,7 @@ import tableMix from '@/mixins/table-mixin';
 export default {
   name: 'StaffManage',
   components: {
-    filterPanel,
     Department, StaffDuty,
-    tableComponent,
     CreateDialog,
     RegularDialog,
     DismissDialog
