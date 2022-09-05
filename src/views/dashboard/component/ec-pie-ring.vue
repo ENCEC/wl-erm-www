@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-26 10:28:20
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-26 14:23:51
+ * @LastEditTime: 2022-09-05 14:18:25
  * @Description:
 -->
 <template>
@@ -97,6 +97,7 @@ export default {
           icon: 'circle',
           x: 'center',
           y: 'bottom',
+          top: 320,
           itemWidth: 8, // 图例标记的图形宽度
           itemHeight: 8, // 图例标记的图形高度。
           itemGap: 13,

@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-25 17:06:32
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-26 16:32:54
+ * @LastEditTime: 2022-09-05 14:41:17
  * @Description:
 -->
 <template>
@@ -79,9 +79,9 @@ export default {
       this.chart = echarts.init(document.getElementById(this.id));
       const seriesConfig = {
         type: 'bar',
-        // barWidth: 15,
-        barMinWidth: 15,
-        barMaxWidth: 50,
+        barWidth: 20,
+        // barMinWidth: 13,
+        // barMaxWidth: 50,
         barGap: 0, // 间距
         itemStyle: {
           // 柱形图圆角，鼠标移上去效果，如果只是一个数字则说明四个参数全部设置为那么多
@@ -96,10 +96,10 @@ export default {
         // 标题
         title: {
           text: '项目人员详细配置情况',
-          top: 16,
+          top: 13,
           textStyle: {
-            fontWeight: 'normal',
-            fontSize: 14,
+            fontWeight: 'bold',
+            fontSize: 16,
             color: '#7f7f7f'
           },
           left: '1%'
@@ -119,7 +119,7 @@ export default {
             show: true, // tooltip轴线,
             type: 'shadow', // 背景色
             shadowStyle: {
-              color: 'rgba(0,0,0,0.1)'// 指针区域-背景色设置
+              color: 'rgba(0,0,0,0.05)'// 指针区域-背景色设置
             }
           },
           // 【自定义tooltip样式】
@@ -172,7 +172,7 @@ export default {
             axisLine: {
               // X轴线的颜色
               lineStyle: {
-                color: '#bbb'
+                color: '#666'
               }
             }
           }

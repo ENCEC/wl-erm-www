@@ -1,10 +1,11 @@
 <!--
  * @Author: Hongzf
- * @Date: 2022-08-25 17:06:32
+ * @Date: 2022-08-29 18:08:12
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-26 14:19:33
- * @Description:
+ * @LastEditTime: 2022-09-05 11:05:51
+ * @Description: 折线图
 -->
+
 <template>
   <div :id="id" :class="className" :style="{ height, width }" />
 </template>
@@ -68,7 +69,7 @@ export default {
           textStyle: {
             fontWeight: 'bold',
             fontSize: 16,
-            color: 'rgb(134, 136, 146)'
+            color: '#7f7f7f'
           },
           left: '2%'
         },
@@ -127,7 +128,7 @@ export default {
           // right: '4%',
         },
         grid: {
-          top: 100, // 图表距离标题的距离
+          top: 90, // 图表距离标题的距离
           left: '2%',
           right: '2%',
           bottom: '10%', // 图表距离底部图例的距离
@@ -145,7 +146,7 @@ export default {
             },
             axisLine: {
               lineStyle: {
-                color: '#bbb'
+                color: '#666'
               }
             }
           }

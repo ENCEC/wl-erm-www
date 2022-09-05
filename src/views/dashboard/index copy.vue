@@ -1,11 +1,10 @@
 <!--
  * @Author: Hongzf
- * @Date: 2022-08-29 18:08:12
+ * @Date: 2022-08-12 19:00:39
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-09-05 17:56:07
- * @Description: 仪表盘
+ * @LastEditTime: 2022-09-05 15:19:35
+ * @Description: 首页
 -->
-
 <template>
   <div class="dashboard-container">
     <div class="top-wrap">
@@ -51,24 +50,49 @@
         </div>
         <!-- 图表 -->
         <div class="echarts-wrap">
-          <!-- <EcBar
+          <EcBar
             id="projectNum"
             title="项目人员配置情况分析"
             width="100%"
             height="100%"
-          /> -->
+          />
         </div>
       </div>
     </div>
     <div class="bottom-wrap">
       <!-- 人员趋势图 -->
-      <!-- <EcLine width="100%" height="100%" /> -->
+      <EcLine width="100%" height="100%" />
     </div>
+    <!-- <Keyboard /> -->
+    <!-- <LineMarker /> -->
+    <!-- <MixChart /> -->
+    <!-- 折线图 -->
+    <!-- 饼图 -->
+    <!-- <EcPieRing width="350px" height="300px" /> -->
+    <!-- 柱状图 -->
+    <!-- <EcBarMultiple width="900px" height="300px" /> -->
+    <!-- <div class="home-wrap">
+      <el-card v-for="(item, index) in 3" :key="index" class="box-card">
+        <div slot="header" class="clearfix">
+          <i class="el-icon-monitor" />
+          <span>功能开发中</span>
+        </div>
+        <div class="text item">
+          敬请期待...
+        </div>
+      </el-card>
+    </div> -->
   </div>
 </template>
 
 <script>
-// import EcLine from './component/ec-line.vue';
+import { mapGetters } from 'vuex';
+// import Keyboard from '@/components/Charts/Keyboard.vue'
+// import LineMarker from '@/components/Charts/LineMarker.vue'
+// import MixChart from '@/components/Charts/MixChart.vue'
+import EcLine from './component/ec-line.vue';
+// import EcPieRing from './component/ec-pie-ring.vue'
+// import EcBarMultiple from './component/ec-bar-multiple.vue'
 import EcBar from './component/ec-bar-single.vue';
 import {
   queryPostOfDept
@@ -76,24 +100,62 @@ import {
 export default {
   name: 'Dashboard',
   components: {
-    // EcLine,
+    EcLine,
     EcBar
+    // Keyboard, LineMarker, MixChart
   },
   data() {
     return {
-      deptInfo: {}// 部门人数信息
+      permissionsLoading: true,
+      // 部门人数
+      deptInfo: {}
     };
   },
-  computed: {},
-  created() {
+  computed: {
+    ...mapGetters(['roles']),
+    noPermits() {
+      if (!this.$permissions.noPermits) {
+        return '';
+      }
+      return this.$permissions.noPermits.join(', ');
+    },
+    permits() {
+      if (!this.$permissions.permits) {
+        return '';
+      }
+      return this.$permissions.permits.join(', ');
+    },
+    title() {
+      if (this.permissionsLoading) {
+        return '权限加载中';
+      }
+      return '权限已加载';
+    },
+    info() {
+      if (this.permissionsLoading) {
+        return '';
+      }
+      return JSON.stringify(
+        {
+          noPermits: this.$permissions.noPermits,
+          permits: this.$permissions.permits
+        },
+        null,
+        4
+      );
+    }
+  },
+  async created() {
+    this.permissionsLoading = true;
+    await this.$permissions.loadPermissions(this.$route.path);
+    this.permissionsLoading = false;
     this.getData()
   },
   methods: {
-    // 跳转
     goUrl(type) {
       let url = ''
       type === 'dept' && (url = '/dept-num-detail')
-      // type === 'project' && (url = '/project-num-detail')
+      type === 'project' && (url = '/project-num-detail')
       url && this.$router.push(url)
     },
     getData() {
@@ -177,4 +239,19 @@ export default {
   }
 }
 
+// .home-wrap {
+//   display: flex;
+//   justify-content: space-between;
+//   padding: 24px;
+//   .box-card {
+//     width: 32.5%;
+//     .item {
+//       height: 100px;
+//       line-height: 100px;
+//       text-align: center;
+//       font-size: 18px;
+//       color: #ccc;
+//     }
+//   }
+// }
 </style>

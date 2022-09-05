@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-04 15:16:04
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-17 09:53:18
+ * @LastEditTime: 2022-09-05 14:47:39
  * @Description:
  */
 import request from '@/utils/request'
@@ -14,7 +14,7 @@ export function login(data) {
     data
   })
 }
-
+// 获取登录用户信息
 export function getInfo(token) {
   return request({
     url: '/share-auth/user/getLoginUserInfo',
@@ -23,7 +23,7 @@ export function getInfo(token) {
     params: { token }
   })
 }
-
+// 退出登录
 export function logout() {
   return request({
     // url: '/vue-element-admin/user/logout',
