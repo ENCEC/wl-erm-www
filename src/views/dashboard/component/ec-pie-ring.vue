@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-26 10:28:20
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-09-05 14:18:25
+ * @LastEditTime: 2022-09-07 18:08:01
  * @Description:
 -->
 <template>
@@ -11,6 +11,7 @@
 
 <script>
 import echarts from 'echarts';
+
 import resize from '@/components/Charts/mixins/resize';
 
 export default {
@@ -20,6 +21,12 @@ export default {
       type: String,
       default: 'pieChart'
     },
+    // 图表数据
+    ecData: {
+      type: Object,
+      default: () => {}
+    },
+    // 样式
     className: {
       type: String,
       default: 'chart'
@@ -35,21 +42,52 @@ export default {
   },
   data() {
     return {
-      chart: null
+      chart: null,
+      seriesData: []
     };
   },
   computed: {
-    seriesData() {
-      return [
-        { value: 735, name: '5年以上' },
-        { value: 580, name: '4-5年' },
-        { value: 484, name: '2-3年' },
-        { value: 300, name: '1年以下' }
-      ];
+    // seriesData() {
+    //   const chartData = this.chartData || {}
+    //   console.log('【 chartData 】-51', chartData)
+    //   const arr = []
+    //   // const total = chartData.number
+    //   if (chartData.number) {
+    //     delete chartData.number
+    //   }
+    //   for (const key in chartData) {
+    //     arr.push({ name: key, value: chartData[key] })
+    //   }
+    //   console.log('【 arr 】-58', arr)
+    //   return [
+    //     { value: 735, name: '5年以上' },
+    //     { value: 580, name: '4-5年' },
+    //     { value: 484, name: '2-3年' },
+    //     { value: 300, name: '1年以下' }
+    //   ];
+    // }
+  },
+  watch: {
+    ecData: {
+      // immediate: true,
+      deep: true,
+      handler(val) {
+        const chartData = val || {}
+        const arr = []
+        // const total = chartData.number
+        if (chartData.number) {
+          delete chartData.number
+        }
+        for (const key in chartData) {
+          arr.push({ name: key, value: chartData[key] })
+        }
+        this.seriesData = arr
+        this.initChart();
+      }
     }
   },
   mounted() {
-    this.initChart();
+    // this.initChart();
   },
   beforeDestroy() {
     if (!this.chart) {
@@ -62,6 +100,7 @@ export default {
     initChart() {
       this.chart = echarts.init(document.getElementById(this.id));
       this.chart.setOption({
+        animation: false,
         color: ['#3aa1ff', '#36cbcb', '#4ecb73', '#fbd437'],
         backgroundColor: '#fff', // 背景
         // 标题
@@ -77,19 +116,20 @@ export default {
             fontSize: 11,
             color: '#666'
           },
+          // formatter: '{a} <br/>{b}: {c} ({d}%)'
           formatter: function(params) {
-            // console.log('【 params 】-102', params.color, params);
+          // console.log('【 params 】-102', params.color, params);
             return `<div style="font-size:10px">
-                      <div>
-                        <span style="font-size:11px;color:${params.color};">●</span> 
-                        ${params.name}: ${params.percent}% ${params.value}人
-                      </div>
-                    </div>`;
+                    <div>
+                      <span style="font-size:11px;color:${params.color};">●</span>
+                      ${params.name}: ${params.value}人 (${params.percent.toFixed(0)}%)
+                    </div>
+                  </div>`;
             // return `<div style="font-size:10px">
-            //             <div><span style="font-size:11px;color:${params.color};">●</span> ${params.name}</div>
-            //             <div style="font-weight:500; margin-left: 12px;">数量：${params.value}人</div>
-            //             <div style="font-weight:500; margin-left: 12px;">占比：${params.percent}%</div>
-            //         </div>`
+            //           <div><span style="font-size:11px;color:${params.color};">●</span> ${params.name}</div>
+            //           <div style="font-weight:500; margin-left: 12px;">数量：${params.value}人</div>
+            //           <div style="font-weight:500; margin-left: 12px;">占比：${params.percent}%</div>
+            //       </div>`
           }
         },
         // 图例
@@ -110,6 +150,8 @@ export default {
           {
             // name: 'Access From',
             type: 'pie',
+            hoverAnimation: false, // 鼠标移进扇区不放大
+            selectedMode: 'single', // 点击移入移出
             data: this.seriesData,
             radius: ['26%', '45%'], // 饼图的半径,数组的第一项是内半径，第二项是外半径
             width: '80%', // 组件的宽度
@@ -127,8 +169,7 @@ export default {
               // formatter: '{b}:{percent|{c} 小时}'
               // formatter: '{a} {c}'
               formatter: function(params) {
-                return `${params.name}: ${params.percent}%
-                ${params.value}人 `;
+                return `${params.name}：${params.value}人 (${params.percent.toFixed(0)}%)`;
                 // return params.name + '\n占比:' + params.percent + '\n数量：' + params.value + '人'
               }
             },

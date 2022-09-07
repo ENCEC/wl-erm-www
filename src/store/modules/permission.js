@@ -98,7 +98,7 @@ const actions = {
         // const map = new Map(Object.entries(routes))
         // const newList = formatData(map)
         const accessedRoutes = filterAsyncRoutes(routes)
-        console.log('【 ==== accessedRoutes ===== 】-117', accessedRoutes)
+        // console.log('【 ==== accessedRoutes ===== 】-117', accessedRoutes)
         commit('SET_ROUTES', accessedRoutes)
         resolve(accessedRoutes)
       })

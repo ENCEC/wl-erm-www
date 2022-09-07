@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-09-05 10:18:51
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-09-05 17:43:51
+ * @LastEditTime: 2022-09-07 16:39:17
  * @Description: 柱状图
 -->
 
@@ -21,11 +21,11 @@ export default {
       type: String,
       default: 'barChart'
     },
+    // 图表数据
     title: {
       type: String,
       default: '标题'
     },
-    // 图表数据
     ecData: {
       type: Array,
       default: () => []
@@ -51,31 +51,52 @@ export default {
   },
   data() {
     return {
-      chart: null
+      chart: null,
+      chartData: [],
+      xData: [],
+      seriesData: []
     };
   },
   computed: {
-    xData() {
-      const ecData = this.ecData// [...this.ecData, ...this.ecData]
-      const arr = ecData.map(item => item.postName)
-      return arr// ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月'];
-    },
-    seriesData() {
-      const ecData = this.ecData// [...this.ecData, ...this.ecData]
-      const arr = ecData.map(item => item.number || 0)
-      return [
-        {
-          // name: 'tokyo',
-          data: arr// [320, 332, 301, 334, 390, 301, 334, 390]
-        }
-      ];
-    }
+    // xData() {
+    //   const chartData = this.chartData// [...this.chartData, ...this.chartData]
+    //   const arr = chartData.map(item => item.postName)
+    //   return arr// ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月'];
+    // },
+    // seriesData() {
+    //   const chartData = this.chartData// [...this.chartData, ...this.chartData]
+    //   const arr = chartData.map(item => item.number || 0)
+    //   return [
+    //     {
+    //       // name: 'tokyo',
+    //       data: arr// [320, 332, 301, 334, 390, 301, 334, 390]
+    //     }
+    //   ];
+    // }
     // legendData() {
     //   return this.seriesData.map(item => item.name);
     // }
   },
+  watch: {
+    ecData: {
+      // immediate: true,
+      deep: true,
+      handler(val) {
+        const chartData = val
+        this.xData = chartData.map(item => item.postName)
+        const arr = chartData.map(item => item.number || 0)
+        this.seriesData = [
+          {
+          // name: 'tokyo',
+            data: arr// [320, 332, 301, 334, 390, 301, 334, 390]
+          }
+        ];
+        this.initChart();
+      }
+    }
+  },
   mounted() {
-    this.initChart();
+    // this.initChart();
   },
   beforeDestroy() {
     if (!this.chart) {
@@ -272,7 +293,7 @@ export default {
         series: [
           {
             ...seriesConfig,
-            name: this.seriesData[0].name,
+            // name: this.seriesData[0].name,
             data: this.seriesData[0].data
           }
         ]

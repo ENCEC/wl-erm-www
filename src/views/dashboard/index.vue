@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-29 18:08:12
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-09-05 17:56:07
+ * @LastEditTime: 2022-09-07 16:12:51
  * @Description: 仪表盘
 -->
 
@@ -14,7 +14,7 @@
         <!-- 标题 -->
         <div class="title-box">
           <span> 部门人数</span>
-          <span class="num"> {{ deptInfo.totleNumber.number||'0' }}人</span>
+          <span class="num"> {{ deptInfo.totalNumber?deptInfo.totalNumber.number:'0' }}人</span>
           <span class="icon-box" @click="goUrl('dept')">
             <el-image
               class="icon"

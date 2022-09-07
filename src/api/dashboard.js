@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-09-05 14:46:59
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-09-05 14:57:54
+ * @LastEditTime: 2022-09-06 17:59:16
  * @Description: 仪表盘-接口
  */
 
@@ -16,6 +16,22 @@ const authPrefix = process.env.VUE_APP_SHARE_AUTH_PREFIX
 export function queryPostOfDept(data) {
   return request({
     url: authPrefix + '/uemUserManage/queryPostOfDept',
+    method: 'post',
+    data
+  });
+}
+// 员工工作年限分析
+export function queryUemUserBySeniority(data) {
+  return request({
+    url: authPrefix + '/uemUserManage/queryUemUserBySeniority',
+    method: 'post',
+    data
+  });
+}
+// 员工学历分析
+export function queryUemUserByEducation(data) {
+  return request({
+    url: authPrefix + '/uemUserManage/queryUemUserByEducation',
     method: 'post',
     data
   });
