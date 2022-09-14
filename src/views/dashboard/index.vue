@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-29 18:08:12
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-09-07 16:12:51
+ * @LastEditTime: 2022-09-14 15:09:27
  * @Description: 仪表盘
 -->
 
@@ -29,6 +29,8 @@
             id="deptNum"
             title="部门人员岗位情况分析"
             :ec-data="deptInfo.data"
+            label-prop="postName"
+            value-prop="number"
             width="100%"
             height="100%"
           />
@@ -39,7 +41,7 @@
         <!-- 标题 -->
         <div class="title-box">
           <span> 部门项目数</span>
-          <span class="num"> {{ 38 }}人</span>
+          <span class="num">  {{ staffInfo.totalNumber?staffInfo.totalNumber.number:'0' }}个</span>
           <span class="icon-box" @click="goUrl('project')">
             <el-image
               class="icon"
@@ -51,37 +53,44 @@
         </div>
         <!-- 图表 -->
         <div class="echarts-wrap">
-          <!-- <EcBar
+          <EcBar
             id="projectNum"
+            :ec-data="staffInfo.data"
+            label-prop="projectName"
+            value-prop="totalNum"
             title="项目人员配置情况分析"
             width="100%"
             height="100%"
-          /> -->
+          />
         </div>
       </div>
     </div>
     <div class="bottom-wrap">
       <!-- 人员趋势图 -->
-      <!-- <EcLine width="100%" height="100%" /> -->
+      <EcLine :ec-data="trendInfo" width="100%" height="100%" />
     </div>
   </div>
 </template>
 
 <script>
-// import EcLine from './component/ec-line.vue';
+import EcLine from './component/ec-line.vue';
 import EcBar from './component/ec-bar-single.vue';
 import {
-  queryPostOfDept
+  queryPostOfDept,
+  queryProjectStaff,
+  queryUemUserTrend
 } from '@/api/dashboard';
 export default {
   name: 'Dashboard',
   components: {
-    // EcLine,
+    EcLine,
     EcBar
   },
   data() {
     return {
-      deptInfo: {}// 部门人数信息
+      deptInfo: {}, // 部门人数信息
+      staffInfo: {}, // 部门项目信息
+      trendInfo: {} // 人员趋势
     };
   },
   computed: {},
@@ -93,7 +102,7 @@ export default {
     goUrl(type) {
       let url = ''
       type === 'dept' && (url = '/dept-num-detail')
-      // type === 'project' && (url = '/project-num-detail')
+      type === 'project' && (url = '/project-num-detail')
       url && this.$router.push(url)
     },
     getData() {
@@ -101,6 +110,18 @@ export default {
       queryPostOfDept().then(res => {
         if (res.success) {
           this.deptInfo = res.data || {}
+        }
+      })
+      // 项目人员配置情况
+      queryProjectStaff().then(res => {
+        if (res.success) {
+          this.staffInfo = res.data || {}
+        }
+      })
+      // 人员趋势
+      queryUemUserTrend().then(res => {
+        if (res.success) {
+          this.trendInfo = res.data || {}
         }
       })
     }
@@ -170,7 +191,7 @@ export default {
     margin-top: 15px;
     min-width: 1253px;
     max-width: 100%;
-    height: 324px;
+    height: 350px;
     padding: 5px;
     background: #fff;
     border-radius: 10px;

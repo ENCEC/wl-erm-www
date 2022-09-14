@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-29 18:08:12
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-09-05 11:05:51
+ * @LastEditTime: 2022-09-14 15:12:30
  * @Description: 折线图
 -->
 
@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import echarts from 'echarts';
+import * as echarts from 'echarts'
 import resize from '@/components/Charts/mixins/resize';
 
 export default {
@@ -20,6 +20,10 @@ export default {
     id: {
       type: String,
       default: 'lineChart'
+    },
+    ecData: {
+      type: Object,
+      default: () => {}
     },
     className: {
       type: String,
@@ -36,19 +40,51 @@ export default {
   },
   data() {
     return {
-      chart: null
+      chart: null,
+      xData: [],
+      yData: []
     };
   },
   computed: {
-    xData() {
-      return ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月'];
-    },
-    yData() {
-      return [10, 50, 25, 45, 22, 65, 22, 20, 82, 91, 34, 50];
+    // xData() {
+    //   return ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '19月', '八月'];
+    // },
+    // yData() {
+    //   return [10, 50, 25, 45, 22, 65, 22, 20, 82, 91, 34, 50, 34, 50];
+    // }
+  },
+  watch: {
+    ecData: {
+      // immediate: true,
+      deep: true,
+      handler(val) {
+        const monthInfo = {
+          1: '一月',
+          2: '二月',
+          3: '三月',
+          4: '四月',
+          5: '五月',
+          6: '六月',
+          7: '七月',
+          8: '八月',
+          9: '九月',
+          10: '十月',
+          11: '十一月',
+          12: '十二月'
+        }
+        const chartInfo = val
+        const chartData = []
+        for (const key in chartInfo) {
+          chartData.push({ name: monthInfo[key], value: chartInfo[key] || 0 })
+        }
+        this.xData = chartData.map(item => item.name)
+        this.yData = chartData.map(item => item.value)
+        this.initChart();
+      }
     }
   },
   mounted() {
-    this.initChart();
+    // this.initChart();
   },
   beforeDestroy() {
     if (!this.chart) {
@@ -61,6 +97,39 @@ export default {
     initChart() {
       this.chart = echarts.init(document.getElementById(this.id));
       this.chart.setOption({
+        // 滚动条
+        dataZoom: [
+          {
+            show: this.xData.length > 9, // 是否显示滑动条，不影响使用
+            xAxisIndex: 0, // 这里是从X轴的0刻度开始
+            type: 'slider', // 这个 dataZoom 组件是 slider 型 dataZoom 组件
+            startValue: 0, // 从头开始。
+            endValue: 7, // 一次性展示6个
+            zoomLock: true,
+            showDataShadow: false, // 是否显示数据阴影 默认auto
+            showDetail: false, // 即拖拽时候是否显示详细数值信息 默认true
+            realtime: false, // 是否实时更新(拖动滚动条的时候数据是否变化，false的话停止拖动数据才变化)
+            filterMode: 'filter',
+            // handleIcon: 'M-9.35,34.56V42m0-40V9.5m-2,0h4a2,2,0,0,1,2,2v21a2,2,0,0,1-2,2h-4a2,2,0,0,1-2-2v-21A2,2,0,0,1-11.35,9.5Z',
+            moveHandleSize: 20,
+            moveOnMouseMove: true,
+            maxValueSpan: 7,
+            minValueSpan: 7,
+            // moveHandleSize: 0,
+            brushSelect: false, // 刷选功能，设为false可以防止拖动条长度改变 ************（这是一个坑）
+            // 滚动条样式
+            top: 310, // 距离调整
+            bottom: 10,
+            height: 7, // 滚动条高度
+            backgroundColor: '#fcfcfc',
+            borderColor: 'rgba(43,48,67,.1)',
+            fillerColor: '#3aa1ff',
+            handleStyle: {
+              color: '#3aa1ff',
+              borderColor: '#3aa1ff'
+            }
+          }
+        ],
         backgroundColor: '#FFF', // 背景
         // 标题
         title: {
@@ -101,11 +170,6 @@ export default {
           // formatter: '{a} {c}'
           // formatter: function(params) {
           //   // console.log(params) // 打印数据
-          //   var showdata = params[0];
-          //   // 根据自己的需求返回数据
-          //   return `
-          //  <div>本月：${showdata.data[1]}</div>
-          //   <div>上月：${showdata.data[2]}</div>`
           // }
         },
         // 图例
@@ -120,15 +184,15 @@ export default {
           textStyle: {
             fontSize: 12,
             color: '#b3b3b3'
-          }
+          },
           // padding: [100, 0, 0, 0]
           // left: '-3%', // 图例组件离容器左侧的距离。
           // bottom: -10 // 图例组件离容器下侧的距离。
-          // top: 20
+          top: 320
           // right: '4%',
         },
         grid: {
-          top: 90, // 图表距离标题的距离
+          top: 85, // 图表距离标题的距离
           left: '2%',
           right: '2%',
           bottom: '10%', // 图表距离底部图例的距离

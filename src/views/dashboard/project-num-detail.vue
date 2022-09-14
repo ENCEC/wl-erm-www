@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-09-05 11:11:15
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-09-05 14:45:14
+ * @LastEditTime: 2022-09-09 17:38:25
  * @Description: 仪表盘-项目数量-详情
 -->
 
@@ -10,13 +10,15 @@
   <div class="dashboard-container project-num-detail">
     <div class="container-wrap">
       <!-- 柱状图 -->
-      <EcBarMultiple width="100%" height="100%" />
+      <EcBarMultiple :ec-data="ecData" width="100%" height="100%" />
     </div>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import {
+  queryProjectDetailedStaff
+} from '@/api/dashboard';
 import EcBarMultiple from './component/ec-bar-multiple.vue';
 export default {
   name: 'ProjectNumDetail',
@@ -25,48 +27,20 @@ export default {
   },
   data() {
     return {
-      permissionsLoading: true
+      ecData: []
     };
   },
-  computed: {
-    ...mapGetters(['roles']),
-    noPermits() {
-      if (!this.$permissions.noPermits) {
-        return '';
-      }
-      return this.$permissions.noPermits.join(', ');
-    },
-    permits() {
-      if (!this.$permissions.permits) {
-        return '';
-      }
-      return this.$permissions.permits.join(', ');
-    },
-    title() {
-      if (this.permissionsLoading) {
-        return '权限加载中';
-      }
-      return '权限已加载';
-    },
-    info() {
-      if (this.permissionsLoading) {
-        return '';
-      }
-      return JSON.stringify(
-        {
-          noPermits: this.$permissions.noPermits,
-          permits: this.$permissions.permits
-        },
-        null,
-        4
-      );
-    }
+  computed: { },
+  created() {
+    this.getEcData()
   },
-
-  async created() {
-    this.permissionsLoading = true;
-    await this.$permissions.loadPermissions(this.$route.path);
-    this.permissionsLoading = false;
+  methods: {
+    getEcData() {
+      queryProjectDetailedStaff().then(res => {
+        const _res = res.data
+        this.ecData = _res || {};
+      });
+    }
   }
 };
 </script>

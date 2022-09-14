@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-25 17:06:32
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-09-14 14:04:19
+ * @LastEditTime: 2022-09-09 17:54:05
  * @Description:
 -->
 <template>
@@ -40,21 +40,40 @@ export default {
   },
   data() {
     return {
-      chart: null,
-      seriesData: []
+      chart: null
+      // seriesData: []
     };
   },
   computed: {
     xData() {
-      return this.ecData.length ? ['项目总监', '项目经理', '开发经理', '需求组长', '开发成员', '需求成员'] : [];
+      return ['项目总监', '项目经理', '开发经理', '需求组长', '开发成员', '需求成员'];
     },
-    // seriesData() {
-    //   return [{
-    //     name: 'one2',
-    //     data: [320, 332, 301, 334, 390, 301, 334, 390]
-    //   },
-    //   ];
-    // },
+    seriesData() {
+      return [{
+        name: 'one2',
+        data: [320, 332, 301, 334, 390, 301, 334, 390]
+      },
+      {
+        name: 'two2',
+        data: [220, 182, 191, 234, 290, 301, 334, 390]
+      },
+      {
+        name: 'on2e',
+        data: [320, 332, 301, 334, 390, 301, 334, 390]
+      },
+      {
+        name: 'tw2o',
+        data: [220, 182, 191, 234, 290, 301, 334, 390]
+      }, {
+        name: 'o2ne',
+        data: [320, 332, 301, 334, 390, 301, 334, 390]
+      },
+      {
+        name: 'tw6o',
+        data: [220, 182, 191, 234, 290, 301, 334, 390]
+      }
+      ];
+    },
     legendData() {
       return this.seriesData.map(item => item.name)
     }
@@ -65,18 +84,18 @@ export default {
       deep: true,
       handler(val) {
         const chartData = val
-        this.seriesData = chartData.map(item => {
-          //  ['项目总监', '项目经理', '开发经理', '需求组长', '开发成员', '需求成员'];
-        // chiefNumber、dutyNumber、devDirectorNumber、
-        // demandNumber、genDevUsersNumber、genDemandUsersNumber
-          const { chiefNumber, dutyNumber, devDirectorNumber,
-            demandNumber, genDevUsersNumber, genDemandUsersNumber } = item
-          return {
-            name: item.projectName,
-            data: [chiefNumber, dutyNumber, devDirectorNumber,
-              demandNumber, genDevUsersNumber, genDemandUsersNumber]// [320, 332, 301, 334, 390, 301, 334, 390]
-          }
-        })
+        // this.seriesData = chartData.map(item => {
+        //   //  ['项目总监', '项目经理', '开发经理', '需求组长', '开发成员', '需求成员'];
+        // // chiefNumber、dutyNumber、devDirectorNumber、
+        // // demandNumber、genDevUsersNumber、genDemandUsersNumber
+        //   const { chiefNumber, dutyNumber, devDirectorNumber,
+        //     demandNumber, genDevUsersNumber, genDemandUsersNumber } = item
+        //   return {
+        //     name: item.projectName,
+        //     data: [chiefNumber, dutyNumber, devDirectorNumber,
+        //       demandNumber, genDevUsersNumber, genDemandUsersNumber]// [320, 332, 301, 334, 390, 301, 334, 390]
+        //   }
+        // })
         // 加载图表
         this.initChart();
       }
@@ -109,13 +128,15 @@ export default {
         }
       };
       // Y轴数据
-      const seriesData = this.seriesData.map(item => {
+      let seriesData = this.seriesData.map(item => {
         return {
           ...seriesConfig,
           ...item
         }
       })
-      // seriesData = [...seriesData, ...seriesData]
+      // TODO
+      seriesData = [...seriesData, ...seriesData]
+      console.log('【 seriesData[0].data.length 】-123', seriesData.length)
       // 一个x轴最多放下48个柱/每个组的柱数=显示几组合适
       const showNum = Math.floor(48 / (seriesData.length)) - 1; //  这个5  可以顺便调整    是用来判断当前视图要显示几个
       const showDataZoom = seriesData.length > 6
@@ -156,7 +177,7 @@ export default {
           }
         ],
         // TODO
-        color: ['#3aa1ff', '#4ecb73', '#fbd437', '#435188', '#36cbcb', '#4aaa99'],
+        color: ['#3aa1ff', '#4ecb73', '#fbd437', '#435188'],
         backgroundColor: '#FFF', // 背景
         // 标题
         title: {

@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-09-05 10:18:51
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-09-07 16:39:17
+ * @LastEditTime: 2022-09-14 14:18:17
  * @Description: 柱状图
 -->
 
@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import echarts from 'echarts';
+import * as echarts from 'echarts'
 import resize from '@/components/Charts/mixins/resize';
 
 export default {
@@ -29,6 +29,14 @@ export default {
     ecData: {
       type: Array,
       default: () => []
+    },
+    labelProp: {
+      type: String,
+      default: 'name'
+    },
+    valueProp: {
+      type: String,
+      default: 'number'
     },
     // 图表自定义配置
     ecConfig: {
@@ -83,8 +91,8 @@ export default {
       deep: true,
       handler(val) {
         const chartData = val
-        this.xData = chartData.map(item => item.postName)
-        const arr = chartData.map(item => item.number || 0)
+        this.xData = chartData.map(item => item[this.labelProp])
+        const arr = chartData.map(item => item[this.valueProp] || 0)
         this.seriesData = [
           {
           // name: 'tokyo',

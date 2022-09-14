@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-26 10:28:20
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-09-07 18:09:05
+ * @LastEditTime: 2022-09-08 09:11:31
  * @Description:
 -->
 <template>
@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import echarts from 'echarts';
+import * as echarts from 'echarts'
 import resize from '@/components/Charts/mixins/resize';
 
 export default {
@@ -101,17 +101,6 @@ export default {
       console.log('【 this.chart 】-101', this.chart)
       const gaugeData = [
         {
-          value: 20,
-          name: 'Perfect',
-          title: {
-            offsetCenter: ['0%', '-30%']
-          },
-          detail: {
-            valueAnimation: true,
-            offsetCenter: ['0%', '-20%']
-          }
-        },
-        {
           value: 40,
           name: 'Good',
           title: {
@@ -138,24 +127,59 @@ export default {
         tooltip: {
           formatter: '{a} <br/>{b} : {c}%'
         },
-        // series.progress在 v5.0以上才支持
         series: [
           {
-            name: 'Pressure',
             type: 'gauge',
-            startAngle: 0,
-            endAngle: 360,
-            detail: {
-              formatter: '{value}'
+            startAngle: 90,
+            endAngle: -270,
+            pointer: {
+              show: false
             },
-            data: [
-              {
-                value: 50,
-                name: 'SCORE'
+            // series.progress在 v5.0以上才支持
+            progress: {
+              show: true,
+              overlap: false,
+              roundCap: true,
+              clip: false,
+              itemStyle: {
+                borderWidth: 1,
+                borderColor: '#464646'
               }
-            ]
+            },
+            axisLine: {
+              lineStyle: {
+                width: 40
+              }
+            },
+            splitLine: {
+              show: false,
+              distance: 0,
+              length: 10
+            },
+            axisTick: {
+              show: false
+            },
+            axisLabel: {
+              show: false,
+              distance: 50
+            },
+            data: gaugeData,
+            title: {
+              fontSize: 14
+            },
+            detail: {
+              width: 50,
+              height: 14,
+              fontSize: 14,
+              color: 'auto',
+              borderColor: 'auto',
+              borderRadius: 20,
+              borderWidth: 1,
+              formatter: '{value}%'
+            }
           }
         ]
+
       });
     }
   }
