@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-01 13:52:08
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-31 10:54:13
+ * @LastEditTime: 2022-09-19 11:18:41
  * @Description:
  */
 
@@ -112,7 +112,7 @@ export const tableConfig = {
   mutiSelect: false, // 是否支持列表项选中功能
   indexShow: true,
   pagination: true,
-  height: '340px'
+  height: '460px'
 };
 
 // 表格列
@@ -121,7 +121,7 @@ export const columns = _this => {
     {
       prop: 'name',
       label: '姓名',
-      width: '100px'
+      minWidth: '100px'
     },
     {
       prop: 'sex',
