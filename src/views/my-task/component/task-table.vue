@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 17:38:09
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-31 18:02:45
+ * @LastEditTime: 2022-09-19 14:46:19
  * @Description: 我的任务-试用任务信息-弹框-表格
 -->
 
@@ -192,6 +192,12 @@ export default {
   computed: {
     // 完成进度-下拉
     progressOptions() {
+      // const result = Array.from({ length: 11 }).map((_, index) => {
+      //   return { value: index * 10,
+      //     label: index * 10
+      //   }
+      // });
+      // console.log('【 result 】-196', result)
       const arr = []
       for (let i = 0; i <= 100; i = i + 10) {
         arr.push({

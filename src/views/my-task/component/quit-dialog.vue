@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-08 18:45:59
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-09-01 14:24:28
+ * @LastEditTime: 2022-09-22 11:18:30
  * @Description:
 -->
 
@@ -402,9 +402,9 @@ export default {
         console.log('【 已完成 】-410')
         status = this.STATUS_TYPE.COMPLETED // 3
       }
-      console.log('【 taskStatus 】-403', taskStatus)
-      console.log('【 status】-396', status)
-      console.log('【 userType 】-399', this.userType)
+      // console.log('【 taskStatus 】-403', taskStatus)
+      // console.log('【 status】-396', status)
+      // console.log('【 userType 】-399', this.userType)
       return status
     }
   },
