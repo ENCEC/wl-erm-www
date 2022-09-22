@@ -89,8 +89,8 @@ export const tableConfig = {
   highlightCurrentRow: true, // 是否支持当前行高亮显示
   mutiSelect: false, // 是否支持列表项选中功能
   indexShow: true,
-  pagination: true,
-  height: '350px'
+  pagination: true
+  // height: '350px'
 };
 
 // 表格列
