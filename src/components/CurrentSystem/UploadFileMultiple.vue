@@ -5,7 +5,7 @@
     :file-list="fileList"
     :show-file-list="false"
     multiple
-    :accept="accept"
+    accept=""
     :limit="2"
     :on-preview="handlePreview"
     :on-success="handleSuccess"
@@ -146,7 +146,8 @@ export default {
       // this.list.push(file);
 
       // this.$refs.uploadFileMultiple.fileList = [];
-      const isPDF = file.type === 'application/pdf';
+      // const isPDF = file.type === 'application/pdf';
+      const isPDF = true;
       const isLtNM = file.size / 1024 / 1024 < 2;
       if (!isPDF) {
         this.$message.error('上传文件只能是 PDF 格式!');

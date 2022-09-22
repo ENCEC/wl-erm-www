@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-01 13:52:08
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-09-19 11:18:41
+ * @LastEditTime: 2022-08-31 10:54:13
  * @Description:
  */
 
@@ -111,8 +111,8 @@ export const tableConfig = {
   highlightCurrentRow: true, // 是否支持当前行高亮显示
   mutiSelect: false, // 是否支持列表项选中功能
   indexShow: true,
-  pagination: true,
-  height: '460px'
+  pagination: true
+  // height: '340px'
 };
 
 // 表格列
