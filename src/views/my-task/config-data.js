@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:15:04
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-31 11:04:46
+ * @LastEditTime: 2022-09-22 11:30:16
  * @Description:
  */
 
@@ -14,22 +14,6 @@ export const filterConfig = _this => {
     operateCol: 8,
     labelWidth: '100px',
     filterList: [
-      // {
-      //   type: 'select',
-      //   label: '用户类型',
-      //   prop: 'userType',
-      //   width: '200px',
-      //   placeholder: '请选择用户类型',
-      //   col: 8,
-      //   optionLabel: 'label',
-      //   optionValue: 'value',
-      //   optionKey: 'value',
-      //   options: _this.$dict.getDictOptions('USER_TYPE_CN'),
-      //   changeSelect: optionVal => {
-      //     _this.filterForm.userType = optionVal || 1;
-      //     _this.handleUserTypeChange(optionVal)
-      //   }
-      // },
       {
         type: 'input',
         label: '标题',
@@ -90,7 +74,7 @@ export const tableConfig = {
   mutiSelect: false, // 是否支持列表项选中功能
   indexShow: true,
   pagination: true
-  // height: '350px'
+  // height: '460px'
 };
 
 // 表格列

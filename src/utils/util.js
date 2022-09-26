@@ -2,10 +2,11 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 17:38:09
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-17 14:13:06
+ * @LastEditTime: 2022-09-01 14:39:12
  * @Description:
  */
 import CryptoJS from 'crypto-js'
+import { Message } from 'element-ui'
 
 export function transformPaginationData(data) {
   return {
@@ -63,7 +64,13 @@ export function aesEncrypt(content) {
 export function downloadFile(fileData, fileName) {
   // console.log('【 downloadFile 】-64', fileData)
   const base = fileData// 你要传入的base64数据
-  const bstr = window.atob(base);
+  let bstr
+  try {
+    bstr = window.atob(base);
+  } catch {
+    Message.error('下载失败')
+    return false
+  }
   let n = bstr.length;
   const u8arr = new Uint8Array(n);
   while (n--) {

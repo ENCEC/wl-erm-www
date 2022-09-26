@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:15:04
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-31 10:26:26
+ * @LastEditTime: 2022-09-02 10:50:50
  * @Description: 员工管理-任务分配
 -->
 
@@ -38,8 +38,6 @@
   </div>
 </template>
 <script>
-import filterPanel from '@/components/FilterPanel';
-import tableComponent from '@/components/TableComponent';
 import { filterConfig, tableConfig, columns, operates } from './config-data.js';
 import CreateDialog from './component/create-dialog';
 import {
@@ -52,9 +50,7 @@ import UserAssociate from '@/components/CurrentSystem/UserAssociate'
 export default {
   name: 'StaffTask',
   components: {
-    filterPanel,
     UserAssociate,
-    tableComponent,
     CreateDialog
   },
   mixins: [tableMix],

@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:15:04
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-31 10:20:46
+ * @LastEditTime: 2022-09-19 11:20:19
  * @Description:
  */
 
@@ -100,7 +100,7 @@ export const tableConfig = {
   mutiSelect: false, // 是否支持列表项选中功能
   indexShow: true,
   pagination: true
-  // height: '340px'
+  // height: '460px'
 };
 
 // 表格列

@@ -121,7 +121,7 @@ export const columns = _this => {
     {
       prop: 'name',
       label: '姓名',
-      width: '100px'
+      minWidth: '100px'
     },
     {
       prop: 'sex',

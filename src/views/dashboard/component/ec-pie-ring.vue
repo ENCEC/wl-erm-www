@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-26 10:28:20
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-26 14:23:51
+ * @LastEditTime: 2022-09-14 13:59:18
  * @Description:
 -->
 <template>
@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import echarts from 'echarts';
+import * as echarts from 'echarts'
 import resize from '@/components/Charts/mixins/resize';
 
 export default {
@@ -20,6 +20,17 @@ export default {
       type: String,
       default: 'pieChart'
     },
+    // 是否显示全部的占比，包括其他
+    showAll: {
+      type: Boolean,
+      default: false
+    },
+    // 图表数据
+    ecData: {
+      type: Object,
+      default: () => {}
+    },
+    // 样式
     className: {
       type: String,
       default: 'chart'
@@ -35,21 +46,68 @@ export default {
   },
   data() {
     return {
-      chart: null
+      chart: null,
+      seriesData: []
     };
   },
   computed: {
-    seriesData() {
-      return [
-        { value: 735, name: '5年以上' },
-        { value: 580, name: '4-5年' },
-        { value: 484, name: '2-3年' },
-        { value: 300, name: '1年以下' }
-      ];
+    // seriesData() {
+    //   const chartData = this.chartData || {}
+    //   console.log('【 chartData 】-51', chartData)
+    //   const arr = []
+    //   // const total = chartData.number
+    //   if (chartData.number) {
+    //     delete chartData.number
+    //   }
+    //   for (const key in chartData) {
+    //     arr.push({ name: key, value: chartData[key] })
+    //   }
+    //   console.log('【 arr 】-58', arr)
+    //   return [
+    //     { value: 735, name: '5年以上' },
+    //     { value: 580, name: '4-5年' },
+    //     { value: 484, name: '2-3年' },
+    //     { value: 300, name: '1年以下' }
+    //   ];
+    // }
+  },
+  watch: {
+    ecData: {
+      // immediate: true,
+      deep: true,
+      handler(val) {
+        const chartData = val || {}
+        const arr = []
+        const total = chartData.number
+        if (chartData.number) {
+          delete chartData.number
+        }
+
+        let other = total// 计算“其他”的数值
+        for (const key in chartData) {
+          other = other - chartData[key]
+          arr.push({ name: key, value: chartData[key] })
+        }
+        // 显示全部的占比，包括其他
+        if (this.showAll) {
+          arr.push({
+            name: '全部',
+            value: other,
+            itemStyle: { color: 'lightgray' },
+            label: { show: false },
+            labelLine: { show: false }, // 标签指引线
+            tooltip: { show: false }
+            // silent: false, // 图形是否不响应和触发鼠标事件
+            // selectedMode: false, // 点击移入移出
+          })
+        }
+        this.seriesData = arr
+        this.initChart();
+      }
     }
   },
   mounted() {
-    this.initChart();
+    // this.initChart();
   },
   beforeDestroy() {
     if (!this.chart) {
@@ -62,13 +120,14 @@ export default {
     initChart() {
       this.chart = echarts.init(document.getElementById(this.id));
       this.chart.setOption({
+        // animation: false,
         color: ['#3aa1ff', '#36cbcb', '#4ecb73', '#fbd437'],
         backgroundColor: '#fff', // 背景
         // 标题
         // title: {},
         tooltip: {
           trigger: 'item',
-          backgroundColor: 'rgb(255,255,255)', // 设置背景图片 rgba格式
+          backgroundColor: 'rgba(255,255,255,0.8)', // 设置背景图片 rgba格式
           // backgroundColor: "transparent",
           // 设置阴影
           extraCssText: 'box-shadow: 0 0 8px rgba(0,0,0,0.5)',
@@ -77,26 +136,23 @@ export default {
             fontSize: 11,
             color: '#666'
           },
+          // formatter: '{a} <br/>{b}: {c} ({d}%)'
           formatter: function(params) {
-            // console.log('【 params 】-102', params.color, params);
             return `<div style="font-size:10px">
-                      <div>
-                        <span style="font-size:11px;color:${params.color};">●</span> 
-                        ${params.name}: ${params.percent}% ${params.value}人
-                      </div>
-                    </div>`;
-            // return `<div style="font-size:10px">
-            //             <div><span style="font-size:11px;color:${params.color};">●</span> ${params.name}</div>
-            //             <div style="font-weight:500; margin-left: 12px;">数量：${params.value}人</div>
-            //             <div style="font-weight:500; margin-left: 12px;">占比：${params.percent}%</div>
-            //         </div>`
+                    <div>
+                      <span style="font-size:11px;color:${params.color};">●</span>
+                      ${params.name}: ${params.value}人 (${params.percent.toFixed(0)}%)
+                    </div>
+                  </div>`;
           }
         },
         // 图例
         legend: {
+          selectedMode: !this.showAll, // 设置是否能点击
           icon: 'circle',
           x: 'center',
           y: 'bottom',
+          top: 320,
           itemWidth: 8, // 图例标记的图形宽度
           itemHeight: 8, // 图例标记的图形高度。
           itemGap: 13,
@@ -110,10 +166,13 @@ export default {
             // name: 'Access From',
             type: 'pie',
             data: this.seriesData,
-            radius: ['26%', '45%'], // 饼图的半径,数组的第一项是内半径，第二项是外半径
-            width: '80%', // 组件的宽度
-            height: '33.33%',
-            avoidLabelOverlap: false,
+            hoverAnimation: false, // 鼠标移进扇区不放大
+            selectedMode: this.showAll ? false : 'single', // 点击移入移出'single'
+            center: ['50%', '50%'], // 设置饼图位置
+            radius: ['32%', '53%'], // 饼图的半径,数组的第一项是内半径，第二项是外半径
+            width: '100%', // 饼图的宽度
+            height: '85%', // 饼图的高度
+            avoidLabelOverlap: true, // 避免标签超出范围，超出用省略号代替
             // 饼图图形上的文本标签，可用于说明图形的一些数据信息，比如值，名称等
             label: {
               show: true,
@@ -126,8 +185,7 @@ export default {
               // formatter: '{b}:{percent|{c} 小时}'
               // formatter: '{a} {c}'
               formatter: function(params) {
-                return `${params.name}: ${params.percent}%
-                ${params.value}人 `;
+                return `${params.name}: ${params.value}人(${params.percent.toFixed(0)}%)`;
                 // return params.name + '\n占比:' + params.percent + '\n数量：' + params.value + '人'
               }
             },

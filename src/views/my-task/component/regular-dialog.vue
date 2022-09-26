@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-02 10:15:03
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-31 17:44:55
+ * @LastEditTime: 2022-09-01 14:20:52
  * @Description:
 -->
 
@@ -65,7 +65,7 @@
               </el-radio-group>
             </el-form-item>
           </el-col>
-          <!-- 进行中-->
+          <!-- 审批中-->
           <el-col v-if="status === STATUS_TYPE.ON_MANAGER || status === STATUS_TYPE.ON_LEADER" :span="12">
             <el-form-item label="附件:" class="file-wrap">
               <a v-if="formData.resume" @click="handleDownloadFile(formData.resume)">个人简历</a>
@@ -124,13 +124,13 @@
           </el-col>
         </el-row>
         <el-row />
-        <!-- 进行中 Start -->
+        <!-- 审批中 Start -->
         <div v-if="status === STATUS_TYPE.ON_MANAGER || status === STATUS_TYPE.ON_LEADER">
           <el-row class="flex-wrap">
             <el-col v-if="status === STATUS_TYPE.ON_LEADER" :span="12">
-              <el-form-item label="面谈人:" prop="approverName">
+              <el-form-item label="面谈人:" prop="auditName">
                 <el-input
-                  v-model="formData.approverName"
+                  v-model="formData.auditName"
                   placeholder="请输入面谈人"
                   :disabled="status === STATUS_TYPE.ON_LEADER"
                   clearable
@@ -199,7 +199,7 @@
               </el-form-item>
             </el-col>
           </el-row>
-          <!-- 进行中（部门领导） -->
+          <!-- 审批中（部门领导） -->
           <div v-if="status === STATUS_TYPE.ON_LEADER">
             <el-row>
               <el-col :span="12">
@@ -243,7 +243,7 @@
             </el-row>
           </div>
         </div>
-        <!-- 进行中 END -->
+        <!-- 审批中 END -->
         <!-- 已完成 Start -->
         <div v-if="status === STATUS_TYPE.COMPLETED">
           <el-row>
@@ -375,12 +375,12 @@ export default {
         progress: '', // 申请进度
         uemUserId: '', // 审批人id（面谈人）
         approverName: '', //  审批人姓名
-        // 进行中（项目经理）
+        // 审批中（项目经理）
         faceTime: '', // 面谈时间
         faceResult: '', // 面谈结果
         faceScore: '', // 转员工答辩成绩
         faceRemark: '', // 面谈评语
-        // 进行中（部门领导）
+        // 审批中（部门领导）
         approvalDate: '', // 审批时间
         resultAccess: '', // 审批结果
         offerRemark: '', // 转正评语
@@ -463,14 +463,13 @@ export default {
       queryPositiveApply({ taskInfoId: this.editData.taskInfoId }).then(res => {
         const _res = res.data
         for (const key in this.formData) {
-          const value = _res[key]
           if (key === 'uemUserId') {
-            this.formData[key] = _res['approver']
+            this.formData[key] = _res['approver'] || ''
           } else if (key === 'progress') {
             // 申请进度
-            this.formData[key] = this.$dict.getDictNameByCode('MY_TASK_STATUS', value)
+            this.formData[key] = this.$dict.getDictNameByCode('MY_TASK_STATUS', _res['status'].toString())
           } else {
-            this.formData[key] = value || ''
+            this.formData[key] = _res[key] || ''
           }
         }
       });
@@ -499,9 +498,13 @@ export default {
           }
           const funcName = funcInfo[this.status]// this.editData.taskInfoId ? updateTaskInfo : saveTaskInfo;
           funcName(this.formData).then(res => {
-            this.$message.success('操作成功');
-            this.$emit('getTableData', '');
-            this.close();
+            if (res.success) {
+              this.$message.success('操作成功');
+              this.$emit('getTableData', '');
+              this.close();
+            } else {
+              this.$message.error(res.errorMessages[0]);
+            }
           });
         }
       });

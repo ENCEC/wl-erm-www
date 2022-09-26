@@ -2,32 +2,19 @@
  * @Author: Hongzf
  * @Date: 2022-07-22 16:25:46
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-31 13:49:33
+ * @LastEditTime: 2022-09-01 09:52:18
  * @Description: 字典
  */
 // 用户类型
 export const USER_TYPE = {
-  // STAFF: '1',
-  // ORDINATOR: '2', // 统筹人
-  // CHARGE: '3', // 负责人
-  // PROJECT_MANAGER: '4', // 项目经理
-  // DEPT_LEADER: '5' // 部门领导
   DISPATCHER: 'dispatcher', // 本人
-  STAFF: 'executor', // 员工
-  ORDINATOR: 'ordinator', // 统筹人
-  CHARGE: 'leader', // 负责人
-  PROJECT_MANAGER: 'approver', // 项目经理
-  DEPT_LEADER: 'auditor' // 部门领导
+  STAFF: 'executor', // 员工1
+  ORDINATOR: 'ordinator', // 统筹人2
+  CHARGE: 'leader', // 负责人3
+  PROJECT_MANAGER: 'auditor', // 项目经理4
+  DEPT_LEADER: 'approver' // 部门领导2
   // DEPT_LEADER_APPROVER: 'approver', // 部门领导_转正
   // DEPT_LEADER_AUDITOR: 'auditor' // 部门领导_离职
-}
-// 用户类型_中文
-export const USER_TYPE_CN = {
-  '1': '员工',
-  '2': '统筹人',
-  '3': '负责人',
-  '4': '项目经理',
-  '5': '部门领导'
 }
 
 // 禁用启用
@@ -89,9 +76,6 @@ export const TASK_TYPE = {
 
 // 我的任务-任务状态
 export const MY_TASK_STATUS = {
-  // '0': '审批中',
-  // '1': '进行中',
-  // '2': '已完成'
   '0': '待完成',
   '1': '进行中',
   '2': '已完成',

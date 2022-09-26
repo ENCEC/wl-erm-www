@@ -57,6 +57,20 @@ export const constantRoutes = [
         component: () => import('@/views/dashboard/index'),
         name: 'Dashboard',
         meta: { title: 'dashboard', icon: 'dashboard', affix: true }
+      },
+      {
+        path: 'dept-num-detail',
+        component: () => import('@/views/dashboard/dept-num-detail'),
+        // redirect: '/dashboard',
+        hidden: true,
+        meta: { title: '', icon: 'dashboard', affix: true }
+      },
+      {
+        path: 'project-num-detail',
+        component: () => import('@/views/dashboard/project-num-detail'),
+        // redirect: '/dashboard',
+        hidden: true,
+        meta: { title: '', icon: 'dashboard', affix: true }
       }
     ]
   },

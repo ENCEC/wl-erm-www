@@ -36,7 +36,7 @@
     "driver.js": "0.9.5",
     "dropzone": "5.5.1",
     "ec-light-vue": "1.0.28",
-    "echarts": "4.2.1",
+    "echarts": "^5.3.3",
     "element-ui": "2.13.2",
     "file-saver": "2.0.1",
     "fuse.js": "3.4.4",

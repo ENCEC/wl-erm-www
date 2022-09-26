@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 17:38:09
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-30 17:27:06
+ * @LastEditTime: 2022-09-02 10:51:03
  * @Description: 我的任务
 -->
 
@@ -57,8 +57,6 @@
   </div>
 </template>
 <script>
-import filterPanel from '@/components/FilterPanel';
-import tableComponent from '@/components/TableComponent';
 import { filterConfig, tableConfig, columns, operates } from './config-data.js';
 import TaskDialog from './component/task-dialog';
 import RegularDialog from './component/regular-dialog';
@@ -72,8 +70,6 @@ import tableMix from '@/mixins/table-mixin';
 export default {
   name: 'MyTask',
   components: {
-    filterPanel,
-    tableComponent,
     TaskDialog,
     RegularDialog,
     QuitDialog
@@ -81,12 +77,6 @@ export default {
   mixins: [tableMix],
   data() {
     return {
-      // 任务状态
-      MY_TASK_STATUS: {
-        check: 1, // 审批中
-        on: 2, // 进行中
-        completed: 3 // 已完成
-      },
       // 查询
       filterConfig: filterConfig(this),
       filterForm: {

@@ -72,7 +72,7 @@ const actions = {
           avatar: '',
           name: res.name
         }
-        console.log('【 data 】-71', data)
+        // console.log('【 data 】-71', data)
         if (!data) {
           reject('Verification failed, please Login again.')
         }
