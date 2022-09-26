@@ -2,12 +2,13 @@
  * @Author: Hongzf
  * @Date: 2022-08-15 14:54:15
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-31 17:28:57
+ * @LastEditTime: 2022-09-26 13:46:21
  * @Description: 归属项目-下拉
 -->
 
 <template>
   <el-select
+    ref="projectSel"
     v-model="selectVal"
     v-bind="$attrs"
     filterable
@@ -37,13 +38,28 @@ export default {
   },
   data() {
     return {
-      selectVal: this.value || '', // 选择的值
+      selectVal: '', // this.value || '', // 选择的值
       optionsList: []
     };
   },
   watch: {
     value(newVal) {
       this.selectVal = newVal
+    },
+    selectVal(newVal) {
+      // console.log('【 selectVal 】-59', newVal)
+      const initVal = newVal
+      // 判断能否匹配到id对应的数据
+      const isExit = this.optionsList.some(item => {
+        return item.uemProjectId === initVal
+      })
+      if (isExit) {
+        this.selectVal = initVal
+      } else {
+        // 匹配不到就置空
+        this.selectVal = ''
+      }
+      this.$emit('input', this.selectVal)
     }
   },
   created() {

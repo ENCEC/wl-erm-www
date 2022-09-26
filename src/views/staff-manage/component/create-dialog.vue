@@ -2,7 +2,7 @@
  * @Author: Hongzf
  * @Date: 2022-08-05 21:05:06
  * @LastEditors: Hongzf
- * @LastEditTime: 2022-08-25 16:23:15
+ * @LastEditTime: 2022-09-26 14:09:11
  * @Description:
 -->
 
@@ -391,6 +391,19 @@ export default {
         this.technicalOptions = technicalOptions.filter(item => {
           return item.postId.toString() === postId
         })
+        // 判断能否匹配到id对应的数据
+        const initVal = this.formData.technicalTitleId
+        if (initVal) {
+          const isExit = this.technicalOptions.some(item => {
+            return item.technicalTitleId === initVal
+          })
+          if (!isExit) {
+            this.formData.technicalTitleId = '' // 匹配不到就置空
+            this.$nextTick(() => {
+              this.$refs['elForm'].clearValidate();
+            })
+          }
+        }
       } else {
         this.technicalOptions = []
       }
