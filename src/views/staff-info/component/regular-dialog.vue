@@ -181,8 +181,8 @@ export default {
       });
     },
     async handleDownload() {
-      await this.downloadMethod('1433ee48-ac94-44de-939a-77c8f5d61909.pdf')
-      await this.downloadMethod('f71bf2e9-45d8-4bea-a9c3-75ab8c9dba7a.pdf')
+      await this.downloadMethod('2de1534b-ce9d-4d9e-8c9e-19c6ef76a19f.doc')
+      await this.downloadMethod('61e791a3-c3cb-4c8c-9f66-63f4aee50941.doc')
     },
     downloadMethod(fileKey) {
       const params = {
