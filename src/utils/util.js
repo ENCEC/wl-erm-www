@@ -115,8 +115,8 @@ export function downloadDocFile(fileData, fileName) {
   // 下载dpf用这个
   const a = document.createElement('a');
   a.setAttribute('href', url);
-  a.setAttribute('download', fileName + '.pdf');
-  a.setAttribute('target', '_blank'); // 打开一个新的窗口
+  a.setAttribute('download', fileName + '.doc');
+  a.setAttribute('target', '_self'); // 打开一个新的窗口
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);

@@ -87,7 +87,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import { downloadFile } from '@/utils/util'
+import { downloadDocFile } from '@/utils/util'
 import { queryStandardDetail } from '@/api/standard-detail.js';
 import { queryAllWorkUserList } from '@/api/common';
 import {
@@ -193,7 +193,7 @@ export default {
         .then((res) => {
           if (res.success) {
             const fileName = '文件'// res.fileName.substring(0, res.fileName.lastIndexOf('.'));
-            downloadFile(res.data, fileName)
+            downloadDocFile(res.data, fileName)
           } else {
             this.$message.error(res.errorMessages[0])
           }
