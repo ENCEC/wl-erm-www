@@ -181,10 +181,10 @@ export default {
       });
     },
     async handleDownload() {
-      await this.downloadMethod('2de1534b-ce9d-4d9e-8c9e-19c6ef76a19f.doc')
-      await this.downloadMethod('61e791a3-c3cb-4c8c-9f66-63f4aee50941.doc')
+      await this.downloadMethod('2de1534b-ce9d-4d9e-8c9e-19c6ef76a19f.doc', '新员工试用期考核表-模板')
+      await this.downloadMethod('61e791a3-c3cb-4c8c-9f66-63f4aee50941.doc', '新员工试用期工作总结-模板')
     },
-    downloadMethod(fileKey) {
+    downloadMethod(fileKey, fileName) {
       const params = {
         systemId: 'YYDM200013',
         fileKey: fileKey
@@ -192,7 +192,6 @@ export default {
       downloadExternalFile(params)
         .then((res) => {
           if (res.success) {
-            const fileName = '文件'// res.fileName.substring(0, res.fileName.lastIndexOf('.'));
             downloadDocFile(res.data, fileName)
           } else {
             this.$message.error(res.errorMessages[0])
