@@ -30,6 +30,13 @@ export const TASK_STATUS = {
   '2': '已完成'
 }
 
+// 归属地
+export const ATTRIBUTION_LAND = {
+  '1': '上海',
+  '2': '北京',
+  '3': '厦门'
+}
+
 // 性别
 export const SEX = {
   false: '男',

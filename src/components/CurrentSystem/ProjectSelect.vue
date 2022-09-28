@@ -20,7 +20,7 @@
       v-for="(item, index) in optionsList"
       :key="'uemProjectId' + index + item.uemProjectId"
       :label="item.projectName"
-      :value="item.uemProjectId.toString()"
+      :value="item.uemProjectId"
     />
   </el-select>
 </template>
@@ -43,23 +43,26 @@ export default {
     };
   },
   watch: {
-    value(newVal) {
-      this.selectVal = newVal
+    value: {
+      handler(newVal) {
+        this.selectVal = newVal
+      }
     },
     selectVal(newVal) {
       // console.log('【 selectVal 】-59', newVal)
       const initVal = newVal
-      // 判断能否匹配到id对应的数据
-      const isExit = this.optionsList.some(item => {
-        return item.uemProjectId === initVal
-      })
-      if (isExit) {
-        this.selectVal = initVal
-      } else {
-        // 匹配不到就置空
-        this.selectVal = ''
-      }
-      this.$emit('input', this.selectVal)
+      // // 判断能否匹配到id对应的数据
+      // const isExit = this.optionsList.some(item => {
+      //   return item.uemProjectId === initVal
+      // })
+      // if (isExit) {
+      //   debugger
+      //   this.selectVal = initVal
+      // } else {
+      //   // 匹配不到就置空
+      //   this.selectVal = ''
+      // }
+      this.$emit('input', initVal)
     }
   },
   created() {

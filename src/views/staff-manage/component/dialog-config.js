@@ -110,6 +110,13 @@ export const formRules = (_this) => {
         message: '请选择归属项目',
         trigger: 'change'
       }
+    ],
+    attributionLand: [
+      {
+        required: true,
+        message: '请选择归属地',
+        trigger: 'change'
+      }
     ]
   }
 };

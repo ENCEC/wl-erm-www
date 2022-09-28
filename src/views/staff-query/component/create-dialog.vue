@@ -272,6 +272,35 @@
           </el-row>
           <el-row>
             <el-col :span="12">
+              <el-form-item label="归属地:" prop="attributionLand">
+                <el-select
+                  v-model="form.attributionLand"
+                  placeholder="请选择归属地"
+                  clearable
+                  class="input-width"
+                >
+                  <el-option
+                    v-for="(item) in attributionLandOptions"
+                    :key="'attributionLand'+item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  />
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="员工标签:" prop="tags">
+                <TagsAssociate
+                  v-model="form.tagIds"
+                  :init-label="form.tagNames"
+                  class="input-width"
+                  @tagChange="tagChange"
+                />
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="12">
               <el-form-item label="归属项目:" prop="projectId">
                 <el-select
                   v-model="form.projectId"
@@ -571,10 +600,11 @@ import { queryOfferInfo } from '@/api/staff-query';
 // import { preservationUemUser } from '@/api/staff-query.js';
 import { queryTechnicalNameBySelect, queryProjectNameBySelect } from '@/api/select-02';
 import { formRules } from './rules';
+import TagsAssociate from '@/components/CurrentSystem/TagsAssociate'
 import Department from '@/components/CurrentSystem/copy/Department.vue'
 import StaffDuty from '@/components/CurrentSystem/copy/StaffDuty.vue'
 export default {
-  components: { Department, StaffDuty },
+  components: { Department, StaffDuty, TagsAssociate },
   // inheritAttrs: false,
   props: {
     // 编辑信息
@@ -633,13 +663,17 @@ export default {
         dismissDate: '',
         dismissReason: '',
         leaveDate: '',
-        leaveReason: ''
+        leaveReason: '',
+        attributionLand: '',
+        tagIds: '',
+        tagNames: ''
 
       },
       // sexOptions: this.$dict.getDictOptions('SEX'),
       maritalStatusOptions: this.$dict.getDictOptions('MARITAL_STATUS'),
       educationOptions: this.$dict.getDictOptions('EDUCATION'),
       offerTypeOptions: this.$dict.getDictOptions('OFFER_TYPE'),
+      attributionLandOptions: this.$dict.getDictOptions('ATTRIBUTION_LAND'),
       politicsOptions: this.$dict.getDictOptions('POLITICAL_STATUS'), // 政治面貌
       technicalOptions: [], // 岗位职称
       projectTypeOptions: []
@@ -662,6 +696,9 @@ export default {
   },
   mounted() {},
   methods: {
+    tagChange(tagIds) {
+      this.form.tagIds = tagIds
+    },
     // 查看个人’简历‘
     handleLookResume() {
       const params = {
@@ -764,18 +801,8 @@ export default {
           }
         }
         this.formLoading = false
-        // this.form = {
-        //   ...this.form,
-        //   ...res,
-        //   jobStatus: res.jobStatus || '',
-        //   entryDate: res.entryDate || '',
-        //   uemDeptId: res.uemDeptId || '',
-        //   staffDutyId: res.staffDutyId || '',
-        //   technicalTitleId: res.technicalTitleId || '',
-        //   projectId: res.projectId || ''
-        // };
       }).catch(() => {
-        this.$$message.error('获取员工信息失败')
+        this.$message.error('获取员工信息失败')
         this.formLoading = false
       })
     },

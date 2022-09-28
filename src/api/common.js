@@ -41,6 +41,16 @@ export function queryStaffDutyBySelect(data) {
     data
   });
 }
+
+// 标签-联想控件
+export function querySysTag(data) {
+  return request({
+    url: prefix + '/sysTag/querySysTag',
+    method: 'post',
+    data
+  })
+}
+
 // 职称-下拉
 export function queryTechnicalNameBySelect(data) {
   return request({

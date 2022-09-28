@@ -269,6 +269,35 @@
         </el-row>
         <el-row>
           <el-col :span="11">
+            <el-form-item label="归属地:" prop="attributionLand">
+              <el-select
+                v-model="formData.attributionLand"
+                placeholder="请选择归属地"
+                clearable
+                class="input-width"
+              >
+                <el-option
+                  v-for="(item) in attributionLandOptions"
+                  :key="'attributionLand'+item.value"
+                  :label="item.label"
+                  :value="item.value"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="13">
+            <el-form-item label="人员标签:" prop="tagIds">
+              <TagsAssociate
+                v-model="formData.tagIds"
+                :init-label="formData.tagNames"
+                class="input-width"
+                @tagChange="tagChange"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="11">
             <el-form-item label="归属项目:" prop="projectId">
               <ProjectSelect v-model="formData.projectId" placeholder="请选择归属项目" class="input-width" />
             </el-form-item>
@@ -304,9 +333,10 @@ import { formRules } from './dialog-config';
 import Department from '@/components/CurrentSystem/Department.vue'
 import StaffDuty from '@/components/CurrentSystem/StaffDuty.vue'
 import ProjectSelect from '@/components/CurrentSystem/ProjectSelect.vue'
+import TagsAssociate from '@/components/CurrentSystem/TagsAssociate'
 import Upload from './Upload.vue'
 export default {
-  components: { Department, StaffDuty, ProjectSelect, Upload },
+  components: { Department, StaffDuty, ProjectSelect, Upload, TagsAssociate },
   // inheritAttrs: false,
   props: {
     // 编辑信息
@@ -353,13 +383,17 @@ export default {
         email: '',
         seniority: '', // 工作年限
         projectId: '', // 归属项目,
-        resume: ''
+        resume: '',
+        attributionLand: '',
+        tagIds: '',
+        tagNames: ''
         // createTime: '',
         // creatorName: ''
       },
       // sexOptions: this.$dict.getDictOptions('SEX'),
       maritalStatusOptions: this.$dict.getDictOptions('MARITAL_STATUS'),
       educationOptions: this.$dict.getDictOptions('EDUCATION'),
+      attributionLandOptions: this.$dict.getDictOptions('ATTRIBUTION_LAND'),
       technicalOptions: [], // 岗位职称
       politicalList: [] // 政治面貌
 
@@ -381,8 +415,13 @@ export default {
     this.uploadData.uemUserId = this.editData.uemUserId
     this.getSelectOptions()
   },
-  mounted() {},
+  mounted() {
+
+  },
   methods: {
+    tagChange(tagIds) {
+      this.formData.tagIds = tagIds
+    },
     // 过滤岗位职称下拉信息
     async filterTechnicalOptions() {
       const postId = this.formData.staffDutyId.toString()
@@ -415,6 +454,34 @@ export default {
     },
     // 关闭弹框
     close() {
+      this.formData = {
+        uemUserId: '',
+        name: '',
+        sex: '',
+        birthday: '',
+        jobStatus: '', // 在职状态（0：试用员工 1：正式员工 2：离职员工）
+        idCard: '',
+        mobile: '',
+        address: '', // 现住址
+        sourceAddress: '', // 户籍地址
+        maritalStatus: '', // 婚姻状况（0：未婚 1：已婚 2：离婚）
+        politicalStatus: '', //  政治面貌
+        education: '', // 学历（0：专科 1：本科 2：研究生 3：博士生）
+        graduateDate: '', // 毕业时间
+        graduateSchool: '', //
+        speciality: '', // 在校专业
+        entryDate: '', // 入职时间
+        uemDeptId: '', // 入职部门
+        staffDutyId: '', // 入职岗位
+        technicalTitleId: '', // 岗位职称
+        email: '',
+        seniority: '', // 工作年限
+        projectId: '', // 归属项目,
+        resume: '',
+        attributionLand: '',
+        tagIds: '',
+        tagNames: ''
+      }
       this.$emit('update:visible', false);
       this.$refs['elForm'].resetFields();
     },
@@ -443,6 +510,7 @@ export default {
     handleConfirm() {
       this.$refs['elForm'].validate(valid => {
         if (valid) {
+          // this.formData.tagIds = this.formData.tagIds ? this.formData.tagIds : null
           updateStaff({ uemUserId: this.editData.uemUserId, ...this.formData }).then(res => {
             this.$message.success(res.data);
             this.$emit('getTableData', '');

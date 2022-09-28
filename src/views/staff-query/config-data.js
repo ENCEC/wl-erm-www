@@ -136,6 +136,13 @@ export const columns = _this => {
       label: '联系电话'
     },
     {
+      prop: 'attributionLand',
+      label: '归属地',
+      formatter: (row) => {
+        return _this.$dict.getDictNameByCode('ATTRIBUTION_LAND', row.attributionLand)
+      }
+    },
+    {
       prop: 'deptName',
       label: '入职部门'
     },
@@ -154,80 +161,32 @@ export const columns = _this => {
       formatter: (row) => {
         return _this.$dict.getDictNameByCode('JOB_STATUS', row.jobStatus)
       }
+    },
+    {
+      prop: 'entryDate',
+      label: '入职时间'
+    },
+    {
+      prop: 'leaveDate',
+      label: '离职时间',
+      formatter: (row, column) => {
+        return row.jobStatus === '2' ? row.leaveDate : '-'
+      }
+    },
+    {
+      prop: 'projectName',
+      label: '归属项目'
+    },
+    {
+      prop: 'tagNames',
+      label: '人员标签'
     }
-
-    // {
-    //   prop: 'name',
-    //   label: '姓名'
-    // },
-    // {
-    //   prop: 'sex',
-    //   label: '性别',
-    //   formatter: (row, column) => {
-    //     return _this.$dict.getDictNameByCode('SEX', row.sex)
-    //   }
-    // },
-    // {
-    //   prop: 'mobile',
-    //   label: '联系电话'
-    // },
-    // // {
-    // //   prop: 'address2',
-    // //   label: '归属地'
-    // // },
-    // {
-    //   prop: 'staffDuty',
-    //   label: '入职岗位'
-    // },
-    // {
-    //   prop: 'technicalName',
-    //   label: '岗位职称'
-    // },
-    // {
-    //   prop: 'jobStatus',
-    //   label: '在职状态',
-    //   width: '100',
-    //   formatter: (row) => {
-    //     return _this.$dict.getDictNameByCode('JOB_STATUS', row.jobStatus)
-    //   }
-    // },
-    // {
-    //   prop: 'entryDate',
-    //   label: '入职时间'
-    // },
-    // {
-    //   prop: 'leaveDate',
-    //   label: '离职时间',
-    //   formatter: (row, column) => {
-    //     return row.jobStatus === '2' ? row.leaveDate : '-'
-    //   }
-    // },
-    // {
-    //   prop: 'projectName',
-    //   label: '归属项目'
-    // },
-    // {
-    //   prop: 'technicalName',
-    //   label: '人员标签'
-    // }
   ];
 };
 
 export const operates = _this => {
   return {
     list: [
-      // {
-      //   id: 'edit',
-      //   label: '编辑',
-      //   type: 'text',
-      //   show: true,
-      //   disabled: false,
-      //   method: (row, index) => {
-      //     console.log('【 row 】-172', row)
-      //     // console.log('【 index 】-163', index)
-      //     _this.handleOpen(row, 'edit');
-      //   }
-      // },
       {
         id: 'detail',
         label: '查看',
@@ -238,57 +197,8 @@ export const operates = _this => {
           _this.handleOpen(row, 'detail');
         }
       }
-      // {
-      //   id: 'regular',
-      //   label: '转正',
-      //   type: 'text',
-      //   show: true,
-      //   //   // show: (row, index) => {
-      //   //   //   return row.status !== 'draft'
-      //   //   // },
-      //   disabled: false,
-      //   method: (row, index) => {
-      //     console.log('【 index 】-163', index)
-      //     _this.handleOpen(row, 'regular');
-      //   }
-      // },
-      // {
-      //   id: 'quit',
-      //   label: '离职',
-      //   type: 'text',
-      //   show: (index, row) => {
-      //     return row.jobStatus === '2'
-      //   },
-      //   disabled: false,
-      //   method: (row, index) => {
-      //     console.log('【 index 】-163', index)
-      //     _this.handleOpen(row, 'quit');
-      //   }
-      // },
-      // {
-      //   id: 'dismiss',
-      //   label: '辞退',
-      //   type: 'text',
-      //   show: true,
-      //   disabled: false,
-      //   method: (row, index) => {
-      //     console.log('【 index 】-163', index)
-      //     _this.handleOpen(row, 'dismiss');
-      //   }
-      // }
-      // {
-      //   id: 'delete',
-      //   label: '删除',
-      //   // icon: 'el-icon-delete',
-      //   type: 'text',
-      //   show: true,
-      //   plain: false,
-      //   method: (row, index) => {
-      //     _this.handleDelete(row.uemUserId)
-      //   }
-      // }
     ],
     fixed: false,
-    width: 230
+    width: 100
   }; // 列操作按钮
 };
